@@ -70,6 +70,7 @@ namespace QoLFix
             this.RegisterPatch<FixToolRefillBioScannerPatch>();
             this.RegisterPatch<FixDoorCollisionPatch>();
             this.RegisterPatch<FixBioScannerNavMarkerPatch>();
+            this.RegisterPatch<FixLockerPingPatch>();
         }
 
         public void RegisterPatch<T>() where T : IPatch, new()

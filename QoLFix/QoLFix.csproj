@@ -285,6 +285,7 @@
     <Compile Include="Patches\FixDoorCollisionPatch.cs" />
     <Compile Include="Patches\ElevatorIntroSkipPatch.cs" />
     <Compile Include="Patches\ElevatorVolumePatch.cs" />
+    <Compile Include="Patches\FixLockerPingPatch.cs" />
     <Compile Include="Patches\FixWeaponSwapPatch.cs" />
     <Compile Include="Patches\IntroSkipPatch.cs" />
     <Compile Include="IPatch.cs" />
