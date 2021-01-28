@@ -19,8 +19,11 @@ namespace QoLFix.Patches
         private static readonly string PatchName = nameof(FixLockerPingPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
+        public static IPatch Instance { get; private set; }
+
         public void Initialize()
         {
+            Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Fixes the bug where resources inside of lockers/boxes aren't individually pingable."));
         }
 
@@ -65,13 +68,13 @@ namespace QoLFix.Patches
 
             if (!resourceContainers.Any())
             {
-                QoLFixPlugin.Instance.Log.LogError($"{nameof(ResourcePackPickup)} isn't located inside of a resource container!?");
+                Instance.LogError($"{nameof(ResourcePackPickup)} isn't located inside of a resource container!?");
                 return;
             }
 
             if (resourceContainers.Count() > 1)
             {
-                QoLFixPlugin.Instance.Log.LogError($"{nameof(ResourcePackPickup)} is inside of multiple resource containers!?");
+                Instance.LogError($"{nameof(ResourcePackPickup)} is inside of multiple resource containers!?");
                 return;
             }
 
@@ -109,14 +112,14 @@ namespace QoLFix.Patches
 
                 foreach (var child in storageChildren)
                 {
-                    QoLFixPlugin.Instance.Log.LogDebug("StorageChild :" + child.name);
+                    Instance.LogDebug("StorageChild :" + child.name);
                 }
 
                 var hits = Physics.RaycastAll(__instance.CamPos, __instance.FPSCamera.Forward, 40f, LayerManager.MASK_PING_TARGET, QueryTriggerInteraction.Ignore);
                 foreach (var hit in hits)
                 {
                     if (!storageChildren.Any(x => x.GetInstanceID() == hit.collider.gameObject.GetInstanceID())) continue;
-                    QoLFixPlugin.Instance.Log.LogDebug("Selecting storage child as ping target");
+                    Instance.LogDebug("Selecting storage child as ping target");
                     pingTarget = hit.collider.gameObject.GetComponentInChildren<iPlayerPingTarget>();
                     break;
                 }

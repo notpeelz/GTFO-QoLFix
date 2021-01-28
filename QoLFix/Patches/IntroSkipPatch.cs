@@ -11,8 +11,11 @@ namespace QoLFix.Patches
         private static readonly ConfigDefinition ConfigSkipRundownInfo = new ConfigDefinition(PatchName, "SkipRundownInfo");
         private static readonly ConfigDefinition ConfigSkipRundownConnect = new ConfigDefinition(PatchName, "SkipRundownConnect");
 
+        public static IPatch Instance { get; private set; }
+
         public void Initialize()
         {
+            Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Skips the intro on startup."));
             QoLFixPlugin.Instance.Config.Bind(ConfigSkipRundownInfo, false, new ConfigDescription("Skips the rundown info screen."));
             QoLFixPlugin.Instance.Config.Bind(ConfigSkipRundownConnect, true, new ConfigDescription("Skips the rundown connect and reveal animation"));
@@ -64,7 +67,7 @@ namespace QoLFix.Patches
         {
             if (previousStep != __instance.m_step)
             {
-                QoLFixPlugin.Instance.Log.LogDebug($"New {nameof(CM_PageIntro)} step: {__instance.m_step}");
+                Instance.LogDebug($"New {nameof(CM_PageIntro)} step: {__instance.m_step}");
                 previousStep = __instance.m_step;
             }
 

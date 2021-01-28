@@ -9,8 +9,11 @@ namespace QoLFix.Patches
         private static readonly string PatchName = nameof(NoiseRemovalPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
+        public static IPatch Instance { get; private set; }
+
         public void Initialize()
         {
+            Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, false, new ConfigDescription("Disables the blue noise shader. This makes the game look clearer, although some areas might look a lot darker than normal."));
         }
 

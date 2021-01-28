@@ -22,8 +22,11 @@ namespace QoLFix.Patches
         private static readonly string PatchName = nameof(FixDoorCollisionPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
+        public static IPatch Instance { get; private set; }
+
         public void Initialize()
         {
+            Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Fixes the door collision bug where c-foam globs could go through if aimed at the cracks."));
         }
 

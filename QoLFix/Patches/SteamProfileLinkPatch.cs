@@ -14,8 +14,11 @@ namespace QoLFix.Patches
         private static readonly string PatchName = nameof(SteamProfileLinkPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
+        public static IPatch Instance { get; private set; }
+
         public void Initialize()
         {
+            Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Lets you open the steam profile of your teammates by clicking on their name (only works in lobby)."));
         }
 
@@ -57,7 +60,7 @@ namespace QoLFix.Patches
 
                 if (component != null)
                 {
-                    QoLFixPlugin.Instance.Log.LogInfo($"Opening steam profile for {__instance.m_player.NickName} ({__instance.m_player.Lookup})");
+                    Instance.LogInfo($"Opening steam profile for {__instance.m_player.NickName} ({__instance.m_player.Lookup})");
 
                     var url = $"https://steamcommunity.com/profiles/{__instance.m_player.Lookup}";
                     if (SteamUtils.IsOverlayEnabled())

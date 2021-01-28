@@ -10,8 +10,11 @@ namespace QoLFix.Patches
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
         private static readonly ConfigDefinition ConfigVolume = new ConfigDefinition(PatchName, "Volume");
 
+        public static IPatch Instance { get; private set; }
+
         public void Initialize()
         {
+            Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Adjusts the SFX volume during the elevator scene."));
             QoLFixPlugin.Instance.Config.Bind(ConfigVolume, 0.05f, new ConfigDescription("The new volume value to use during the scene (1 = 100%, 0.5 = 50%, etc.)"));
         }

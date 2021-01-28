@@ -12,8 +12,11 @@ namespace QoLFix.Patches
         private static readonly string PatchName = nameof(PingableSwapsPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
+        public static IPatch Instance { get; private set; }
+
         public void Initialize()
         {
+            Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Lets you (terminal) ping resource packs that were swapped out."));
         }
 

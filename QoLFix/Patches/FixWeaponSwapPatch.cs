@@ -19,46 +19,21 @@ namespace QoLFix.Patches
             { SectionSwapModeStealth, new SwapModeSection(SectionSwapModeStealth, DRAMA_State.Sneaking, SwapMode.HackingTool) },
         };
 
-        private class SwapModeSection
-        {
-            private readonly SwapMode defaultSwapMode;
-            private readonly DRAMA_State state;
-
-            public SwapModeSection(string section, DRAMA_State state, SwapMode defaultSwapMode)
-            {
-                this.state = state;
-                this.SwapMode = new ConfigDefinition(section, "SwapMode");
-                this.defaultSwapMode = defaultSwapMode;
-            }
-
-            public void Bind()
-            {
-                QoLFixPlugin.Instance.Config.Bind(this.SwapMode, this.defaultSwapMode, new ConfigDescription($"Controls the swap behavior when the game is in the {this.state} drama state."));
-            }
-
-            public ConfigDefinition SwapMode { get; }
-        }
-
-        public enum SwapMode
-        {
-            Melee,
-            HackingTool,
-            Primary,
-            Secondary,
-        }
-
-        public string Name => PatchName;
-
-        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public static IPatch Instance { get; private set; }
 
         public void Initialize()
         {
+            Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Changes the weapon swap order dynamically based on the drama state of the game (stealth, loud, etc.)"));
             foreach (var kv in ConfigSwapModes)
             {
                 kv.Value.Bind();
             }
         }
+
+        public string Name { get; } = PatchName;
+
+        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
         public void Patch(Harmony harmony)
         {
@@ -116,5 +91,33 @@ namespace QoLFix.Patches
             SwapMode.Secondary => InventorySlot.GearSpecial,
             _ => InventorySlot.HackingTool,
         };
+
+        private class SwapModeSection
+        {
+            private readonly SwapMode defaultSwapMode;
+            private readonly DRAMA_State state;
+
+            public SwapModeSection(string section, DRAMA_State state, SwapMode defaultSwapMode)
+            {
+                this.state = state;
+                this.SwapMode = new ConfigDefinition(section, "SwapMode");
+                this.defaultSwapMode = defaultSwapMode;
+            }
+
+            public void Bind()
+            {
+                QoLFixPlugin.Instance.Config.Bind(this.SwapMode, this.defaultSwapMode, new ConfigDescription($"Controls the swap behavior when the game is in the {this.state} drama state."));
+            }
+
+            public ConfigDefinition SwapMode { get; }
+        }
+
+        private enum SwapMode
+        {
+            Melee,
+            HackingTool,
+            Primary,
+            Secondary,
+        }
     }
 }

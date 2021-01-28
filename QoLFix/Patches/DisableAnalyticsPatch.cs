@@ -9,8 +9,11 @@ namespace QoLFix.Patches
         private static readonly string WarningMessage = "This patch is mostly useful to prevent spamming the developers with useless analytics data when debugging/testing. Please don't use this during actual gameplay!";
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
+        public static IPatch Instance { get; private set; }
+
         public void Initialize()
         {
+            Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, false, new ConfigDescription(WarningMessage));
         }
 

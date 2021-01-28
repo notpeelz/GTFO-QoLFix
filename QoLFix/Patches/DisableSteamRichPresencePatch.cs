@@ -9,8 +9,11 @@ namespace QoLFix.Patches
         private static readonly string PatchName = nameof(DisableSteamRichPresencePatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
+        public static IPatch Instance { get; private set; }
+
         public void Initialize()
         {
+            Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, false, new ConfigDescription("Disables Steam Rich Presence updates; also prevents Steam friends from seeing your lobby from the rundown screen."));
         }
 

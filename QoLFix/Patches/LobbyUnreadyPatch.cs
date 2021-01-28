@@ -11,8 +11,11 @@ namespace QoLFix.Patches
         private static readonly string PatchName = nameof(LobbyUnreadyPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
+        public static IPatch Instance { get; private set; }
+
         public void Initialize()
         {
+            Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Lets you unready after readying up."));
         }
 

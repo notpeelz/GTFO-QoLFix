@@ -9,8 +9,11 @@ namespace QoLFix.Patches
         private static readonly string PatchName = nameof(FixToolRefillBioScannerPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
+        public static IPatch Instance { get; private set; }
+
         public void Initialize()
         {
+            Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Prevents you from accidentally giving a tool refill to a bio tracker."));
         }
 

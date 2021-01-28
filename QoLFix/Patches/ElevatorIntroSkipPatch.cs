@@ -8,8 +8,11 @@ namespace QoLFix.Patches
         private static readonly string PatchName = nameof(ElevatorIntroSkipPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
+        public static IPatch Instance { get; private set; }
+
         public void Initialize()
         {
+            Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Skips the intro that plays when dropping into a level."));
         }
 
