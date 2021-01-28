@@ -35,9 +35,18 @@ namespace QoLFix.Patches
                 harmony.Patch(methodInfo, prefix: new HarmonyMethod(AccessTools.Method(typeof(FixLockerPingPatch), nameof(PlayerAgent__UpdateGlobalInput))));
             }
             {
-                var methodInfo = typeof(ResourcePackPickup).GetMethod(nameof(ResourcePackPickup.OnSyncStateChange));
-                harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(FixLockerPingPatch), nameof(ResourcePackPickup__OnSyncStateChange))));
+                var methodInfo = typeof(ResourcePackPickup).GetMethod(nameof(ResourcePackPickup.Setup));
+                harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(FixLockerPingPatch), nameof(ResourcePackPickup__Setup))));
             }
+        }
+
+        private static void ResourcePackPickup__Setup(ResourcePackPickup __instance)
+        {
+            __instance.m_sync.add_OnSyncStateChange(
+                (Il2CppSystem.Action<ePickupItemStatus, pPickupPlacement, PlayerAgent, bool>)(
+                    (status, placement, _, _) => ResourcePackPickup__OnSyncStateChange(__instance, status, placement)
+                )
+            );
         }
 
         /// <summary>
@@ -54,7 +63,12 @@ namespace QoLFix.Patches
                 .Where(x => x != null)
                 .ToArray();
 
-            if (!resourceContainers.Any()) return;
+            if (!resourceContainers.Any())
+            {
+                QoLFixPlugin.Instance.Log.LogError($"{nameof(ResourcePackPickup)} isn't located inside of a resource container!?");
+                return;
+            }
+
             if (resourceContainers.Count() > 1)
             {
                 QoLFixPlugin.Instance.Log.LogError($"{nameof(ResourcePackPickup)} is inside of multiple resource containers!?");
@@ -63,6 +77,7 @@ namespace QoLFix.Patches
 
             var resourceContainer = resourceContainers.Single();
             __instance.gameObject.transform.SetParent(resourceContainer.gameObject.transform);
+            __instance.gameObject.transform.SetPositionAndRotation(placement.position, placement.rotation);
         }
 
         private static bool PlayerAgent__UpdateGlobalInput(PlayerAgent __instance)
