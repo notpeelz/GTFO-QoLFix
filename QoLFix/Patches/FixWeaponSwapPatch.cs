@@ -69,17 +69,22 @@ namespace QoLFix.Patches
         private static bool PlayerBackpackManager__WieldFirstLocalGear()
         {
             var playerAgent = PlayerManager.GetLocalPlayerAgent();
-            if (playerAgent == null) return false;
+            if (playerAgent == null) return true;
 
             if (playerAgent.Locomotion.m_lastStateEnum == PlayerLocomotion.PLOC_State.ClimbLadder) return true;
 
             var wieldedSlot = playerAgent.Inventory.WieldedSlot;
-            if (wieldedSlot == InventorySlot.ConsumableHeavy || wieldedSlot == InventorySlot.InLevelCarry) return true;
-
-            var slot = GetInventorySlotByDrama();
-            playerAgent.Sync.WantsToWieldSlot(slot);
-
-            return false;
+            switch (wieldedSlot)
+            {
+                case InventorySlot.None:
+                case InventorySlot.ConsumableHeavy:
+                case InventorySlot.InLevelCarry:
+                    return true;
+                default:
+                    var slot = GetInventorySlotByDrama();
+                    playerAgent.Sync.WantsToWieldSlot(slot);
+                    return false;
+            }
         }
 
         private static InventorySlot GetInventorySlotByDrama()
@@ -104,20 +109,12 @@ namespace QoLFix.Patches
             }
         }
 
-        private static InventorySlot GetPreferredInventorySlot(SwapMode swapMode)
+        private static InventorySlot GetPreferredInventorySlot(SwapMode swapMode) => swapMode switch
         {
-            switch (swapMode)
-            {
-                case SwapMode.Melee:
-                    return InventorySlot.GearMelee;
-                case SwapMode.Primary:
-                    return InventorySlot.GearStandard;
-                case SwapMode.Secondary:
-                    return InventorySlot.GearSpecial;
-                default:
-                case SwapMode.HackingTool:
-                    return InventorySlot.HackingTool;
-            }
-        }
+            SwapMode.Melee => InventorySlot.GearMelee,
+            SwapMode.Primary => InventorySlot.GearStandard,
+            SwapMode.Secondary => InventorySlot.GearSpecial,
+            _ => InventorySlot.HackingTool,
+        };
     }
 }
