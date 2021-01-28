@@ -291,6 +291,7 @@
     <Compile Include="IPatch.cs" />
     <Compile Include="Patches\LobbyUnreadyPatch.cs" />
     <Compile Include="Patches\NoiseRemovalPatch.cs" />
+    <Compile Include="Patches\PingableSwapsPatch.cs" />
     <Compile Include="Patches\SteamProfileLinkPatch.cs" />
     <Compile Include="Patches\FixToolRefillBioScannerPatch.cs" />
     <Compile Include="QoLFixPlugin.cs" />
