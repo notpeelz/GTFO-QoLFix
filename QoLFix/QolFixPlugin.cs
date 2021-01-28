@@ -65,6 +65,7 @@ namespace QoLFix
             this.RegisterPatch<SteamProfileLinkPatch>();
             this.RegisterPatch<NoiseRemovalPatch>();
             this.RegisterPatch<PingableSwapsPatch>();
+            this.RegisterPatch<HideCrosshairPatch>();
 
             // Bug fixes
             this.RegisterPatch<FixWeaponSwapPatch>();

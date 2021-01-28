@@ -280,6 +280,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BIEExtensions.cs" />
+    <Compile Include="Patches\HideCrosshairPatch.cs" />
     <Compile Include="Patches\FixBioScannerNavMarkerPatch.cs" />
     <Compile Include="Patches\DisableAnalyticsPatch.cs" />
     <Compile Include="Patches\FixDoorCollisionPatch.cs" />
