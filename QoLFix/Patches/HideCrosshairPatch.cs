@@ -9,6 +9,7 @@ namespace QoLFix.Patches
         private static readonly string PatchName = nameof(HideCrosshairPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
         private static readonly ConfigDefinition ConfigShowForMelee = new ConfigDefinition(PatchName, "ShowForMelee");
+        private static readonly ConfigDefinition ConfigShowForConsumables = new ConfigDefinition(PatchName, "ShowForConsumables");
 
         public static IPatch Instance { get; private set; }
 
@@ -16,7 +17,8 @@ namespace QoLFix.Patches
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, false, new ConfigDescription("Hides the in-game crosshair."));
-            QoLFixPlugin.Instance.Config.Bind(ConfigShowForMelee, true, new ConfigDescription("Prevents hiding the crosshair when a melee weapon is out."));
+            QoLFixPlugin.Instance.Config.Bind(ConfigShowForMelee, true, new ConfigDescription("Prevents hiding the crosshair when a melee weapon is wielded."));
+            QoLFixPlugin.Instance.Config.Bind(ConfigShowForConsumables, true, new ConfigDescription("Prevents hiding the crosshair when a consumable is wielded."));
         }
 
         public string Name { get; } = PatchName;
@@ -35,6 +37,7 @@ namespace QoLFix.Patches
             if (playerAgent == null) return true;
 
             if (playerAgent.Inventory.WieldedSlot == InventorySlot.GearMelee) return true;
+            if (playerAgent.Inventory.WieldedSlot == InventorySlot.Consumable) return true;
 
             __instance.HideAllCrosshairs();
             return false;
