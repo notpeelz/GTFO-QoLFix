@@ -71,6 +71,7 @@ namespace QoLFix
             this.RegisterPatch<FixWeaponSwapPatch>();
             this.RegisterPatch<FixToolRefillBioScannerPatch>();
             this.RegisterPatch<FixDoorCollisionPatch>();
+            this.RegisterPatch<FixDoorFramePingPatch>();
             this.RegisterPatch<FixBioScannerNavMarkerPatch>();
             this.RegisterPatch<FixLockerPingPatch>();
         }
