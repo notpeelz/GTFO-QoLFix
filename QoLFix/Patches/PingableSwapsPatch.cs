@@ -51,6 +51,12 @@ namespace QoLFix.Patches
 
             LG_LevelInteractionManager.Current.m_terminalItems.Add(terminalItem.TerminalItemId, terminalItem);
             LG_LevelInteractionManager.Current.m_terminalItemsByKeyString.Add(terminalItem.TerminalItemKey, terminalItem);
+
+            var resourceContainer = GTFOUtils.GetParentResourceContainer(__instance.transform.position);
+            var spawnNode = resourceContainer.SpawnNode;
+            var spawnZone = spawnNode.m_zone;
+            terminalItem.SpawnNode = spawnNode;
+            terminalItem.FloorItemLocation = spawnZone.NavInfo.GetFormattedText(LG_NavInfoFormat.Full_And_Number_With_Underscore);
         }
     }
 }

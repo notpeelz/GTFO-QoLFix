@@ -71,24 +71,7 @@ namespace QoLFix.Patches
         {
             if (status != ePickupItemStatus.PlacedInLevel) return;
 
-            var resourceContainers = Physics.OverlapSphere(placement.position, float.Epsilon, LayerManager.MASK_PING_TARGET)
-                .Select(x => x.GetComponentInParent<LG_WeakResourceContainer>())
-                .Where(x => x != null)
-                .ToArray();
-
-            if (!resourceContainers.Any())
-            {
-                Instance.LogError($"{nameof(ResourcePackPickup)} isn't located inside of a resource container!?");
-                return;
-            }
-
-            if (resourceContainers.Count() > 1)
-            {
-                Instance.LogError($"{nameof(ResourcePackPickup)} is inside of multiple resource containers!?");
-                return;
-            }
-
-            var resourceContainer = resourceContainers.Single();
+            var resourceContainer = GTFOUtils.GetParentResourceContainer(placement.position);
             __instance.gameObject.transform.SetParent(resourceContainer.gameObject.transform);
             __instance.gameObject.transform.SetPositionAndRotation(placement.position, placement.rotation);
         }
