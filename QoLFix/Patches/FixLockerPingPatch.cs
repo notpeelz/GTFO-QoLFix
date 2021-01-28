@@ -50,6 +50,16 @@ namespace QoLFix.Patches
                     (status, placement, _, _) => ResourcePackPickup__OnSyncStateChange(__instance, status, placement)
                 )
             );
+
+            // Fix disinfection pack pings showing up as ammo packs
+            if (__instance.m_packType == eResourceContainerSpawnType.Disinfection)
+            {
+                var pingTarget = __instance.GetComponentInChildren<PlayerPingTarget>();
+                if (pingTarget != null)
+                {
+                    pingTarget.m_pingTargetStyle = eNavMarkerStyle.PlayerPingDisinfection;
+                }
+            }
         }
 
         /// <summary>
