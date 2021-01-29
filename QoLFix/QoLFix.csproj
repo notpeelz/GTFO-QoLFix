@@ -281,6 +281,7 @@
   <ItemGroup>
     <Compile Include="BIEExtensions.cs" />
     <Compile Include="GTFOUtils.cs" />
+    <Compile Include="Patches\FixTerminalDisplayPingPatch.cs" />
     <Compile Include="Patches\HideCrosshairPatch.cs" />
     <Compile Include="Patches\FixBioScannerNavMarkerPatch.cs" />
     <Compile Include="Patches\DisableAnalyticsPatch.cs" />

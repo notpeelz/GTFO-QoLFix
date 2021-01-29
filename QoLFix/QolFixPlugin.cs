@@ -72,6 +72,7 @@ namespace QoLFix
             this.RegisterPatch<FixToolRefillBioScannerPatch>();
             this.RegisterPatch<FixDoorCollisionPatch>();
             this.RegisterPatch<FixDoorFramePingPatch>();
+            this.RegisterPatch<FixTerminalDisplayPingPatch>();
             this.RegisterPatch<FixBioScannerNavMarkerPatch>();
             this.RegisterPatch<FixLockerPingPatch>();
         }
