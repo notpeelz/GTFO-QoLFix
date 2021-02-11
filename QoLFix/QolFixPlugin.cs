@@ -66,6 +66,7 @@ namespace QoLFix
             this.RegisterPatch<NoiseRemovalPatch>();
             this.RegisterPatch<PingableSwapsPatch>();
             this.RegisterPatch<HideCrosshairPatch>();
+            this.RegisterPatch<DropResourcesPatch>();
 
             // Bug fixes
             this.RegisterPatch<FixWeaponSwapPatch>();
@@ -75,6 +76,9 @@ namespace QoLFix
             this.RegisterPatch<FixTerminalDisplayPingPatch>();
             this.RegisterPatch<FixBioScannerNavMarkerPatch>();
             this.RegisterPatch<FixLockerPingPatch>();
+
+            // Misc (needs to execute after everything else)
+            this.RegisterPatch<ReparentPickupPatch>();
         }
 
         public void RegisterPatch<T>() where T : IPatch, new()

@@ -45,35 +45,20 @@ namespace QoLFix.Patches
 
         private static void ResourcePackPickup__Setup(ResourcePackPickup __instance)
         {
-            __instance.m_sync.add_OnSyncStateChange(
-                (Il2CppSystem.Action<ePickupItemStatus, pPickupPlacement, PlayerAgent, bool>)(
-                    (status, placement, _, _) => ResourcePackPickup__OnSyncStateChange(__instance, status, placement)
-                )
-            );
-
-            // Fix disinfection pack pings showing up as ammo packs
-            if (__instance.m_packType == eResourceContainerSpawnType.Disinfection)
+            var pingTarget = __instance.GetComponentInChildren<PlayerPingTarget>();
+            if (pingTarget == null) return;
+            switch (__instance.m_packType)
             {
-                var pingTarget = __instance.GetComponentInChildren<PlayerPingTarget>();
-                if (pingTarget != null)
-                {
+                // Fix disinfection pack pings showing up as ammo packs
+                case eResourceContainerSpawnType.Disinfection:
                     pingTarget.m_pingTargetStyle = eNavMarkerStyle.PlayerPingDisinfection;
-                }
+                    break;
+                // Tool refills show up as ammo but there's no appropriate
+                // icon for them...
+                //case eResourceContainerSpawnType.AmmoTool:
+                //    pingTarget.m_pingTargetStyle = eNavMarkerStyle.PlayerPingLoot;
+                //    break;
             }
-        }
-
-        /// <summary>
-        /// This is used to reparent a resource pickup to its container
-        /// so that PlayerAgent__UpdateGlobalInput can detect pickups that
-        /// were swapped.
-        /// </summary>
-        private static void ResourcePackPickup__OnSyncStateChange(ResourcePackPickup __instance, ePickupItemStatus status, pPickupPlacement placement)
-        {
-            if (status != ePickupItemStatus.PlacedInLevel) return;
-
-            var resourceContainer = GTFOUtils.GetParentResourceContainer(placement.position);
-            __instance.gameObject.transform.SetParent(resourceContainer.gameObject.transform);
-            __instance.gameObject.transform.SetPositionAndRotation(placement.position, placement.rotation);
         }
 
         private static bool PlayerAgent__UpdateGlobalInput(PlayerAgent __instance)
@@ -87,39 +72,14 @@ namespace QoLFix.Patches
                 return false;
             }
 
-            if (!Physics.Raycast(__instance.CamPos, __instance.FPSCamera.Forward, out var hitInfo, 40f, LayerManager.MASK_PING_TARGET, QueryTriggerInteraction.Ignore))
+            if (!GTFOUtils.GetComponentInSight<iPlayerPingTarget>(__instance, out var pingTarget, out var pingPos, 40f, LayerManager.MASK_PING_TARGET))
             {
                 GuiManager.CrosshairLayer.PopAngryPingIndicator();
                 return false;
             }
 
-            var pingTarget = hitInfo.collider.GetComponentInChildren<iPlayerPingTarget>();
-            var resourceContainer = hitInfo.collider.GetComponentInParent<LG_WeakResourceContainer>();
-
-            if (resourceContainer != null)
-            {
-                var storageChildren = resourceContainer.m_storageComp.gameObject
-                   .GetChildren()
-                   .Where(x => x.GetComponentInChildren<iPlayerPingTarget>() != null)
-                   .ToHashSet();
-
-                foreach (var child in storageChildren)
-                {
-                    Instance.LogDebug("StorageChild :" + child.name);
-                }
-
-                var hits = Physics.RaycastAll(__instance.CamPos, __instance.FPSCamera.Forward, 40f, LayerManager.MASK_PING_TARGET, QueryTriggerInteraction.Ignore);
-                foreach (var hit in hits)
-                {
-                    if (!storageChildren.Any(x => x.GetInstanceID() == hit.collider.gameObject.GetInstanceID())) continue;
-                    Instance.LogDebug("Selecting storage child as ping target");
-                    pingTarget = hit.collider.gameObject.GetComponentInChildren<iPlayerPingTarget>();
-                    break;
-                }
-            }
-
             __instance.m_pingTarget = pingTarget;
-            __instance.m_pingPos = hitInfo.point;
+            __instance.m_pingPos = pingPos;
             if (__instance.m_pingTarget != null && (__instance.m_pingTarget != __instance.m_lastPingedTarget || Clock.Time > __instance.m_pingAgainTimer))
             {
                 __instance.TriggerMarkerPing(__instance.m_pingTarget, __instance.m_pingPos);

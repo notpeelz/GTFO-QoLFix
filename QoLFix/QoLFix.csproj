@@ -34,6 +34,11 @@
     <WarningLevel>4</WarningLevel>
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
+  <ItemGroup Condition="$(DefineConstants.Contains('DEBUG_PLACEHOLDERS'))">
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -281,6 +286,7 @@
   <ItemGroup>
     <Compile Include="BIEExtensions.cs" />
     <Compile Include="GTFOUtils.cs" />
+    <Compile Include="Patches\ReparentPickupPatch.cs" />
     <Compile Include="Patches\FixTerminalDisplayPingPatch.cs" />
     <Compile Include="Patches\HideCrosshairPatch.cs" />
     <Compile Include="Patches\FixBioScannerNavMarkerPatch.cs" />
@@ -296,15 +302,21 @@
     <Compile Include="Patches\NoiseRemovalPatch.cs" />
     <Compile Include="Patches\FixDoorFramePingPatch.cs" />
     <Compile Include="Patches\PingableSwapsPatch.cs" />
+    <Compile Include="Patches\DropResourcesPatch.cs" />
+    <Compile Include="ProjectionEqualityComparer.cs" />
+    <Compile Include="Debugging\RectangleWireframe.cs" />
     <Compile Include="Patches\SteamProfileLinkPatch.cs" />
     <Compile Include="Patches\FixToolRefillBioScannerPatch.cs" />
     <Compile Include="QoLFixPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Patches\DisableSteamRichPresencePatch.cs" />
     <Compile Include="UnityExtensions.cs" />
+    <Compile Include="Json\QuaternionJsonConverter.cs" />
+    <Compile Include="Json\Vector3JsonConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

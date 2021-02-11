@@ -18,5 +18,12 @@ namespace QoLFix
                 yield return obj.transform.GetChild(i).gameObject;
             }
         }
+
+        public static bool ContainsPoint(this BoxCollider collider, Vector3 point)
+        {
+            var bounds = new Bounds(collider.center, collider.size);
+            var localPos = collider.transform.InverseTransformPoint(point);
+            return bounds.Contains(localPos);
+        }
     }
 }
