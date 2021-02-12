@@ -522,6 +522,7 @@ namespace QoLFix.Patches
                 : base(value) { }
 
             private PlayerAgent playerAgent;
+            private GameObject ghostGO;
             private Interact_ManualTimedWithCallback interact;
             private StorageSlotPlaceholder currentPlaceholder;
             private ItemEquippable currentWieldedItem;
@@ -648,7 +649,9 @@ namespace QoLFix.Patches
                     maxDistance: 1.5f,
                     layerMask: LayerManager.MASK_PLAYER_INTERACT_SPHERE);
 
-                var isDroppable = this.playerAgent.Inventory?.WieldedSlot switch
+                var wieldedItem = this.playerAgent.Inventory?.WieldedItem;
+                var wieldedSlot = this.playerAgent.Inventory?.WieldedSlot;
+                var isDroppable = wieldedSlot switch
                 {
                     InventorySlot.ResourcePack => true,
                     InventorySlot.Consumable => true,
@@ -660,6 +663,11 @@ namespace QoLFix.Patches
                     if (this.currentPlaceholder != null)
                     {
                         DisableInteractions = false;
+                        if (this.ghostGO != null)
+                        {
+                            Destroy(this.ghostGO);
+                            this.ghostGO = null;
+                        }
                         // Clear the placeholder interaction
                         this.interact.PlayerSetSelected(false, this.playerAgent);
                         this.UpdateInteractionMessage("");
@@ -693,7 +701,6 @@ namespace QoLFix.Patches
                     this.playerAgent.Interaction.m_bestInteractInCurrentSearch = this.interact;
                 }
 
-                var wieldedItem = this.playerAgent.Inventory?.WieldedItem;
                 var wieldedItemChanged = false;
 
                 if (this.currentWieldedItem?.GetInstanceID() != wieldedItem?.GetInstanceID())
@@ -705,6 +712,30 @@ namespace QoLFix.Patches
                 if (placeholderChanged || wieldedItemChanged)
                 {
                     this.UpdateInteractionMessage($"Drop {wieldedItem?.ItemDataBlock?.publicName ?? "item"}");
+
+                    var prefabParts = ItemSpawnManager.m_loadedPrefabsPerItemMode[(int)ItemMode.Pickup][wieldedItem.ItemDataBlock.persistentID];
+                    var transform = wieldedSlot switch
+                    {
+                        InventorySlot.ResourcePack => this.currentPlaceholder.Slot.ResourcePack,
+                        InventorySlot.Consumable => this.currentPlaceholder.Slot.Consumable,
+                        _ => this.currentPlaceholder.Slot.Consumable,
+                    };
+
+                    if (this.ghostGO != null)
+                    {
+                        Destroy(this.ghostGO);
+                        this.ghostGO = null;
+                    }
+
+                    this.ghostGO = Instantiate(prefabParts[0], transform.position, transform.rotation);
+                    foreach (var renderer in this.ghostGO.GetComponentsInChildren<Renderer>())
+                    {
+                        foreach (var material in renderer.materials)
+                        {
+                            material.shader = Shader.Find("Transparent/Diffuse");
+                            material.color = Color.black.AlphaMultiplied(0.25f);
+                        }
+                    }
                 }
 
                 this.interact.PlayerSetSelected(true, this.playerAgent);
