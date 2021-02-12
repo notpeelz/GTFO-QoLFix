@@ -39,8 +39,8 @@ namespace QoLFix.Patches
                 harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(SteamProfileLinkPatch), nameof(CM_PlayerLobbyBar__SetupFromPage))));
             }
             {
-                var methodInfo = typeof(CM_PlayerLobbyBar).GetMethod(nameof(CM_PlayerLobbyBar.OnBtnPressAnywhere));
-                harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(SteamProfileLinkPatch), nameof(CM_PlayerLobbyBar__OnBtnPressAnywhere))));
+                var methodInfo = typeof(CM_PageBase).GetMethod(nameof(CM_PageBase.UpdateButtonPress));
+                harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(SteamProfileLinkPatch), nameof(CM_PageBase__UpdateButtonPress))));
             }
         }
 
@@ -50,37 +50,46 @@ namespace QoLFix.Patches
             handler.enabled = true;
         }
 
-        private static void CM_PlayerLobbyBar__OnBtnPressAnywhere(CM_PlayerLobbyBar __instance)
+        private static void CM_PageBase__UpdateButtonPress(CM_PageBase __instance)
         {
-            if (__instance.m_player == null) return;
+            var clickDown = InputMapper.GetButtonDown.Invoke(InputAction.MenuClick, eFocusState.None);
+            var clickAltDown = InputMapper.GetButtonDown.Invoke(InputAction.MenuClickAlternate, eFocusState.None);
+            if (!clickDown && !clickAltDown) return;
 
-            if (__instance.m_parentPage.m_guiLayer.GuiLayerBase.m_cellUICanvas.Raycast(__instance.m_parentPage.m_cursor.WorldPos, out var rayHit))
+            if (__instance.TryCast<CM_PageLoadout>() == null) return;
+
+            if (!__instance.m_guiLayer.GuiLayerBase.m_cellUICanvas.Raycast(__instance.CursorWorldPosition, out var rayHit)) return;
+
+            var comp = rayHit.collider.GetComponent<SteamProfileClickHandler>();
+            if (comp == null) return;
+            Instance.LogDebug($"Hit {comp.GetInstanceID()}");
+
+            var playerBar = rayHit.collider.GetComponentInParent<CM_PlayerLobbyBar>();
+            if (playerBar?.m_player == null) return;
+
+            Instance.LogInfo($"Opening steam profile for {playerBar.m_player.NickName} ({playerBar.m_player.Lookup})");
+
+            var url = $"https://steamcommunity.com/profiles/{playerBar.m_player.Lookup}";
+            if (SteamUtils.IsOverlayEnabled())
             {
-                var component = rayHit.collider.GetComponent<SteamProfileClickHandler>();
-
-                if (component != null)
-                {
-                    Instance.LogInfo($"Opening steam profile for {__instance.m_player.NickName} ({__instance.m_player.Lookup})");
-
-                    var url = $"https://steamcommunity.com/profiles/{__instance.m_player.Lookup}";
-                    if (SteamUtils.IsOverlayEnabled())
-                    {
-                        SteamFriends.ActivateGameOverlayToWebPage(url);
-                    }
-                    else
-                    {
-                        Application.OpenURL(url);
-                    }
-                }
+                SteamFriends.ActivateGameOverlayToWebPage(url);
+            }
+            else
+            {
+                Application.OpenURL(url);
             }
         }
 
         private static void CM_PlayerLobbyBar__SetupFromPage(CM_PlayerLobbyBar __instance)
         {
-            var comp = __instance.m_nickText.gameObject.AddComponent<SteamProfileClickHandler>();
-            comp.NickText = __instance.m_nickText;
+            var comp = __instance.m_nickText.gameObject.GetComponent<SteamProfileClickHandler>();
+            if (comp == null)
+            {
+                comp = __instance.m_nickText.gameObject.AddComponent<SteamProfileClickHandler>();
+                comp.gameObject.AddComponent<BoxCollider2D>();
+                Instance.LogDebug($"Added SteamProfileClickHandler #{comp.GetInstanceID()} to {__instance.name}");
+            }
             comp.enabled = false;
-            comp.gameObject.AddComponent<BoxCollider2D>();
         }
 
         private class SteamProfileClickHandler : MonoBehaviour
@@ -88,15 +97,22 @@ namespace QoLFix.Patches
             public SteamProfileClickHandler(IntPtr value)
                 : base(value) { }
 
-            public TextMeshPro NickText { get; set; }
-
             private void Update()
             {
-                var collider = this.NickText.GetComponent<SteamProfileClickHandler>().GetComponent<BoxCollider2D>();
+                var collider = this.GetComponent<BoxCollider2D>();
 
-                var width = this.NickText.GetRenderedWidth(true);
-                collider.size = new Vector2(width, this.NickText.GetRenderedHeight(true));
-                collider.offset = new Vector2(width / 2f, 0f);
+                var nickText = this.GetComponent<TextMeshPro>();
+                if (nickText == null)
+                {
+                    Instance.LogError($"{nameof(SteamProfileClickHandler)} isn't attached to a {nameof(TextMeshPro)}");
+                    this.enabled = false;
+                    return;
+                }
+
+                var width = nickText.GetRenderedWidth(true);
+                var height = nickText.GetRenderedHeight(true);
+                collider.size = new Vector2(width, height);
+                collider.offset = new Vector2(width / 2f, height / 2f);
 
                 this.enabled = false;
             }
