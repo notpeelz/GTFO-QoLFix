@@ -286,6 +286,7 @@
   <ItemGroup>
     <Compile Include="BIEExtensions.cs" />
     <Compile Include="GTFOUtils.cs" />
+    <Compile Include="NativeMethods.cs" />
     <Compile Include="Patches\Common\CursorExtensions.cs" />
     <Compile Include="Patches\DropResources\PlaceholderInteractionMonitor.cs" />
     <Compile Include="Patches\DropResources\StorageSlotManager.cs" />

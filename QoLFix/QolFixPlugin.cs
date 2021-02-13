@@ -16,8 +16,11 @@ namespace QoLFix
         public const string GUID = "dev.peelz.qolfix";
         public const string Version = "0.1.0";
 
+        public const int SupportedGameRevision = 21989;
+
         private const string SectionMain = "Config";
         private static readonly ConfigDefinition ConfigVersion = new ConfigDefinition(SectionMain, "Version");
+        private static readonly ConfigDefinition ConfigGameVersion = new ConfigDefinition(SectionMain, "GameVersion");
 
         private Harmony harmony;
 
@@ -32,23 +35,9 @@ namespace QoLFix
         {
             Instance = this;
 
-            this.Config.Bind(ConfigVersion, Version, new ConfigDescription("Used internally for config upgrades; don't touch!"));
+            if (!this.CheckConfigVersion()) return;
 
-            var versionEntry = this.Config.GetConfigEntry<string>(ConfigVersion);
-            var configVersion = new Version(versionEntry.Value);
-            var currentVersion = new Version(Version);
-            if (configVersion < currentVersion)
-            {
-                this.Log.LogInfo($"Upgrading config to {currentVersion}");
-                versionEntry.Value = Version;
-                this.Config.Save();
-            }
-            else if (configVersion > currentVersion)
-            {
-                this.Log.LogError($"The current config is from a newer version of the plugin. If you're trying to downgrade, you should delete the config file and let it regenerate.");
-                this.Unload();
-                return;
-            }
+            this.CheckGameVersion();
 
             this.Config.SaveOnConfigSet = true;
 
@@ -81,6 +70,77 @@ namespace QoLFix
             this.RegisterPatch<DisableAnalyticsPatch>();
             // XXX: needs to execute after everything else
             this.RegisterPatch<ReparentPickupPatch>();
+
+            this.Config.Save();
+        }
+
+        public override bool Unload()
+        {
+            this.Log.LogInfo("Unloading");
+            return base.Unload();
+        }
+
+        private bool CheckConfigVersion()
+        {
+            this.Config.Bind(ConfigVersion, Version, new ConfigDescription("Used internally for config upgrades; don't touch!"));
+
+            var versionEntry = this.Config.GetConfigEntry<string>(ConfigVersion);
+            var configVersion = new Version(versionEntry.Value);
+            var currentVersion = new Version(Version);
+            if (configVersion < currentVersion)
+            {
+                this.Log.LogInfo($"Upgrading config to {currentVersion}");
+                versionEntry.Value = Version;
+                this.Config.Save();
+            }
+            else if (configVersion > currentVersion)
+            {
+                this.Log.LogError($"The current config is from a newer version of the plugin. If you're trying to downgrade, you should delete the config file and let it regenerate.");
+                this.Unload();
+                return false;
+            }
+
+            return true;
+        }
+
+        private void CheckGameVersion()
+        {
+            var currentGameVersion = CellBuildData.GetRevision();
+            this.Config.Bind(ConfigGameVersion, currentGameVersion, new ConfigDescription("Last known game version"));
+            var knownGameVersionEntry = this.Config.GetConfigEntry<int>(ConfigGameVersion);
+            if (currentGameVersion == knownGameVersionEntry.Value) return;
+
+            try
+            {
+                if (currentGameVersion < SupportedGameRevision)
+                {
+                    NativeMethods.MessageBox(
+                        hWnd: IntPtr.Zero,
+                        text: $"You are attempting to run {ModName} {Version} on an outdated version of the game.\n" +
+                              $"Your current version of {ModName} was built for rev {SupportedGameRevision}.\n" +
+                              $"The current game version is: {currentGameVersion}\n\n" +
+                              $"This may result in stability problems or even crashes.\n" +
+                              $"This warning will NOT be shown again.",
+                        caption: "Outdated game revision",
+                        options: (int)(NativeMethods.MB_OK | NativeMethods.MB_ICONWARNING | NativeMethods.MB_SYSTEMMODAL));
+                }
+                else if (currentGameVersion > SupportedGameRevision)
+                {
+                    NativeMethods.MessageBox(
+                        hWnd: IntPtr.Zero,
+                        text: $"You are attempting to run {ModName} {Version} on a newer version of the game.\n" +
+                              $"Your current version of {ModName} was built for rev {SupportedGameRevision}.\n" +
+                              $"The current game version is: {currentGameVersion}\n\n" +
+                              $"This may result in stability problems or even crashes.\n" +
+                              $"This warning will NOT be shown again.",
+                        caption: "Outdated mod version",
+                        options: (int)(NativeMethods.MB_OK | NativeMethods.MB_ICONWARNING | NativeMethods.MB_SYSTEMMODAL));
+                }
+            }
+            finally
+            {
+                knownGameVersionEntry.Value = currentGameVersion;
+            }
         }
 
         public void RegisterPatch<T>() where T : IPatch, new()
