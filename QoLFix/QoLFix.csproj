@@ -296,7 +296,7 @@
     <Compile Include="Patches\FixTerminalDisplayPingPatch.cs" />
     <Compile Include="Patches\HideCrosshairPatch.cs" />
     <Compile Include="Patches\FixBioScannerNavMarkerPatch.cs" />
-    <Compile Include="Patches\DisableAnalyticsPatch.cs" />
+    <Compile Include="Patches\Common\DisableAnalyticsPatch.cs" />
     <Compile Include="Patches\FixDoorCollisionPatch.cs" />
     <Compile Include="Patches\ElevatorIntroSkipPatch.cs" />
     <Compile Include="Patches\ElevatorVolumePatch.cs" />

@@ -53,7 +53,6 @@ namespace QoLFix
             this.Config.SaveOnConfigSet = true;
 
             // Misc
-            this.RegisterPatch<DisableAnalyticsPatch>();
             this.RegisterPatch<DisableSteamRichPresencePatch>();
 
             // Annoyances
@@ -79,6 +78,7 @@ namespace QoLFix
             this.RegisterPatch<FixLockerPingPatch>();
 
             // Common
+            this.RegisterPatch<DisableAnalyticsPatch>();
             // XXX: needs to execute after everything else
             this.RegisterPatch<ReparentPickupPatch>();
         }
