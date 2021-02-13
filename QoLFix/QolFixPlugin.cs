@@ -1,9 +1,10 @@
-﻿using QoLFix.Patches;
-using BepInEx.IL2CPP;
+﻿using BepInEx.IL2CPP;
 using BepInEx;
 using HarmonyLib;
 using BepInEx.Configuration;
 using System;
+using QoLFix.Patches;
+using QoLFix.Patches.Common;
 
 namespace QoLFix
 {
@@ -77,7 +78,8 @@ namespace QoLFix
             this.RegisterPatch<FixBioScannerNavMarkerPatch>();
             this.RegisterPatch<FixLockerPingPatch>();
 
-            // Misc (needs to execute after everything else)
+            // Common
+            // XXX: needs to execute after everything else
             this.RegisterPatch<ReparentPickupPatch>();
         }
 

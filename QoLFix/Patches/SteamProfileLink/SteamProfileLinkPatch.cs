@@ -1,10 +1,9 @@
 ﻿using BepInEx.Configuration;
 using CellMenu;
 using HarmonyLib;
+using QoLFix.Patches.Common;
 using SNetwork;
 using Steamworks;
-using System;
-using UnhollowerBaseLib;
 using UnhollowerRuntimeLib;
 using UnityEngine;
 
@@ -38,12 +37,6 @@ namespace QoLFix.Patches
             this.PatchMethod<PUI_Inventory>(nameof(PUI_Inventory.Setup), new[] { typeof(GuiLayer) }, PatchType.Postfix);
             this.PatchMethod<CM_PageBase>(nameof(CM_PageBase.UpdateButtonPress), PatchType.Postfix);
         }
-
-        private static SpriteRenderer CursorPointerSprite { get; set; }
-
-        private static CM_Cursor Cursor { get; set; }
-
-        private static bool IsHovering { get; set; }
 
         private static void CM_PlayerLobbyBar__UpdatePlayer__Postfix(CM_PlayerLobbyBar __instance)
         {
@@ -86,7 +79,7 @@ namespace QoLFix.Patches
             }
             finally
             {
-                UpdateCursor(__instance, isHovering);
+                __instance.SetCursorHovering(isHovering);
             }
 
             static SNet_Player GetPlayerInfo(GameObject go)
@@ -128,77 +121,6 @@ namespace QoLFix.Patches
                 if (offset != null) collider.offset = (Vector2)offset;
                 if (size != null) collider.size = (Vector2)size;
                 comp.enabled = false;
-            }
-        }
-
-        private static void UpdateCursor(CM_PageBase __instance, bool isHovering)
-        {
-            try
-            {
-                if (Cursor == null
-                    || Cursor.Pointer == IntPtr.Zero
-                    || Cursor.GetInstanceID() != __instance.m_cursor?.GetInstanceID())
-                {
-                    UpdateCursorRef();
-                }
-            }
-            catch (ObjectCollectedException)
-            {
-                UpdateCursorRef();
-            }
-
-            if (CursorPointerSprite == null) return; // Not sure why this would happen, but check just in case
-            if (IsHovering == isHovering) return;
-            IsHovering = isHovering;
-
-            Instance.LogDebug("UpdateCursor");
-
-            if (isHovering)
-            {
-                __instance.m_cursor.m_cursorSprite.GetComponent<SpriteRenderer>().enabled = false;
-                __instance.m_cursor.m_cursorSpriteDrag.GetComponent<SpriteRenderer>().enabled = false;
-                CursorPointerSprite.gameObject.SetActive(true);
-            }
-            else
-            {
-                __instance.m_cursor.m_cursorSprite.GetComponent<SpriteRenderer>().enabled = true;
-                __instance.m_cursor.m_cursorSpriteDrag.GetComponent<SpriteRenderer>().enabled = true;
-                CursorPointerSprite.gameObject.SetActive(false);
-            }
-
-            void UpdateCursorRef()
-            {
-                Instance.LogDebug("UpdateCursorRef");
-
-                Cursor = __instance.m_cursor;
-                if (CursorPointerSprite != null)
-                {
-                    UnityEngine.Object.Destroy(CursorPointerSprite.gameObject);
-                }
-                var pointerGO = new GameObject("Pointer", new[]
-                {
-                    Il2CppType.Of<RectTransform>(),
-                    Il2CppType.Of<CanvasRenderer>(),
-                    Il2CppType.Of<SpriteRenderer>()
-                });
-                pointerGO.SetActive(false);
-                pointerGO.layer = LayerManager.LAYER_UI;
-
-                var t = pointerGO.GetComponent<RectTransform>();
-                t.localScale = new Vector3(8f, 8f, 8f);
-                t.anchorMin = new Vector2(0.5f, 0.5f);
-                t.anchorMax = new Vector2(0.5f, 0.5f);
-                t.pivot = new Vector2(0.5f, 0.5f);
-
-                var r = pointerGO.GetComponent<SpriteRenderer>();
-
-                var tex = Resources.Load<Texture2D>("gui/crosshairs/clicker");
-                r.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), t.pivot, 100f);
-
-                t.localPosition = new Vector3(0, -t.rect.height / 7f, 0.33f);
-
-                CursorPointerSprite = r;
-                t.SetParent(Cursor.m_cursorSprite.gameObject.transform.parent, false);
             }
         }
     }
