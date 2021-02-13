@@ -51,37 +51,5 @@ namespace QoLFix.Patches
                 collider.size = new Vector3(collider.size.x, collider.size.y * 1.1f, collider.size.z);
             }
         }
-
-        /*private static void GlueGunProjectile__OnProjectileCollision(GlueGunProjectile __instance, RaycastHit rayHit)
-        {
-            if (rayHit.collider == null) return;
-            var gameObject = rayHit.collider.gameObject;
-            if (gameObject.layer == LayerManager.LAYER_DYNAMIC)
-            {
-                MelonLogger.Log("Hit Dynamic GO!");
-                var wdd = gameObject.GetComponentInParent<iLG_WeakDoor_Destruction>();
-                MelonLogger.Log("Hit WDD: " + wdd);
-            }
-        }
-
-        private static void LG_WeakDoor_Destruction__Setup(LG_WeakDoor_Destruction __instance)
-        {
-            var collision = __instance.m_doorBladeSimple.GetChildren().SingleOrDefault(x => x.name == "Collision");
-            if (collision == null) return;
-
-            var collider = collision.GetComponent<BoxCollider>();
-            if (collider == null) return;
-
-            var newCollision = new GameObject("Collision");
-            //var meshRenderer = __instance.m_doorBladeSkinned.GetComponent<MeshRenderer>();
-            var newCollider = newCollision.AddComponent<BoxCollider>();
-            newCollider.size = collider.size;
-            newCollider.center = collider.center;
-            newCollider.transform.parent = __instance.m_doorBladeSkinned.transform;
-            newCollider.transform.localPosition = collision.transform.localPosition;
-            newCollider.transform.localRotation = collision.transform.localRotation;
-            newCollider.transform.localScale = collision.transform.localScale;
-            newCollider.gameObject.layer = collision.layer;
-        }*/
     }
 }

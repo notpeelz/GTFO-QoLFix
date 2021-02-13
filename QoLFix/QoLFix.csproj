@@ -286,6 +286,10 @@
   <ItemGroup>
     <Compile Include="BIEExtensions.cs" />
     <Compile Include="GTFOUtils.cs" />
+    <Compile Include="Patches\DropResources\PlaceholderInteractionMonitor.cs" />
+    <Compile Include="Patches\DropResources\StorageSlotManager.cs" />
+    <Compile Include="Patches\DropResources\StorageSlotPlaceholder.cs" />
+    <Compile Include="Patches\SteamProfileLink\SteamProfileClickHandler.cs" />
     <Compile Include="PatchType.cs" />
     <Compile Include="Patches\ReparentPickupPatch.cs" />
     <Compile Include="Patches\FixTerminalDisplayPingPatch.cs" />
@@ -303,10 +307,10 @@
     <Compile Include="Patches\NoiseRemovalPatch.cs" />
     <Compile Include="Patches\FixDoorFramePingPatch.cs" />
     <Compile Include="Patches\PingableSwapsPatch.cs" />
-    <Compile Include="Patches\DropResourcesPatch.cs" />
+    <Compile Include="Patches\DropResources\DropResourcesPatch.cs" />
     <Compile Include="ProjectionEqualityComparer.cs" />
     <Compile Include="Debugging\RectangleWireframe.cs" />
-    <Compile Include="Patches\SteamProfileLinkPatch.cs" />
+    <Compile Include="Patches\SteamProfileLink\SteamProfileLinkPatch.cs" />
     <Compile Include="Patches\FixToolRefillBioScannerPatch.cs" />
     <Compile Include="QoLFixPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -4,14 +4,13 @@ using HarmonyLib;
 using SNetwork;
 using Steamworks;
 using System;
-using TMPro;
 using UnhollowerBaseLib;
 using UnhollowerRuntimeLib;
 using UnityEngine;
 
 namespace QoLFix.Patches
 {
-    public class SteamProfileLinkPatch : IPatch
+    public partial class SteamProfileLinkPatch : IPatch
     {
         private static readonly string PatchName = nameof(SteamProfileLinkPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
@@ -200,32 +199,6 @@ namespace QoLFix.Patches
 
                 CursorPointerSprite = r;
                 t.SetParent(Cursor.m_cursorSprite.gameObject.transform.parent, false);
-            }
-        }
-
-        private class SteamProfileClickHandler : MonoBehaviour
-        {
-            public SteamProfileClickHandler(IntPtr value)
-                : base(value) { }
-
-            private void Update()
-            {
-                var collider = this.GetComponent<BoxCollider2D>();
-
-                var nickText = this.GetComponent<TextMeshPro>();
-                if (nickText == null)
-                {
-                    Instance.LogError($"{nameof(SteamProfileClickHandler)} isn't attached to a {nameof(TextMeshPro)}");
-                    this.enabled = false;
-                    return;
-                }
-
-                var width = nickText.GetRenderedWidth(true);
-                var height = nickText.GetRenderedHeight(true);
-                collider.size = new Vector2(width, height);
-                collider.offset = new Vector2(width / 2f, 0);
-
-                this.enabled = false;
             }
         }
     }

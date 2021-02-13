@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using BepInEx.Configuration;
+﻿using BepInEx.Configuration;
 using Gear;
 using HarmonyLib;
-using LevelGeneration;
 using Player;
 using UnityEngine;
 

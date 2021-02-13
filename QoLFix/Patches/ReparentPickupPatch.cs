@@ -2,7 +2,6 @@
 using HarmonyLib;
 using LevelGeneration;
 using Player;
-using UnityEngine;
 
 namespace QoLFix.Patches
 {
