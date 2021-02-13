@@ -29,12 +29,14 @@ namespace QoLFix.Patches
 
         public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public void Patch(Harmony harmony)
+        public Harmony Harmony { get; set; }
+
+        public void Patch()
         {
-            var methodInfo = typeof(EnemyAgent).GetMethod(nameof(EnemyAgent.SyncPlaceNavMarkerTag));
-            harmony.Patch(methodInfo, prefix: new HarmonyMethod(AccessTools.Method(typeof(FixBioScannerNavMarkerPatch), nameof(EnemyAgent__SyncPlaceNavMarkerTag))));
+            this.PatchMethod<EnemyAgent>(nameof(EnemyAgent.SyncPlaceNavMarkerTag), PatchType.Postfix);
         }
 
-        private static void EnemyAgent__SyncPlaceNavMarkerTag(EnemyAgent __instance) => __instance.RemoveNavMarker();
+        private static void EnemyAgent__SyncPlaceNavMarkerTag__Postfix(EnemyAgent __instance) =>
+            __instance.RemoveNavMarker();
     }
 }

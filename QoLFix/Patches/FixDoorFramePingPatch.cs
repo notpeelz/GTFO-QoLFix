@@ -23,15 +23,16 @@ namespace QoLFix.Patches
 
         public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public void Patch(Harmony harmony)
+        public Harmony Harmony { get; set; }
+
+        public void Patch()
         {
-            var methodInfo = typeof(LG_BuildGateJob).GetMethod(nameof(LG_BuildGateJob.SetupDoor));
-            harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(FixDoorFramePingPatch), nameof(LG_BuildGateJob__SetupDoor))));
+            this.PatchMethod<LG_BuildGateJob>(nameof(LG_BuildGateJob.SetupDoor), PatchType.Postfix);
         }
 
         private static readonly string[] CollisionNames = new[] { "c_weakDoor_8x4_tech", "c_weakDoor_4x4_tech" };
 
-        private static void LG_BuildGateJob__SetupDoor(LG_BuildGateJob __instance, ref iLG_Door_Core __result)
+        private static void LG_BuildGateJob__SetupDoor__Postfix(LG_BuildGateJob __instance, ref iLG_Door_Core __result)
         {
             var colliders = __instance.m_gate.gameObject.GetComponentsInChildren<MeshCollider>();
 

@@ -37,7 +37,9 @@ namespace QoLFix.Patches
 
         public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public void Patch(Harmony harmony)
+        public Harmony Harmony { get; set; }
+
+        public void Patch()
         {
             ClassInjector.RegisterTypeInIl2Cpp<PlaceholderInteractionMonitor>();
             ClassInjector.RegisterTypeInIl2Cpp<StorageSlotPlaceholder>();
@@ -45,40 +47,22 @@ namespace QoLFix.Patches
             ClassInjector.RegisterTypeInIl2Cpp<RectangleWireframe>();
 #endif
 
-            {
-                var methodInfo = typeof(LocalPlayerAgentSettings).GetMethod(nameof(LocalPlayerAgentSettings.OnLocalPlayerAgentEnable));
-                harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(DropResourcesPatch), nameof(LocalPlayerAgentSettings__OnLocalPlayerAgentEnable))));
-            }
-            {
-                var methodInfo = typeof(LG_ResourceContainer_Storage).GetMethod(nameof(LG_ResourceContainer_Storage.EnablePickupInteractions));
-                harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(DropResourcesPatch), nameof(LG_ResourceContainer_Storage__EnablePickupInteractions))));
-            }
-            {
-                var methodInfo = typeof(LG_ResourceContainer_Storage).GetMethod(nameof(LG_ResourceContainer_Storage.DisablePickupInteractions));
-                harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(DropResourcesPatch), nameof(LG_ResourceContainer_Storage__DisablePickupInteractions))));
-            }
-            {
-                var methodInfo = typeof(LG_PickupItem_Sync).GetMethod(nameof(LG_PickupItem_Sync.OnStateChange));
-                harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(DropResourcesPatch), nameof(LG_PickupItem_Sync__OnStateChange))));
-            }
-            {
-                var methodInfo = typeof(LG_ResourceContainerBuilder).GetMethod(nameof(LG_ResourceContainerBuilder.SetupFunctionGO));
-                harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(DropResourcesPatch), nameof(LG_ResourceContainerBuilder__SetupFunctionGO))));
-            }
-            {
-                var methodInfo = typeof(PlayerInteraction).GetMethod(nameof(PlayerInteraction.UpdateWorldInteractions));
-                harmony.Patch(methodInfo, prefix: new HarmonyMethod(AccessTools.Method(typeof(DropResourcesPatch), nameof(PlayerInteraction__UpdateWorldInteractions))));
-            }
+            this.PatchMethod<LocalPlayerAgentSettings>(nameof(LocalPlayerAgentSettings.OnLocalPlayerAgentEnable), PatchType.Postfix);
+            this.PatchMethod<LG_ResourceContainer_Storage>(nameof(LG_ResourceContainer_Storage.EnablePickupInteractions), PatchType.Postfix);
+            this.PatchMethod<LG_ResourceContainer_Storage>(nameof(LG_ResourceContainer_Storage.DisablePickupInteractions), PatchType.Postfix);
+            this.PatchMethod<LG_PickupItem_Sync>(nameof(LG_PickupItem_Sync.OnStateChange), PatchType.Postfix);
+            this.PatchMethod<LG_ResourceContainerBuilder>(nameof(LG_ResourceContainerBuilder.SetupFunctionGO), PatchType.Postfix);
+            this.PatchMethod<PlayerInteraction>(nameof(PlayerInteraction.UpdateWorldInteractions), PatchType.Prefix);
         }
 
-        private static void LocalPlayerAgentSettings__OnLocalPlayerAgentEnable()
+        private static void LocalPlayerAgentSettings__OnLocalPlayerAgentEnable__Postfix()
         {
             var playerAgent = SNet.LocalPlayer.PlayerAgent?.Cast<PlayerAgent>();
             if (playerAgent == null) return;
             playerAgent.gameObject.AddComponent<PlaceholderInteractionMonitor>();
         }
 
-        private static bool PlayerInteraction__UpdateWorldInteractions(PlayerInteraction __instance)
+        private static bool PlayerInteraction__UpdateWorldInteractions__Prefix()
         {
             // If interactions are disabled, skip the normal function to
             // prevent it from interfering with our placeholder interaction.
@@ -86,7 +70,7 @@ namespace QoLFix.Patches
             return true;
         }
 
-        private static void LG_PickupItem_Sync__OnStateChange(LG_PickupItem_Sync __instance, pPickupItemState newState)
+        private static void LG_PickupItem_Sync__OnStateChange__Postfix(LG_PickupItem_Sync __instance)
         {
             var container = __instance.GetComponentInParent<LG_WeakResourceContainer>();
             if (container == null)
@@ -100,7 +84,7 @@ namespace QoLFix.Patches
             UpdatePlaceholders(container);
         }
 
-        private static void LG_ResourceContainer_Storage__EnablePickupInteractions(LG_ResourceContainer_Storage __instance)
+        private static void LG_ResourceContainer_Storage__EnablePickupInteractions__Postfix(LG_ResourceContainer_Storage __instance)
         {
             var container = __instance.m_core.TryCast<LG_WeakResourceContainer>();
             if (container == null)
@@ -182,7 +166,7 @@ namespace QoLFix.Patches
             }
         }
 
-        private static void LG_ResourceContainer_Storage__DisablePickupInteractions(LG_ResourceContainer_Storage __instance)
+        private static void LG_ResourceContainer_Storage__DisablePickupInteractions__Postfix(LG_ResourceContainer_Storage __instance)
         {
             var container = __instance.m_core.TryCast<LG_WeakResourceContainer>();
             if (container == null)
@@ -198,7 +182,7 @@ namespace QoLFix.Patches
             }
         }
 
-        private static void LG_ResourceContainerBuilder__SetupFunctionGO(LG_ResourceContainerBuilder __instance, GameObject GO)
+        private static void LG_ResourceContainerBuilder__SetupFunctionGO__Postfix(LG_ResourceContainerBuilder __instance, GameObject GO)
         {
             if (__instance.m_function != ExpeditionFunction.ResourceContainerWeak) return;
             var comp = GO.GetComponentInChildren<LG_WeakResourceContainer>();

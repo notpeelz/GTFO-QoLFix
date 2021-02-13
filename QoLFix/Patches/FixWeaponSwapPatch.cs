@@ -35,13 +35,14 @@ namespace QoLFix.Patches
 
         public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public void Patch(Harmony harmony)
+        public Harmony Harmony { get; set; }
+
+        public void Patch()
         {
-            var methodInfo = typeof(PlayerBackpackManager).GetMethod(nameof(PlayerBackpackManager.WieldFirstLocalGear));
-            harmony.Patch(methodInfo, prefix: new HarmonyMethod(AccessTools.Method(typeof(FixWeaponSwapPatch), nameof(PlayerBackpackManager__WieldFirstLocalGear))));
+            this.PatchMethod<PlayerBackpackManager>(nameof(PlayerBackpackManager.WieldFirstLocalGear), PatchType.Prefix);
         }
 
-        private static bool PlayerBackpackManager__WieldFirstLocalGear()
+        private static bool PlayerBackpackManager__WieldFirstLocalGear__Prefix()
         {
             var playerAgent = PlayerManager.GetLocalPlayerAgent();
             if (playerAgent == null) return true;

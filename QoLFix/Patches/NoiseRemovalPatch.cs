@@ -21,15 +21,16 @@ namespace QoLFix.Patches
 
         public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public void Patch(Harmony harmony)
+        public Harmony Harmony { get; set; }
+
+        public void Patch()
         {
-            var methodInfo = typeof(PE_BlueNoise).GetMethod(nameof(PE_BlueNoise.Update));
-            harmony.Patch(methodInfo, prefix: new HarmonyMethod(AccessTools.Method(typeof(NoiseRemovalPatch), nameof(PE_BlueNoise__Update))));
+            this.PatchMethod<PE_BlueNoise>(nameof(PE_BlueNoise.Update), PatchType.Prefix);
         }
 
         private static Texture EmptyTexture;
 
-        private static bool PE_BlueNoise__Update()
+        private static bool PE_BlueNoise__Update__Prefix()
         {
             if (PE_BlueNoise.s_computeShader == null) return false;
             if (EmptyTexture == null)

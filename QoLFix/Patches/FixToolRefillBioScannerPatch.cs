@@ -21,13 +21,14 @@ namespace QoLFix.Patches
 
         public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public void Patch(Harmony harmony)
+        public Harmony Harmony { get; set; }
+
+        public void Patch()
         {
-            var methodInfo = typeof(PlayerAgent).GetMethod(nameof(PlayerAgent.NeedToolAmmo));
-            harmony.Patch(methodInfo, prefix: new HarmonyMethod(AccessTools.Method(typeof(FixToolRefillBioScannerPatch), nameof(PlayerAgent__NeedToolAmmo))));
+            this.PatchMethod<PlayerAgent>(nameof(PlayerAgent.NeedToolAmmo), PatchType.Prefix);
         }
 
-        private static bool PlayerAgent__NeedToolAmmo(PlayerAgent __instance, ref bool __result)
+        private static bool PlayerAgent__NeedToolAmmo__Prefix(PlayerAgent __instance, ref bool __result)
         {
             if (!PlayerBackpackManager.TryGetBackpack(__instance.Owner, out var bp)) return true;
             if (bp.TryGetBackpackItem(InventorySlot.GearClass, out var item))

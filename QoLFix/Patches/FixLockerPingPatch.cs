@@ -31,19 +31,15 @@ namespace QoLFix.Patches
 
         public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public void Patch(Harmony harmony)
+        public Harmony Harmony { get; set; }
+
+        public void Patch()
         {
-            {
-                var methodInfo = typeof(PlayerAgent).GetMethod(nameof(PlayerAgent.UpdateGlobalInput));
-                harmony.Patch(methodInfo, prefix: new HarmonyMethod(AccessTools.Method(typeof(FixLockerPingPatch), nameof(PlayerAgent__UpdateGlobalInput))));
-            }
-            {
-                var methodInfo = typeof(ResourcePackPickup).GetMethod(nameof(ResourcePackPickup.Setup));
-                harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(FixLockerPingPatch), nameof(ResourcePackPickup__Setup))));
-            }
+            this.PatchMethod<PlayerAgent>(nameof(PlayerAgent.UpdateGlobalInput), PatchType.Prefix);
+            this.PatchMethod<ResourcePackPickup>(nameof(ResourcePackPickup.Setup), PatchType.Postfix);
         }
 
-        private static void ResourcePackPickup__Setup(ResourcePackPickup __instance)
+        private static void ResourcePackPickup__Setup__Postfix(ResourcePackPickup __instance)
         {
             var pingTarget = __instance.GetComponentInChildren<PlayerPingTarget>();
             if (pingTarget == null) return;
@@ -61,7 +57,7 @@ namespace QoLFix.Patches
             }
         }
 
-        private static bool PlayerAgent__UpdateGlobalInput(PlayerAgent __instance)
+        private static bool PlayerAgent__UpdateGlobalInput__Prefix(PlayerAgent __instance)
         {
             if (Input.GetKey(__instance.m_ffKey1) && Input.GetKeyDown(__instance.m_ffKey2)) return true;
             if (!InputMapper.GetButtonDown.Invoke(InputAction.NavMarkerPing, __instance.InputFilter)) return true;

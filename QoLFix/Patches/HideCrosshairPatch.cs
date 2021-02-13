@@ -25,13 +25,14 @@ namespace QoLFix.Patches
 
         public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public void Patch(Harmony harmony)
+        public Harmony Harmony { get; set; }
+
+        public void Patch()
         {
-            var methodInfo = typeof(CrosshairGuiLayer).GetMethod(nameof(CrosshairGuiLayer.ShowSpreadCircle));
-            harmony.Patch(methodInfo, prefix: new HarmonyMethod(AccessTools.Method(typeof(HideCrosshairPatch), nameof(CrosshairGuiLayer__ShowSpreadCircle))));
+            this.PatchMethod<CrosshairGuiLayer>(nameof(CrosshairGuiLayer.ShowSpreadCircle), PatchType.Prefix);
         }
 
-        private static bool CrosshairGuiLayer__ShowSpreadCircle(CrosshairGuiLayer __instance)
+        private static bool CrosshairGuiLayer__ShowSpreadCircle__Prefix(CrosshairGuiLayer __instance)
         {
             var playerAgent = PlayerManager.GetLocalPlayerAgent();
             if (playerAgent == null) return true;

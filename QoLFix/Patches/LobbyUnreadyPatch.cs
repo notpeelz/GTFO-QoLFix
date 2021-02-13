@@ -23,13 +23,14 @@ namespace QoLFix.Patches
 
         public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public void Patch(Harmony harmony)
+        public Harmony Harmony { get; set; }
+
+        public void Patch()
         {
-            var methodInfo = typeof(CM_PageLoadout).GetMethod(nameof(CM_PageLoadout.UpdateReadyButton));
-            harmony.Patch(methodInfo, prefix: new HarmonyMethod(AccessTools.Method(typeof(LobbyUnreadyPatch), nameof(CM_PageLoadout__UpdateReadyButton))));
+            this.PatchMethod<CM_PageLoadout>(nameof(CM_PageLoadout.UpdateReadyButton), PatchType.Prefix);
         }
 
-        private static bool CM_PageLoadout__UpdateReadyButton(CM_PageLoadout __instance)
+        private static bool CM_PageLoadout__UpdateReadyButton__Prefix(CM_PageLoadout __instance)
         {
             if (PlayfabMatchmakingManager.Current.IsMatchmakeInProgress) return true;
             if (SNet.IsMaster || !GameStateManager.IsReady) return true;

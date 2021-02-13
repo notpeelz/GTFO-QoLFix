@@ -88,12 +88,17 @@ namespace QoLFix
                 this.harmony = new Harmony(GUID);
             }
 
-            var patch = new T();
+            var patch = new T
+            {
+                Harmony = this.harmony
+            };
+
             patch.Initialize();
+
             if (patch.Enabled)
             {
                 this.Log.LogInfo($"Applying patch: {patch.Name}");
-                patch.Patch(this.harmony);
+                patch.Patch();
             }
         }
 

@@ -25,23 +25,16 @@ namespace QoLFix.Patches
 
         public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public void Patch(Harmony harmony)
+        public Harmony Harmony { get; set; }
+
+        public void Patch()
         {
-            {
-                var methodInfo = typeof(CM_PageIntro).GetMethod(nameof(CM_PageIntro.Update));
-                harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(IntroSkipPatch), nameof(CM_PageIntro__Update))));
-            }
-            {
-                var methodInfo = typeof(CM_PageIntro).GetMethod(nameof(CM_PageIntro.StartInitializing));
-                harmony.Patch(methodInfo, prefix: new HarmonyMethod(AccessTools.Method(typeof(IntroSkipPatch), nameof(CM_PageIntro__StartInitializing))));
-            }
-            {
-                var methodInfo = typeof(CM_PageRundown_New).GetMethod(nameof(CM_PageRundown_New.Setup));
-                harmony.Patch(methodInfo, prefix: new HarmonyMethod(AccessTools.Method(typeof(IntroSkipPatch), nameof(CM_PageRundown_New__Setup))));
-            }
+            this.PatchMethod<CM_PageIntro>(nameof(CM_PageIntro.Update), PatchType.Postfix);
+            this.PatchMethod<CM_PageIntro>(nameof(CM_PageIntro.StartInitializing), PatchType.Prefix);
+            this.PatchMethod<CM_PageRundown_New>(nameof(CM_PageRundown_New.Setup), PatchType.Prefix);
         }
 
-        private static void CM_PageRundown_New__Setup(CM_PageRundown_New __instance)
+        private static void CM_PageRundown_New__Setup__Prefix(CM_PageRundown_New __instance)
         {
             __instance.m_cortexIntroIsDone = true;
             __instance.m_rundownIntroIsDone = QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigSkipRundownConnect).Value;
@@ -55,7 +48,7 @@ namespace QoLFix.Patches
             __instance.SetRundownFullyRevealed();
         }
 
-        private static bool CM_PageIntro__StartInitializing(CM_PageIntro __instance)
+        private static bool CM_PageIntro__StartInitializing__Prefix(CM_PageIntro __instance)
         {
             SkipIntro(__instance);
             return false;
@@ -63,7 +56,7 @@ namespace QoLFix.Patches
 
         private static CM_IntroStep? previousStep;
 
-        private static void CM_PageIntro__Update(CM_PageIntro __instance)
+        private static void CM_PageIntro__Update__Postfix(CM_PageIntro __instance)
         {
             if (previousStep != __instance.m_step)
             {

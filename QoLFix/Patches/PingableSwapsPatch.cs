@@ -24,13 +24,14 @@ namespace QoLFix.Patches
 
         public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public void Patch(Harmony harmony)
+        public Harmony Harmony { get; set; }
+
+        public void Patch()
         {
-            var methodInfo = typeof(ResourcePackPickup).GetMethod(nameof(ResourcePackPickup.Setup));
-            harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(PingableSwapsPatch), nameof(ResourcePackPickup__Setup))));
+            this.PatchMethod<ResourcePackPickup>(nameof(ResourcePackPickup.Setup), PatchType.Postfix);
         }
 
-        private static void ResourcePackPickup__Setup(ResourcePackPickup __instance)
+        private static void ResourcePackPickup__Setup__Postfix(ResourcePackPickup __instance)
         {
             __instance.m_sync.add_OnSyncStateChange(
                 (Il2CppSystem.Action<ePickupItemStatus, pPickupPlacement, PlayerAgent, bool>)(

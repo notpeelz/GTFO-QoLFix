@@ -34,13 +34,14 @@ namespace QoLFix.Patches
 
         public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public void Patch(Harmony harmony)
+        public Harmony Harmony { get; set; }
+
+        public void Patch()
         {
-            var methodInfo = typeof(LG_WeakDoor_Destruction).GetMethod(nameof(LG_WeakDoor_Destruction.Setup));
-            harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(FixDoorCollisionPatch), nameof(LG_WeakDoor_Destruction__Setup))));
+            this.PatchMethod<LG_WeakDoor_Destruction>(nameof(LG_WeakDoor_Destruction.Setup), PatchType.Postfix);
         }
 
-        private static void LG_WeakDoor_Destruction__Setup(LG_WeakDoor_Destruction __instance)
+        private static void LG_WeakDoor_Destruction__Setup__Postfix(LG_WeakDoor_Destruction __instance)
         {
             var skinned = __instance.m_doorBladeSkinned;
             foreach (var collider in skinned.GetComponentsInChildren<BoxCollider>())

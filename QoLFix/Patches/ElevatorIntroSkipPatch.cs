@@ -20,12 +20,13 @@ namespace QoLFix.Patches
 
         public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public void Patch(Harmony harmony)
+        public Harmony Harmony { get; set; }
+
+        public void Patch()
         {
-            var methodInfo = typeof(ElevatorRide).GetMethod(nameof(ElevatorRide.StartPreReleaseSequence));
-            harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(ElevatorIntroSkipPatch), nameof(ElevatorRide__StartPreReleaseSequence))));
+            this.PatchMethod<ElevatorRide>(nameof(ElevatorRide.StartPreReleaseSequence), PatchType.Postfix);
         }
 
-        private static void ElevatorRide__StartPreReleaseSequence() => ElevatorRide.SkipPreReleaseSequence();
+        private static void ElevatorRide__StartPreReleaseSequence__Postfix() => ElevatorRide.SkipPreReleaseSequence();
     }
 }

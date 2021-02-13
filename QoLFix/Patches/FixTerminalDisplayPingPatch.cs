@@ -25,13 +25,14 @@ namespace QoLFix.Patches
 
         public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public void Patch(Harmony harmony)
+        public Harmony Harmony { get; set; }
+
+        public void Patch()
         {
-            var methodInfo = typeof(LG_MarkerFactory).GetMethod(nameof(LG_MarkerFactory.InstantiateMarkerGameObject), BindingFlags.Public | BindingFlags.Static);
-            harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(FixTerminalDisplayPingPatch), nameof(LG_MarkerFactory__InstantiateMarkerGameObject))));
+            this.PatchMethod<LG_MarkerFactory>(nameof(LG_MarkerFactory.InstantiateMarkerGameObject), PatchType.Postfix);
         }
 
-        private static void LG_MarkerFactory__InstantiateMarkerGameObject(ref GameObject __result)
+        private static void LG_MarkerFactory__InstantiateMarkerGameObject__Postfix(ref GameObject __result)
         {
             if (__result == null) return;
             var terminals = __result?.GetComponentsInChildren<LG_ComputerTerminal>();

@@ -19,32 +19,34 @@ namespace QoLFix.Patches
 
         public bool Enabled => true;
 
+        public Harmony Harmony { get; set; }
+
         public void Initialize()
         {
             Instance = this;
         }
 
-        public void Patch(Harmony harmony)
+        public void Patch()
         {
             // We can't patch ItemInLevel.Setup directly because it gets
             // executed before the ones from derived classes.
             // This is a problem because we need to add a callback to
             // OnSyncStateChange after everything else.
-            {
-                var methodInfo = typeof(ConsumablePickup_Core).GetMethod(nameof(ConsumablePickup_Core.Setup));
-                harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(ReparentPickupPatch), nameof(ItemInLevel__Setup))));
-            }
-            {
-                var methodInfo = typeof(GenericSmallPickupItem_Core).GetMethod(nameof(GenericSmallPickupItem_Core.Setup));
-                harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(ReparentPickupPatch), nameof(ItemInLevel__Setup))));
-            }
-            {
-                var methodInfo = typeof(ResourcePackPickup).GetMethod(nameof(ResourcePackPickup.Setup));
-                harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(ReparentPickupPatch), nameof(ItemInLevel__Setup))));
-            }
+            this.PatchMethod<ConsumablePickup_Core>(
+                methodName: nameof(ConsumablePickup_Core.Setup),
+                patchType: PatchType.Postfix,
+                postfixMethodName: nameof(ItemInLevel__Setup__Postfix));
+            this.PatchMethod<GenericSmallPickupItem_Core>(
+                methodName: nameof(GenericSmallPickupItem_Core.Setup),
+                patchType: PatchType.Postfix,
+                postfixMethodName: nameof(ItemInLevel__Setup__Postfix));
+            this.PatchMethod<ResourcePackPickup>(
+                methodName: nameof(ResourcePackPickup.Setup),
+                patchType: PatchType.Postfix,
+                postfixMethodName: nameof(ItemInLevel__Setup__Postfix));
         }
 
-        private static void ItemInLevel__Setup(ItemInLevel __instance)
+        private static void ItemInLevel__Setup__Postfix(ItemInLevel __instance)
         {
             __instance.GetSyncComponent().add_OnSyncStateChange(
                 (Il2CppSystem.Action<ePickupItemStatus, pPickupPlacement, PlayerAgent, bool>)(

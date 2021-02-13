@@ -28,26 +28,16 @@ namespace QoLFix.Patches
 
         public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public void Patch(Harmony harmony)
+        public Harmony Harmony { get; set; }
+
+        public void Patch()
         {
             ClassInjector.RegisterTypeInIl2Cpp<SteamProfileClickHandler>();
 
-            {
-                var methodInfo = typeof(CM_PlayerLobbyBar).GetMethod(nameof(CM_PlayerLobbyBar.UpdatePlayer));
-                harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(SteamProfileLinkPatch), nameof(CM_PlayerLobbyBar__UpdatePlayer))));
-            }
-            {
-                var methodInfo = typeof(CM_PlayerLobbyBar).GetMethod(nameof(CM_PlayerLobbyBar.SetupFromPage));
-                harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(SteamProfileLinkPatch), nameof(CM_PlayerLobbyBar__SetupFromPage))));
-            }
-            {
-                var methodInfo = typeof(PUI_Inventory).GetMethod(nameof(PUI_Inventory.Setup), new[] { typeof(GuiLayer) });
-                harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(SteamProfileLinkPatch), nameof(PUI_Inventory__Setup))));
-            }
-            {
-                var methodInfo = typeof(CM_PageBase).GetMethod(nameof(CM_PageBase.UpdateButtonPress));
-                harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(SteamProfileLinkPatch), nameof(CM_PageBase__UpdateButtonPress))));
-            }
+            this.PatchMethod<CM_PlayerLobbyBar>(nameof(CM_PlayerLobbyBar.UpdatePlayer), PatchType.Postfix);
+            this.PatchMethod<CM_PlayerLobbyBar>(nameof(CM_PlayerLobbyBar.SetupFromPage), PatchType.Postfix);
+            this.PatchMethod<PUI_Inventory>(nameof(PUI_Inventory.Setup), new[] { typeof(GuiLayer) }, PatchType.Postfix);
+            this.PatchMethod<CM_PageBase>(nameof(CM_PageBase.UpdateButtonPress), PatchType.Postfix);
         }
 
         private static SpriteRenderer CursorPointerSprite { get; set; }
@@ -56,13 +46,13 @@ namespace QoLFix.Patches
 
         private static bool IsHovering { get; set; }
 
-        private static void CM_PlayerLobbyBar__UpdatePlayer(CM_PlayerLobbyBar __instance)
+        private static void CM_PlayerLobbyBar__UpdatePlayer__Postfix(CM_PlayerLobbyBar __instance)
         {
             var handler = __instance.m_nickText.GetComponent<SteamProfileClickHandler>();
             handler.enabled = true;
         }
 
-        private static void CM_PageBase__UpdateButtonPress(CM_PageBase __instance)
+        private static void CM_PageBase__UpdateButtonPress__Postfix(CM_PageBase __instance)
         {
             if (__instance.TryCast<CM_PageLoadout>() == null
                 && __instance.TryCast<CM_PageMap>() == null) return;
@@ -112,10 +102,10 @@ namespace QoLFix.Patches
             }
         }
 
-        private static void CM_PlayerLobbyBar__SetupFromPage(CM_PlayerLobbyBar __instance) =>
+        private static void CM_PlayerLobbyBar__SetupFromPage__Postfix(CM_PlayerLobbyBar __instance) =>
             InitializeClickHandler(__instance.m_nickText.gameObject);
 
-        private static void PUI_Inventory__Setup(PUI_Inventory __instance)
+        private static void PUI_Inventory__Setup__Postfix(PUI_Inventory __instance)
         {
             var go = __instance.m_headerRoot.transform.Find("Background")?.gameObject;
             var bg = go?.GetComponent<SpriteRenderer>();

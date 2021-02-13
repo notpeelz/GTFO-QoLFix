@@ -21,12 +21,13 @@ namespace QoLFix.Patches
 
         public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public void Patch(Harmony harmony)
+        public Harmony Harmony { get; set; }
+
+        public void Patch()
         {
-            var methodInfo = typeof(SNet_Core_STEAM).GetMethod(nameof(SNet_Core_STEAM.SetFriendsData), new[] { typeof(string), typeof(string) });
-            harmony.Patch(methodInfo, prefix: new HarmonyMethod(AccessTools.Method(typeof(DisableSteamRichPresencePatch), nameof(SNet_Core_STEAM__SetFriendsData))));
+            this.PatchMethod<SNet_Core_STEAM>(nameof(SNet_Core_STEAM.SetFriendsData), new[] { typeof(string), typeof(string) }, PatchType.Prefix);
         }
 
-        private static bool SNet_Core_STEAM__SetFriendsData() => false;
+        private static bool SNet_Core_STEAM__SetFriendsData__Prefix() => false;
     }
 }

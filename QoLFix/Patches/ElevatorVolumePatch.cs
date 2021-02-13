@@ -23,27 +23,23 @@ namespace QoLFix.Patches
 
         public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public void Patch(Harmony harmony)
+        public Harmony Harmony { get; set; }
+
+        public void Patch()
         {
-            {
-                var methodInfo = typeof(GameStateManager).GetMethod(nameof(GameStateManager.ChangeState));
-                harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(ElevatorVolumePatch), nameof(GameStateManager__ChangeState))));
-            }
-            {
-                var methodInfo = typeof(CellSettingsManager).GetMethod(nameof(CellSettingsManager.OnApplicationFocus));
-                harmony.Patch(methodInfo, postfix: new HarmonyMethod(AccessTools.Method(typeof(ElevatorVolumePatch), nameof(OnApplicationFocus))));
-            }
+            this.PatchMethod<GameStateManager>(nameof(GameStateManager.ChangeState), PatchType.Postfix);
+            this.PatchMethod<CellSettingsManager>(nameof(CellSettingsManager.OnApplicationFocus), PatchType.Postfix);
         }
 
         private static bool Focused = true;
 
-        private static void OnApplicationFocus(bool focus)
+        private static void CellSettingsManager__OnApplicationFocus__Postfix(bool focus)
         {
             Focused = focus;
             UpdateAudio(GameStateManager.CurrentStateName);
         }
 
-        private static void GameStateManager__ChangeState(eGameStateName nextState) => UpdateAudio(nextState);
+        private static void GameStateManager__ChangeState__Postfix(eGameStateName nextState) => UpdateAudio(nextState);
 
         private static void UpdateAudio(eGameStateName state)
         {
