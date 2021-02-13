@@ -4,6 +4,7 @@ using HarmonyLib;
 using Steamworks;
 using System;
 using TMPro;
+using UnhollowerBaseLib;
 using UnhollowerRuntimeLib;
 using UnityEngine;
 
@@ -44,6 +45,12 @@ namespace QoLFix.Patches
             }
         }
 
+        private static SpriteRenderer CursorPointerSprite { get; set; }
+
+        private static CM_Cursor Cursor { get; set; }
+
+        private static bool IsHovering { get; set; }
+
         private static void CM_PlayerLobbyBar__UpdatePlayer(CM_PlayerLobbyBar __instance)
         {
             var handler = __instance.m_nickText.GetComponent<SteamProfileClickHandler>();
@@ -52,31 +59,108 @@ namespace QoLFix.Patches
 
         private static void CM_PageBase__UpdateButtonPress(CM_PageBase __instance)
         {
-            var clickDown = InputMapper.GetButtonDown.Invoke(InputAction.MenuClick, eFocusState.None);
-            var clickAltDown = InputMapper.GetButtonDown.Invoke(InputAction.MenuClickAlternate, eFocusState.None);
-            if (!clickDown && !clickAltDown) return;
-
             if (__instance.TryCast<CM_PageLoadout>() == null) return;
 
-            if (!__instance.m_guiLayer.GuiLayerBase.m_cellUICanvas.Raycast(__instance.CursorWorldPosition, out var rayHit)) return;
-
-            var comp = rayHit.collider.GetComponent<SteamProfileClickHandler>();
-            if (comp == null) return;
-            Instance.LogDebug($"Hit {comp.GetInstanceID()}");
-
-            var playerBar = rayHit.collider.GetComponentInParent<CM_PlayerLobbyBar>();
-            if (playerBar?.m_player == null) return;
-
-            Instance.LogInfo($"Opening steam profile for {playerBar.m_player.NickName} ({playerBar.m_player.Lookup})");
-
-            var url = $"https://steamcommunity.com/profiles/{playerBar.m_player.Lookup}";
-            if (SteamUtils.IsOverlayEnabled())
+            var isHovering = false;
+            try
             {
-                SteamFriends.ActivateGameOverlayToWebPage(url);
+                if (!__instance.m_guiLayer.GuiLayerBase.m_cellUICanvas.Raycast(__instance.CursorWorldPosition, out var rayHit)) return;
+
+                var comp = rayHit.collider.GetComponent<SteamProfileClickHandler>();
+                if (comp == null) return;
+                isHovering = true;
+
+                var playerBar = rayHit.collider.GetComponentInParent<CM_PlayerLobbyBar>();
+                if (playerBar?.m_player == null) return;
+
+                if (!InputMapper.GetButtonDown.Invoke(InputAction.MenuClick, eFocusState.None)) return;
+
+                Instance.LogInfo($"Opening steam profile for {playerBar.m_player.NickName} ({playerBar.m_player.Lookup})");
+
+                var url = $"https://steamcommunity.com/profiles/{playerBar.m_player.Lookup}";
+                if (SteamUtils.IsOverlayEnabled())
+                {
+                    SteamFriends.ActivateGameOverlayToWebPage(url);
+                }
+                else
+                {
+                    Application.OpenURL(url);
+                }
             }
-            else
+            finally
             {
-                Application.OpenURL(url);
+                UpdateCursor();
+            }
+
+            void UpdateCursor()
+            {
+                try
+                {
+                    if (Cursor == null
+                        || Cursor.Pointer == IntPtr.Zero
+                        || Cursor.GetInstanceID() != __instance.m_cursor?.GetInstanceID())
+                    {
+                        UpdateCursorRef();
+                    }
+                }
+                catch (ObjectCollectedException)
+                {
+                    UpdateCursorRef();
+                }
+
+                if (CursorPointerSprite == null) return; // Not sure why this would happen, but check just in case
+                if (IsHovering == isHovering) return;
+                IsHovering = isHovering;
+
+                Instance.LogDebug("UpdateCursor");
+
+                if (isHovering)
+                {
+                    __instance.m_cursor.m_cursorSprite.gameObject.SetActive(false);
+                    __instance.m_cursor.m_cursorSpriteDrag.gameObject.SetActive(false);
+                    CursorPointerSprite.gameObject.SetActive(true);
+                }
+                else
+                {
+                    __instance.m_cursor.m_cursorSprite.gameObject.SetActive(true);
+                    CursorPointerSprite.gameObject.SetActive(false);
+                }
+
+                void UpdateCursorRef()
+                {
+                    Instance.LogDebug("UpdateCursorRef");
+
+                    Cursor = __instance.m_cursor;
+                    if (CursorPointerSprite != null)
+                    {
+                        UnityEngine.Object.Destroy(CursorPointerSprite);
+                        UnityEngine.Object.Destroy(CursorPointerSprite.gameObject);
+                    }
+                    var pointerGO = new GameObject("Pointer", new[]
+                    {
+                        Il2CppType.Of<RectTransform>(),
+                        Il2CppType.Of<CanvasRenderer>(),
+                        Il2CppType.Of<SpriteRenderer>()
+                    });
+                    pointerGO.SetActive(false);
+                    pointerGO.layer = LayerManager.LAYER_UI;
+
+                    var t = pointerGO.GetComponent<RectTransform>();
+                    t.localScale = new Vector3(8f, 8f, 8f);
+                    t.anchorMin = new Vector2(0.5f, 0.5f);
+                    t.anchorMax = new Vector2(0.5f, 0.5f);
+                    t.pivot = new Vector2(0.5f, 0.5f);
+
+                    var r = pointerGO.GetComponent<SpriteRenderer>();
+
+                    var tex = Resources.Load<Texture2D>("gui/crosshairs/clicker");
+                    r.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), t.pivot, 100f);
+
+                    t.localPosition = new Vector3(0, -t.rect.height / 7f, 0.33f);
+
+                    CursorPointerSprite = r;
+                    t.SetParent(Cursor.m_cursorSprite.gameObject.transform.parent, false);
+                }
             }
         }
 
@@ -87,7 +171,6 @@ namespace QoLFix.Patches
             {
                 comp = __instance.m_nickText.gameObject.AddComponent<SteamProfileClickHandler>();
                 comp.gameObject.AddComponent<BoxCollider2D>();
-                Instance.LogDebug($"Added SteamProfileClickHandler #{comp.GetInstanceID()} to {__instance.name}");
             }
             comp.enabled = false;
         }
@@ -112,7 +195,7 @@ namespace QoLFix.Patches
                 var width = nickText.GetRenderedWidth(true);
                 var height = nickText.GetRenderedHeight(true);
                 collider.size = new Vector2(width, height);
-                collider.offset = new Vector2(width / 2f, height / 2f);
+                collider.offset = new Vector2(width / 2f, 0);
 
                 this.enabled = false;
             }
