@@ -164,5 +164,16 @@ namespace QoLFix
             }
         }
 
+        public static void LogDebug(object data) => Instance.Log.LogDebug(data);
+
+        public static void LogError(object data) => Instance.Log.LogError(data);
+
+        public static void LogFatal(object data) => Instance.Log.LogFatal(data);
+
+        public static void LogInfo(object data) => Instance.Log.LogInfo(data);
+
+        public static void LogMessage(object data) => Instance.Log.LogMessage(data);
+
+        public static void LogWarning(object data) => Instance.Log.LogWarning(data);
     }
 }

@@ -46,7 +46,7 @@ namespace QoLFix.Patches.Common
             if (state.Hovering == hovering) return;
             state.Hovering = hovering;
 
-            QoLFixPlugin.Instance.Log.LogDebug($"UpdateCursor: {(hovering ? "hovering" : "not hovering")}");
+            QoLFixPlugin.LogDebug($"<{nameof(SetCursorHovering)}> UpdateCursor: {(hovering ? "hovering" : "not hovering")}");
 
             if (hovering)
             {
@@ -63,7 +63,7 @@ namespace QoLFix.Patches.Common
 
             void UpdateCursorRef()
             {
-                QoLFixPlugin.Instance.Log.LogDebug("UpdateCursorRef");
+                QoLFixPlugin.LogDebug($"<{nameof(SetCursorHovering)}> UpdateCursorRef");
 
                 state.Cursor = page.m_cursor;
                 if (state.HoveringSprite != null)

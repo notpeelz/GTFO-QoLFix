@@ -78,7 +78,7 @@ namespace QoLFix.Patches
 
             private static void OnWatcherEvent(object sender, FileSystemEventArgs e)
             {
-                QoLFixPlugin.Instance.Log.LogDebug($"WATCH EVENT: {e.ChangeType} - {e.Name}");
+                QoLFixPlugin.LogDebug($"WATCH EVENT: {e.ChangeType} - {e.Name}");
                 if (e.ChangeType != WatcherChangeTypes.Changed && e.ChangeType != WatcherChangeTypes.Created) return;
                 if (Path.GetFileName(e.Name) != CONFIG_FILE) return;
                 ShouldUpdateSettings = true;
@@ -107,7 +107,7 @@ namespace QoLFix.Patches
                     }
                     catch (ObjectCollectedException)
                     {
-                        QoLFixPlugin.Instance.Log.LogWarning($"Container {i} was garbage-collected");
+                        QoLFixPlugin.LogWarning($"Container {i} was garbage-collected");
                         wireframes.RemoveAt(i);
                     }
                 }
@@ -135,7 +135,7 @@ namespace QoLFix.Patches
                 }
                 catch (Exception ex)
                 {
-                    QoLFixPlugin.Instance.Log.LogError("Failed to deserialize wireframes config file: " + ex);
+                    QoLFixPlugin.LogError("Failed to deserialize wireframes config file: " + ex);
                     return false;
                 }
             }

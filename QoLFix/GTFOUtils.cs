@@ -85,7 +85,7 @@ namespace QoLFix
                 {
                     foreach (var child in storageChildren)
                     {
-                        QoLFixPlugin.Instance.Log.LogDebug($"<{nameof(GetComponentInSight)}> StorageChild: {child.name}");
+                        QoLFixPlugin.LogDebug($"<{nameof(GetComponentInSight)}> StorageChild: {child.name}");
                     }
                 }
 
@@ -100,7 +100,7 @@ namespace QoLFix
 
                     if (debug)
                     {
-                        QoLFixPlugin.Instance.Log.LogDebug($"<{nameof(GetComponentInSight)}> Selecting storage child as target");
+                        QoLFixPlugin.LogDebug($"<{nameof(GetComponentInSight)}> Selecting storage child as target");
                     }
 
                     hitPos = hit.point;
@@ -127,13 +127,13 @@ namespace QoLFix
 
             if (!resourceContainers.Any())
             {
-                QoLFixPlugin.Instance.Log.LogError($"{nameof(ItemInLevel)} isn't located inside of a resource container!?");
+                QoLFixPlugin.LogError($"{nameof(ItemInLevel)} isn't located inside of a resource container!?");
                 return null;
             }
 
             if (resourceContainers.Count() > 1)
             {
-                QoLFixPlugin.Instance.Log.LogError($"{nameof(ItemInLevel)} is inside of multiple resource containers!?");
+                QoLFixPlugin.LogError($"{nameof(ItemInLevel)} is inside of multiple resource containers!?");
             }
 
             return resourceContainers.First();
