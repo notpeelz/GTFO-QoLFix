@@ -1,0 +1,14 @@
+<Project>
+  <!-- This is a workaround for https://github.com/dotnet/roslyn/issues/47786 -->
+  <Target Name="_CleanupRoslynAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
+    <ItemGroup>
+      <_AdditionalFilesCleanup Include="@(AdditionalFiles)" />
+      <AdditionalFiles Remove="@(_AdditionalFilesCleanup)" />
+      <AdditionalFiles Include="@(_AdditionalFilesCleanup->'$([System.IO.Path]::GetFullPath('%(_AdditionalFilesCleanup.Identity)'))')" />
+    </ItemGroup>
+  </Target>
+
+  <ItemGroup>
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Embed" />
+  </ItemGroup>
+</Project>
