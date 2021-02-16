@@ -3,7 +3,7 @@
   <PropertyGroup>
     <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+  <PropertyGroup>
     <StartAction>Program</StartAction>
     <StartProgram>C:\Windows\System32\cmd.exe</StartProgram>
     <StartURL>
