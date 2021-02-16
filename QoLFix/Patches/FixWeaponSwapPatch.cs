@@ -12,7 +12,7 @@ namespace QoLFix.Patches
         private static readonly string SectionSwapModeLoud = $"{PatchName}_SwapModeLoud";
         private static readonly string SectionSwapModeStealth = $"{PatchName}_SwapModeStealth";
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
-        private static readonly Dictionary<string, SwapModeSection> ConfigSwapModes = new Dictionary<string, SwapModeSection>
+        private static readonly Dictionary<string, SwapModeSection> ConfigSwapModes = new()
         {
             { SectionSwapModeDefault, new SwapModeSection(SectionSwapModeDefault, DRAMA_State.Exploration, SwapMode.Melee) },
             { SectionSwapModeLoud, new SwapModeSection(SectionSwapModeLoud, DRAMA_State.Combat, SwapMode.Melee) },

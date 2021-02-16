@@ -20,7 +20,7 @@ namespace QoLFix.Patches.Common
             public SpriteRenderer HoveringSprite { get; set; }
         }
 
-        private static readonly Dictionary<int, CursorState> CursorStates = new Dictionary<int, CursorState>();
+        private static readonly Dictionary<int, CursorState> CursorStates = new();
 
         public static void SetCursorHovering(this CM_PageBase page, bool hovering)
         {

@@ -57,28 +57,6 @@ namespace QoLFix.EmbeddedResources
             AppDomain.CurrentDomain.AssemblyResolve += AppDomain_AssemblyResolve;
         }
 
-        /*public static void LoadPlugins()
-        {
-            Initialize();
-
-            foreach (var (_, embed) in Assemblies)
-            {
-                var asmStream = embed.AssemblyStream.Value;
-                var asmDef = AssemblyDefinition.ReadAssembly(asmStream, TypeLoader.ReaderParameters);
-
-                var matches = asmDef.MainModule.Types
-                    // TODO: use a hash as the assemblyLocation?
-                    .Select(t => IL2CPPChainloader.ToPluginInfo(t, "nowhere"))
-                    .Where(t => t != null)
-                    .ToArray();
-
-                foreach (var pluginInfo in matches)
-                {
-                    IL2CPPChainloader.Instance.LoadPlugin(pluginInfo, embed.Assembly.Value);
-                }
-            }
-        }*/
-
         private static Assembly AppDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             foreach (var asmName in Assemblies.Keys)

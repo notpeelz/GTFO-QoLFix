@@ -45,7 +45,7 @@ namespace QoLFix.Patches
             if (status != ePickupItemStatus.PlacedInLevel) return;
 
             var terminalItem = __instance.m_terminalItem;
-            if (String.IsNullOrEmpty(terminalItem?.TerminalItemKey)) return;
+            if (string.IsNullOrEmpty(terminalItem?.TerminalItemKey)) return;
 
             if (LG_LevelInteractionManager.Current.m_terminalItemsByKeyString.ContainsKey(terminalItem.TerminalItemKey))
                 return;

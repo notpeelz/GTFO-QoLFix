@@ -78,7 +78,7 @@ namespace QoLFix
 
         public override bool Unload()
         {
-            this.Log.LogInfo("Unloading");
+            LogInfo("Unloading");
             return base.Unload();
         }
 
@@ -91,13 +91,13 @@ namespace QoLFix
             var currentVersion = new Version(Version);
             if (configVersion < currentVersion)
             {
-                this.Log.LogInfo($"Upgrading config to {currentVersion}");
+                LogInfo($"Upgrading config to {currentVersion}");
                 versionEntry.Value = Version;
                 this.Config.Save();
             }
             else if (configVersion > currentVersion)
             {
-                this.Log.LogError($"The current config is from a newer version of the plugin. If you're trying to downgrade, you should delete the config file and let it regenerate.");
+                LogError($"The current config is from a newer version of the plugin. If you're trying to downgrade, you should delete the config file and let it regenerate.");
                 this.Unload();
                 return false;
             }
@@ -161,7 +161,7 @@ namespace QoLFix
 
             if (patch.Enabled)
             {
-                this.Log.LogInfo($"Applying patch: {patch.Name}");
+                LogInfo($"Applying patch: {patch.Name}");
                 patch.Patch();
             }
         }

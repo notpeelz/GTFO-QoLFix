@@ -7,7 +7,7 @@ namespace QoLFix.Debugging
     public class RectangleWireframe : MonoBehaviour
     {
         // This workaround is necessary because Unhollower doesn't expose fields/properties to IL2CPP
-        private static readonly Dictionary<int, Vector3> DefaultPositions = new Dictionary<int, Vector3>();
+        private static readonly Dictionary<int, Vector3> DefaultPositions = new();
 
         public RectangleWireframe(IntPtr value)
             : base(value) { }
