@@ -48,25 +48,30 @@ namespace QoLFix.Generators
 
             var fieldName = FormatFieldName(asmName);
 
-            var sb = new StringBuilder();
-            sb.AppendLine("namespace QoLFix.EmbeddedResources");
-            sb.AppendLine("{");
-            sb.AppendLine("public static partial class EmbeddedAssembly");
-            sb.AppendLine("{");
-
-            sb.AppendLine($"[EmbeddedAssembly(\"{asmName}\")]");
-            sb.AppendLine($"    private static readonly byte[] {fieldName} = new byte[{bytes.Length}]");
-            sb.AppendLine("    {");
-            foreach (var byteRow in bytes.Batch(16))
+            if (!context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.RootNamespace", out var rootNs))
             {
-                sb.AppendLine("        " + FormatByteRow(byteRow));
+                throw new InvalidOperationException("Missing RootNamespace property");
             }
-            sb.AppendLine();
-            sb.AppendLine("    };");
 
-            sb.AppendLine("}");
-            sb.AppendLine("}");
-            context.AddSource($"EmbeddedAssembly_{fieldName}", SourceText.From(sb.ToString(), Encoding.UTF8));
+            var hintName = $"{rootNs}.EmbeddedAssembly_{fieldName}";
+
+            var src = $@"
+using System.CodeDom.Compiler;
+using System.Runtime.CompilerServices;
+
+namespace {rootNs}.EmbeddedResources {{
+    [GeneratedCode(""{rootNs}.VersionInfo"", ""0.1"")]
+    [CompilerGenerated]
+    public static partial class EmbeddedAssembly {{
+        [EmbeddedAssembly(""{asmName}"")]
+        private static readonly byte[] {fieldName} = new byte[{bytes.Length}] {{{
+            string.Join("\n", bytes.Batch(16).Select(FormatByteRow))
+        }}};
+    }}
+}}
+";
+
+            context.AddSource(hintName, SourceText.From(src, Encoding.UTF8));
         }
 
         private static string FormatByteRow(IEnumerable<byte> byteRow)

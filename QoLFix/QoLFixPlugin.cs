@@ -9,13 +9,13 @@ using QoLFix.EmbeddedResources;
 
 namespace QoLFix
 {
-    [BepInPlugin(GUID, ModName, Version)]
+    [BepInPlugin(GUID, ModName, VersionInfo.Version)]
     [BepInProcess("GTFO.exe")]
     public class QoLFixPlugin : BasePlugin
     {
-        public const string ModName = "QoL Fix";
-        public const string GUID = "dev.peelz.qolfix";
-        public const string Version = "0.1.0";
+        internal const string ModName = "QoL Fix";
+        internal const string GUID = "dev.peelz.qolfix";
+        internal static readonly Version CurrentVersion = new Version(VersionInfo.Version);
 
         public const int SupportedGameRevision = 21989;
 
@@ -84,15 +84,15 @@ namespace QoLFix
 
         private bool CheckConfigVersion()
         {
-            this.Config.Bind(ConfigVersion, Version, new ConfigDescription("Used internally for config upgrades; don't touch!"));
+            this.Config.Bind(ConfigVersion, VersionInfo.Version, new ConfigDescription("Used internally for config upgrades; don't touch!"));
 
             var versionEntry = this.Config.GetConfigEntry<string>(ConfigVersion);
             var configVersion = new Version(versionEntry.Value);
-            var currentVersion = new Version(Version);
+            var currentVersion = new Version(VersionInfo.Version);
             if (configVersion < currentVersion)
             {
                 LogInfo($"Upgrading config to {currentVersion}");
-                versionEntry.Value = Version;
+                versionEntry.Value = VersionInfo.Version;
                 this.Config.Save();
             }
             else if (configVersion > currentVersion)
@@ -118,7 +118,7 @@ namespace QoLFix
                 {
                     NativeMethods.MessageBox(
                         hWnd: IntPtr.Zero,
-                        text: $"You are attempting to run {ModName} {Version} on an outdated version of the game.\n" +
+                        text: $"You are attempting to run {ModName} {VersionInfo.Version} on an outdated version of the game.\n" +
                               $"Your current version of {ModName} was built for rev {SupportedGameRevision}.\n" +
                               $"The current game version is: {currentGameVersion}\n\n" +
                               $"This may result in stability problems or even crashes.\n" +
@@ -130,7 +130,7 @@ namespace QoLFix
                 {
                     NativeMethods.MessageBox(
                         hWnd: IntPtr.Zero,
-                        text: $"You are attempting to run {ModName} {Version} on a newer version of the game.\n" +
+                        text: $"You are attempting to run {ModName} {VersionInfo.Version} on a newer version of the game.\n" +
                               $"Your current version of {ModName} was built for rev {SupportedGameRevision}.\n" +
                               $"The current game version is: {currentGameVersion}\n\n" +
                               $"This may result in stability problems or even crashes.\n" +

@@ -9,6 +9,8 @@
   </Target>
 
   <ItemGroup>
+    <CompilerVisibleProperty Include="RootNamespace" />
+    <CompilerVisibleProperty Include="Version" />
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Embed" />
   </ItemGroup>
 </Project>
