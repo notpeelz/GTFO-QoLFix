@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using CellMenu;
 using UnhollowerBaseLib;
-using UnhollowerRuntimeLib;
 using UnityEngine;
 
 namespace QoLFix.Patches.Common
@@ -70,17 +69,14 @@ namespace QoLFix.Patches.Common
                 {
                     UnityEngine.Object.Destroy(state.HoveringSprite.gameObject);
                 }
-                var pointerGO = new GameObject("Pointer", new[]
-                {
-                    Il2CppType.Of<RectTransform>(),
-                    Il2CppType.Of<CanvasRenderer>(),
-                    Il2CppType.Of<SpriteRenderer>()
-                });
+
+                var pointerGO = GOFactory.CreateObject("Pointer", state.Cursor.transform,
+                    out RectTransform t,
+                    out CanvasRenderer _,
+                    out SpriteRenderer r);
+
                 pointerGO.SetActive(false);
                 pointerGO.layer = LayerManager.LAYER_UI;
-
-                var t = pointerGO.GetComponent<RectTransform>();
-                var r = pointerGO.GetComponent<SpriteRenderer>();
 
                 t.localScale = new Vector3(8f, 8f, 8f);
                 t.localPosition = new Vector3(7f, -20f, 0.33f);
@@ -92,7 +88,6 @@ namespace QoLFix.Patches.Common
                 r.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), t.pivot, 100f);
 
                 state.HoveringSprite = r;
-                t.SetParent(state.Cursor.transform, false);
             }
         }
     }

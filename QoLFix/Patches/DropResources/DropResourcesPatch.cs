@@ -162,23 +162,17 @@ namespace QoLFix.Patches
 
                 var defaultPos = slot.Consumable.parent.localPosition + slot.Consumable.localPosition;
                 var size = slotSettings?.Size ?? new Vector3(0.1f, 0.1f, 0.1f);
+                var slotGO = GOFactory.CreateObject($"storageSlot{i}", comp.transform,
+                    out BoxCollider collider,
+                    out StorageSlotPlaceholder placeholder);
 
-                var slotGO = new GameObject($"storageSlot{i}", new[]
-                {
-                    Il2CppType.Of<BoxCollider>(),
-                    Il2CppType.Of<StorageSlotPlaceholder>(),
-                });
-
-                slotGO.transform.SetParent(comp.transform, false);
                 slotGO.transform.localPosition = (slotSettings?.Offset - size / 2f) ?? defaultPos;
                 slotGO.transform.localRotation = slotSettings?.Rotation ?? Quaternion.identity;
                 slotGO.layer = LayerManager.LAYER_INTERACTION;
 
-                var collider = slotGO.GetComponent<BoxCollider>();
                 collider.center = Vector3.zero;
                 collider.size = size;
 
-                var placeholder = slotGO.GetComponent<StorageSlotPlaceholder>();
                 // Placeholders get enabled when the container is opened (in EnablePickupInteractions)
                 placeholder.enabled = false;
                 placeholder.Slot = slot;

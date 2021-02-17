@@ -32,22 +32,16 @@ namespace QoLFix.Debugging
             this.lines = new LineRenderer[LINE_COUNT];
             for (var i = 0; i < LINE_COUNT; i++)
             {
-                var go = new GameObject($"line{i}", new[]
-                {
-                    UnhollowerRuntimeLib.Il2CppType.Of<LineRenderer>(),
-                });
-
-                var c = go.GetComponent<LineRenderer>();
-                c.transform.SetParent(this.gameObject.transform, false);
-                c.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                c.receiveShadows = false;
-                c.useWorldSpace = false;
-                c.positionCount = 2;
-                c.startWidth = 0.005f;
-                c.endWidth = 0.005f;
-                c.material = this.material;
-                c.enabled = true;
-                this.lines[i] = c;
+                GOFactory.CreateObject($"line{i}", this.gameObject.transform, out LineRenderer r);
+                r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                r.receiveShadows = false;
+                r.useWorldSpace = false;
+                r.positionCount = 2;
+                r.startWidth = 0.005f;
+                r.endWidth = 0.005f;
+                r.material = this.material;
+                r.enabled = true;
+                this.lines[i] = r;
             }
         }
 

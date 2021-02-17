@@ -25,5 +25,15 @@ namespace QoLFix
             var localPos = collider.transform.InverseTransformPoint(point);
             return bounds.Contains(localPos);
         }
+
+        public static void SetLayerRecursively(this GameObject obj, int layer)
+        {
+            obj.layer = layer;
+            var t = obj.transform;
+            for (var i = 0; i < t.childCount; i++)
+            {
+                SetLayerRecursively(t.GetChild(i).gameObject, layer);
+            }
+        }
     }
 }
