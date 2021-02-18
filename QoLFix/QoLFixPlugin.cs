@@ -5,7 +5,6 @@ using BepInEx.Configuration;
 using System;
 using QoLFix.Patches;
 using QoLFix.Patches.Common;
-using QoLFix.EmbeddedResources;
 
 namespace QoLFix
 {
@@ -30,7 +29,6 @@ namespace QoLFix
         public QoLFixPlugin()
         {
             this.Config.SaveOnConfigSet = false;
-            EmbeddedAssembly.Initialize();
         }
 
         public override void Load()
