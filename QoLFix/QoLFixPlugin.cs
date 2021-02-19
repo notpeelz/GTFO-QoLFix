@@ -64,7 +64,7 @@ namespace QoLFix
             this.RegisterPatch<PingableSwapsPatch>();
             this.RegisterPatch<HideCrosshairPatch>();
             this.RegisterPatch<DropResourcesPatch>();
-            this.RegisterPatch<FixWeaponSwapPatch>();
+            this.RegisterPatch<BetterWeaponSwapPatch>();
 
             // Bug fixes
             this.RegisterPatch<FixToolRefillBioScannerPatch>();

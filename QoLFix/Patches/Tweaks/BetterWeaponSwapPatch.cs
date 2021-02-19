@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace QoLFix.Patches.Tweaks
 {
-    public class FixWeaponSwapPatch : IPatch
+    public class BetterWeaponSwapPatch : IPatch
     {
-        private static readonly string PatchName = nameof(FixWeaponSwapPatch);
+        private static readonly string PatchName = nameof(BetterWeaponSwapPatch);
         private static readonly string SectionSwapModeDefault = $"{PatchName}_SwapModeDefault";
         private static readonly string SectionSwapModeLoud = $"{PatchName}_SwapModeLoud";
         private static readonly string SectionSwapModeStealth = $"{PatchName}_SwapModeStealth";
