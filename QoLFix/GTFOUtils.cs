@@ -125,11 +125,7 @@ namespace QoLFix
                 .Cast<LG_WeakResourceContainer>()
                 .ToArray();
 
-            if (!resourceContainers.Any())
-            {
-                QoLFixPlugin.LogError($"{nameof(ItemInLevel)} isn't located inside of a resource container!?");
-                return null;
-            }
+            if (!resourceContainers.Any()) return null;
 
             if (resourceContainers.Count() > 1)
             {
