@@ -33,10 +33,10 @@ namespace QoLFix.Patches
 
         public void Patch()
         {
-            this.PatchMethod<EnemyAgent>(nameof(EnemyAgent.SyncPlaceNavMarkerTag), PatchType.Postfix);
+            this.PatchMethod<EnemyAgent>(nameof(EnemyAgent.SyncPlaceNavMarkerTag), PatchType.Prefix);
         }
 
-        private static void EnemyAgent__SyncPlaceNavMarkerTag__Postfix(EnemyAgent __instance) =>
+        private static void EnemyAgent__SyncPlaceNavMarkerTag__Prefix(EnemyAgent __instance) =>
             __instance.RemoveNavMarker();
     }
 }
