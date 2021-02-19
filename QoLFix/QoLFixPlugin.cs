@@ -5,6 +5,7 @@ using BepInEx.Configuration;
 using System;
 using QoLFix.Patches;
 using QoLFix.Patches.Common;
+using QoLFix.UI;
 
 namespace QoLFix
 {
@@ -14,7 +15,7 @@ namespace QoLFix
     {
         internal const string ModName = "QoL Fix";
         internal const string GUID = "dev.peelz.qolfix";
-        internal static readonly Version CurrentVersion = new Version(VersionInfo.Version);
+        internal const string RepoName = "louistakepillz/QoLFix";
 
         public const int SupportedGameRevision = 21989;
 
@@ -41,6 +42,10 @@ namespace QoLFix
 
             this.Config.SaveOnConfigSet = true;
 
+            // Common
+            this.RegisterPatch<DisableAnalyticsPatch>();
+            this.RegisterPatch<CursorUnlockPatch>();
+
             // Misc
             this.RegisterPatch<DisableSteamRichPresencePatch>();
 
@@ -66,12 +71,17 @@ namespace QoLFix
             this.RegisterPatch<FixBioScannerNavMarkerPatch>();
             this.RegisterPatch<FixLockerPingPatch>();
 
-            // Common
-            this.RegisterPatch<DisableAnalyticsPatch>();
             // XXX: needs to execute after everything else
             this.RegisterPatch<ReparentPickupPatch>();
 
             this.Config.Save();
+
+            UIManager.Initialize();
+            UIManager.Initialized += () =>
+            {
+                UpdateNotifier.Initialize();
+                UpdateManager.Initialize();
+            };
         }
 
         public override bool Unload()
@@ -86,14 +96,13 @@ namespace QoLFix
 
             var versionEntry = this.Config.GetConfigEntry<string>(ConfigVersion);
             var configVersion = new Version(versionEntry.Value);
-            var currentVersion = new Version(VersionInfo.Version);
-            if (configVersion < currentVersion)
+            if (configVersion < UpdateManager.CurrentVersion)
             {
-                LogInfo($"Upgrading config to {currentVersion}");
+                LogInfo($"Upgrading config to {UpdateManager.CurrentVersion}");
                 versionEntry.Value = VersionInfo.Version;
                 this.Config.Save();
             }
-            else if (configVersion > currentVersion)
+            else if (configVersion > UpdateManager.CurrentVersion)
             {
                 LogError($"The current config is from a newer version of the plugin. If you're trying to downgrade, you should delete the config file and let it regenerate.");
                 this.Unload();
