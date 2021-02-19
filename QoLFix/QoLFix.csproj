@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <GameFolder>C:\Program Files (x86)\Steam\steamapps\common\GTFO</GameFolder>
+    <BIELibsFolder>$(GameFolder)\BepInEx\core</BIELibsFolder>
     <UnhollowedLibsFolder>$(GameFolder)\BepInEx\unhollowed</UnhollowedLibsFolder>
     <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <RootNamespace>QoLFix</RootNamespace>
@@ -10,9 +11,10 @@
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
     <Version>0.1.0</Version>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="$(GameFolder)\BepInEx\core\*.dll" Private="false" />
+    <Reference Include="$(BIELibsFolder)\*.dll" Private="false" />
     <Reference Include="$(UnhollowedLibsFolder)\*.dll" Private="false" />
   </ItemGroup>
   <ItemGroup>
