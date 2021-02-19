@@ -15,6 +15,26 @@ namespace QoLFix
             return entry;
         }
 
+        public static void PatchConstructor<TClass>(
+            this IPatch patch,
+            PatchType patchType,
+            string prefixMethodName = default,
+            string postfixMethodName = default)
+            where TClass : class =>
+            PatchConstructor<TClass>(patch, null, patchType, prefixMethodName, postfixMethodName);
+
+        public static void PatchConstructor<TClass>(
+            this IPatch patch,
+            Type[] parameters,
+            PatchType patchType,
+            string prefixMethodName = default,
+            string postfixMethodName = default)
+            where TClass : class
+        {
+            var m = AccessTools.Constructor(typeof(TClass), parameters);
+            PatchMethod<TClass>(patch, m, patchType, prefixMethodName, postfixMethodName);
+        }
+
         public static void PatchMethod<TClass>(
             this IPatch patch,
             string methodName,
@@ -33,8 +53,20 @@ namespace QoLFix
             string postfixMethodName = default)
             where TClass : class
         {
-            var methodInfo = AccessTools.Method(typeof(TClass), methodName, parameters);
-            var formattedMethodName = $"{typeof(TClass)}:{methodName}({parameters?.Length.ToString() ?? ""}";
+            var m = AccessTools.Method(typeof(TClass), methodName, parameters);
+            PatchMethod<TClass>(patch, m, patchType, prefixMethodName, postfixMethodName);
+        }
+
+        public static void PatchMethod<TClass>(
+            this IPatch patch,
+            MethodBase methodBase,
+            PatchType patchType,
+            string prefixMethodName = default,
+            string postfixMethodName = default)
+            where TClass : class
+        {
+            var formattedMethodName = methodBase.ToString();
+            var methodName = methodBase.IsConstructor ? "ctor" : methodBase.Name;
 
             MethodInfo postfix = null, prefix = null;
 
@@ -66,19 +98,19 @@ namespace QoLFix
             {
                 if (prefix != null && postfix != null)
                 {
-                    patch.Harmony.Patch(methodInfo, prefix: new HarmonyMethod(prefix), postfix: new HarmonyMethod(postfix));
+                    patch.Harmony.Patch(methodBase, prefix: new HarmonyMethod(prefix), postfix: new HarmonyMethod(postfix));
                     return;
                 }
 
                 if (prefix != null)
                 {
-                    patch.Harmony.Patch(methodInfo, prefix: new HarmonyMethod(prefix));
+                    patch.Harmony.Patch(methodBase, prefix: new HarmonyMethod(prefix));
                     return;
                 }
 
                 if (postfix != null)
                 {
-                    patch.Harmony.Patch(methodInfo, postfix: new HarmonyMethod(postfix));
+                    patch.Harmony.Patch(methodBase, postfix: new HarmonyMethod(postfix));
                     return;
                 }
             }
