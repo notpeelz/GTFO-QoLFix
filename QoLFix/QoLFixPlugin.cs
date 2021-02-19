@@ -61,7 +61,7 @@ namespace QoLFix
             this.RegisterPatch<LobbyUnreadyPatch>();
             this.RegisterPatch<SteamProfileLinkPatch>();
             this.RegisterPatch<NoiseRemovalPatch>();
-            this.RegisterPatch<PingableSwapsPatch>();
+            this.RegisterPatch<TerminalPingableSwapsPatch>();
             this.RegisterPatch<HideCrosshairPatch>();
             this.RegisterPatch<DropResourcesPatch>();
             this.RegisterPatch<BetterWeaponSwapPatch>();

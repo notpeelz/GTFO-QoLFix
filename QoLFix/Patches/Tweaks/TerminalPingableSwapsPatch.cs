@@ -11,9 +11,9 @@ namespace QoLFix.Patches.Tweaks
     /// Known bugs:
     ///   - The ping doesn't show up unless the player is hosting
     /// </summary>
-    public class PingableSwapsPatch : IPatch
+    public class TerminalPingableSwapsPatch : IPatch
     {
-        private static readonly string PatchName = nameof(PingableSwapsPatch);
+        private static readonly string PatchName = nameof(TerminalPingableSwapsPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
         public static IPatch Instance { get; private set; }
