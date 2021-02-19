@@ -2,7 +2,7 @@
 using HarmonyLib;
 using Player;
 
-namespace QoLFix.Patches
+namespace QoLFix.Patches.Bugfixes
 {
     public class FixToolRefillBioScannerPatch : IPatch
     {

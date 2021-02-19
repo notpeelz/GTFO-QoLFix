@@ -4,7 +4,7 @@ using CellMenu;
 using HarmonyLib;
 using SNetwork;
 
-namespace QoLFix.Patches
+namespace QoLFix.Patches.Tweaks
 {
     public class LobbyUnreadyPatch : IPatch
     {

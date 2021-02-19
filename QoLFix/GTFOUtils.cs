@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LevelGeneration;
 using Player;
-using QoLFix.Patches;
+using QoLFix.Patches.Tweaks;
 using UnityEngine;
 
 namespace QoLFix

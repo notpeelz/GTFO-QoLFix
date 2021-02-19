@@ -3,7 +3,7 @@ using HarmonyLib;
 using Player;
 using System.Collections.Generic;
 
-namespace QoLFix.Patches
+namespace QoLFix.Patches.Tweaks
 {
     public class FixWeaponSwapPatch : IPatch
     {

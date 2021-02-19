@@ -2,7 +2,7 @@
 using HarmonyLib;
 using SNetwork;
 
-namespace QoLFix.Patches
+namespace QoLFix.Patches.Misc
 {
     public class DisableSteamRichPresencePatch : IPatch
     {

@@ -1,7 +1,7 @@
 ﻿using BepInEx.Configuration;
 using HarmonyLib;
 
-namespace QoLFix.Patches
+namespace QoLFix.Patches.Annoyances
 {
     public class ElevatorIntroSkipPatch : IPatch
     {

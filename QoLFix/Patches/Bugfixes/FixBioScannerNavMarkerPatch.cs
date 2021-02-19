@@ -2,7 +2,7 @@
 using Enemies;
 using HarmonyLib;
 
-namespace QoLFix.Patches
+namespace QoLFix.Patches.Bugfixes
 {
     /// <summary>
     /// EnemyAgent.m_tagMarker gets reassigned in

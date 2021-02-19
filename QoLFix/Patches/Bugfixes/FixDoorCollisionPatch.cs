@@ -3,7 +3,7 @@ using HarmonyLib;
 using LevelGeneration;
 using UnityEngine;
 
-namespace QoLFix.Patches
+namespace QoLFix.Patches.Bugfixes
 {
     /// <summary>
     /// WeakDoor has two states: Skinned and Simple (default).

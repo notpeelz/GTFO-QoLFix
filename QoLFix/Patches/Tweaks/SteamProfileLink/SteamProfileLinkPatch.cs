@@ -7,7 +7,7 @@ using Steamworks;
 using UnhollowerRuntimeLib;
 using UnityEngine;
 
-namespace QoLFix.Patches
+namespace QoLFix.Patches.Tweaks
 {
     public partial class SteamProfileLinkPatch : IPatch
     {

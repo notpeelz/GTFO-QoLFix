@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace QoLFix.Patches
+namespace QoLFix.Patches.Tweaks
 {
     public partial class SteamProfileLinkPatch
     {

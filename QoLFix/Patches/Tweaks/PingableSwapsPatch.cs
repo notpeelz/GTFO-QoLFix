@@ -1,12 +1,16 @@
-﻿using System;
-using BepInEx.Configuration;
+﻿using BepInEx.Configuration;
 using Gear;
 using HarmonyLib;
 using LevelGeneration;
 using Player;
 
-namespace QoLFix.Patches
+namespace QoLFix.Patches.Tweaks
 {
+    /// <summary>
+    /// This patch lets the player look up swapped out resources on the terminal.
+    /// Known bugs:
+    ///   - The ping doesn't show up unless the player is hosting
+    /// </summary>
     public class PingableSwapsPatch : IPatch
     {
         private static readonly string PatchName = nameof(PingableSwapsPatch);

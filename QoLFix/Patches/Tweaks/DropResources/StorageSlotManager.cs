@@ -11,7 +11,7 @@ using UnhollowerBaseLib;
 using QoLFix.Debugging;
 #endif
 
-namespace QoLFix.Patches
+namespace QoLFix.Patches.Tweaks
 {
     public partial class DropResourcesPatch
     {

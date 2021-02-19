@@ -3,9 +3,12 @@ using BepInEx;
 using HarmonyLib;
 using BepInEx.Configuration;
 using System;
-using QoLFix.Patches;
 using QoLFix.Patches.Common;
 using QoLFix.UI;
+using QoLFix.Patches.Misc;
+using QoLFix.Patches.Annoyances;
+using QoLFix.Patches.Tweaks;
+using QoLFix.Patches.Bugfixes;
 
 namespace QoLFix
 {
@@ -61,9 +64,9 @@ namespace QoLFix
             this.RegisterPatch<PingableSwapsPatch>();
             this.RegisterPatch<HideCrosshairPatch>();
             this.RegisterPatch<DropResourcesPatch>();
+            this.RegisterPatch<FixWeaponSwapPatch>();
 
             // Bug fixes
-            this.RegisterPatch<FixWeaponSwapPatch>();
             this.RegisterPatch<FixToolRefillBioScannerPatch>();
             this.RegisterPatch<FixDoorCollisionPatch>();
             this.RegisterPatch<FixDoorFramePingPatch>();

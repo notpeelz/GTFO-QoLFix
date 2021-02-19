@@ -4,7 +4,7 @@ using HarmonyLib;
 using Player;
 using UnityEngine;
 
-namespace QoLFix.Patches
+namespace QoLFix.Patches.Bugfixes
 {
     /// <summary>
     /// Resources inside resource containers aren't pingable because the

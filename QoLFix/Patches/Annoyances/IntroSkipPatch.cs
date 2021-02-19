@@ -2,7 +2,7 @@
 using CellMenu;
 using HarmonyLib;
 
-namespace QoLFix.Patches
+namespace QoLFix.Patches.Annoyances
 {
     public class IntroSkipPatch : IPatch
     {
