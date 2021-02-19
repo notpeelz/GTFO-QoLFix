@@ -39,21 +39,23 @@ namespace QoLFix
             this IPatch patch,
             string methodName,
             PatchType patchType,
+            Type[] generics = null,
             string prefixMethodName = default,
             string postfixMethodName = default)
             where TClass : class =>
-            PatchMethod<TClass>(patch, methodName, null, patchType, prefixMethodName, postfixMethodName);
+            PatchMethod<TClass>(patch, methodName, null, patchType, generics, prefixMethodName, postfixMethodName);
 
         public static void PatchMethod<TClass>(
             this IPatch patch,
             string methodName,
             Type[] parameters,
             PatchType patchType,
+            Type[] generics = null,
             string prefixMethodName = default,
             string postfixMethodName = default)
             where TClass : class
         {
-            var m = AccessTools.Method(typeof(TClass), methodName, parameters);
+            var m = AccessTools.Method(typeof(TClass), methodName, parameters, generics);
             PatchMethod<TClass>(patch, m, patchType, prefixMethodName, postfixMethodName);
         }
 
@@ -65,6 +67,7 @@ namespace QoLFix
             string postfixMethodName = default)
             where TClass : class
         {
+            var className = typeof(TClass).Name.Replace("`", "__");
             var formattedMethodName = methodBase.ToString();
             var methodName = methodBase.IsConstructor ? "ctor" : methodBase.Name;
 
@@ -74,7 +77,7 @@ namespace QoLFix
             {
                 try
                 {
-                    prefix = AccessTools.Method(patch.GetType(), prefixMethodName ?? $"{typeof(TClass).Name}__{methodName}__Prefix");
+                    prefix = AccessTools.Method(patch.GetType(), prefixMethodName ?? $"{className}__{methodName}__Prefix");
                 }
                 catch (Exception ex)
                 {
@@ -86,7 +89,7 @@ namespace QoLFix
             {
                 try
                 {
-                    postfix = AccessTools.Method(patch.GetType(), postfixMethodName ?? $"{typeof(TClass).Name}__{methodName}__Postfix");
+                    postfix = AccessTools.Method(patch.GetType(), postfixMethodName ?? $"{className}__{methodName}__Postfix");
                 }
                 catch (Exception ex)
                 {
