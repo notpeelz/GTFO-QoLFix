@@ -49,14 +49,14 @@ namespace QoLFix.Patches.Common
 
             if (hovering)
             {
-                page.m_cursor.m_cursorSprite.GetComponent<SpriteRenderer>().enabled = false;
-                page.m_cursor.m_cursorSpriteDrag.GetComponent<SpriteRenderer>().enabled = false;
+                page.m_cursor.m_cursorSprite.enabled = false;
+                page.m_cursor.m_cursorSpriteDrag.enabled = false;
                 state.HoveringSprite.gameObject.SetActive(true);
             }
             else
             {
-                page.m_cursor.m_cursorSprite.GetComponent<SpriteRenderer>().enabled = true;
-                page.m_cursor.m_cursorSpriteDrag.GetComponent<SpriteRenderer>().enabled = true;
+                page.m_cursor.m_cursorSprite.enabled = true;
+                page.m_cursor.m_cursorSpriteDrag.enabled = true;
                 state.HoveringSprite.gameObject.SetActive(false);
             }
 

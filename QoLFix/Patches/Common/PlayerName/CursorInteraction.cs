@@ -2,13 +2,13 @@
 using TMPro;
 using UnityEngine;
 
-namespace QoLFix.Patches.Tweaks
+namespace QoLFix.Patches.Common
 {
-    public partial class SteamProfileLinkPatch
+    public partial class PlayerNameExtPatch
     {
-        public class SteamProfileClickHandler : MonoBehaviour
+        public class CursorInteraction : MonoBehaviour
         {
-            public SteamProfileClickHandler(IntPtr value)
+            public CursorInteraction(IntPtr value)
                 : base(value) { }
 
             private void Update()
@@ -18,7 +18,7 @@ namespace QoLFix.Patches.Tweaks
                 var nickText = this.GetComponent<TextMeshPro>();
                 if (nickText == null)
                 {
-                    Instance.LogError($"{nameof(SteamProfileClickHandler)} isn't attached to a {nameof(TextMeshPro)}");
+                    Instance.LogError($"{nameof(CursorInteraction)} isn't attached to a {nameof(TextMeshPro)}");
                     this.enabled = false;
                     return;
                 }

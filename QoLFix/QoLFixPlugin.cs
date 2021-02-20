@@ -47,6 +47,7 @@ namespace QoLFix
 
             // Common
             this.RegisterPatch<DisableAnalyticsPatch>();
+            this.RegisterPatch<PlayerNameExtPatch>();
             this.RegisterPatch<CursorUnlockPatch>();
 
             // Misc
