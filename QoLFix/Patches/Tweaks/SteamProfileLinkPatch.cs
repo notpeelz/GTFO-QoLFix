@@ -30,6 +30,7 @@ namespace QoLFix.Patches.Tweaks
 
         public void Patch()
         {
+            QoLFixPlugin.RegisterPatch<PlayerNameExtPatch>();
             PlayerNameExtPatch.CursorUpdate += OnCursorUpdate;
         }
 

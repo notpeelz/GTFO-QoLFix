@@ -9,6 +9,7 @@ using QoLFix.Patches.Misc;
 using QoLFix.Patches.Annoyances;
 using QoLFix.Patches.Tweaks;
 using QoLFix.Patches.Bugfixes;
+using System.Collections.Generic;
 
 namespace QoLFix
 {
@@ -26,7 +27,8 @@ namespace QoLFix
         private static readonly ConfigDefinition ConfigVersion = new ConfigDefinition(SectionMain, "Version");
         private static readonly ConfigDefinition ConfigGameVersion = new ConfigDefinition(SectionMain, "GameVersion");
 
-        private Harmony harmony;
+        private static Harmony HarmonyInstance;
+        private static readonly Dictionary<Type, IPatch> RegisteredPatches = new();
 
         public static QoLFixPlugin Instance { get; private set; }
 
@@ -46,38 +48,37 @@ namespace QoLFix
             this.Config.SaveOnConfigSet = true;
 
             // Common
-            this.RegisterPatch<DisableAnalyticsPatch>();
-            this.RegisterPatch<PlayerNameExtPatch>();
-            this.RegisterPatch<CursorUnlockPatch>();
+            RegisterPatch<DisableAnalyticsPatch>();
+            RegisterPatch<CursorUnlockPatch>();
 
             // Misc
-            this.RegisterPatch<DisableSteamRichPresencePatch>();
+            RegisterPatch<DisableSteamRichPresencePatch>();
 
             // Annoyances
-            this.RegisterPatch<IntroSkipPatch>();
-            this.RegisterPatch<ElevatorIntroSkipPatch>();
-            this.RegisterPatch<ElevatorVolumePatch>();
+            RegisterPatch<IntroSkipPatch>();
+            RegisterPatch<ElevatorIntroSkipPatch>();
+            RegisterPatch<ElevatorVolumePatch>();
 
             // Tweaks
-            this.RegisterPatch<LobbyUnreadyPatch>();
-            this.RegisterPatch<SteamProfileLinkPatch>();
-            this.RegisterPatch<NoiseRemovalPatch>();
-            this.RegisterPatch<TerminalPingableSwapsPatch>();
-            this.RegisterPatch<HideCrosshairPatch>();
-            this.RegisterPatch<DropResourcesPatch>();
-            this.RegisterPatch<BetterWeaponSwapPatch>();
-            this.RegisterPatch<LatencyHUDPatch>();
+            RegisterPatch<LobbyUnreadyPatch>();
+            RegisterPatch<SteamProfileLinkPatch>();
+            RegisterPatch<NoiseRemovalPatch>();
+            RegisterPatch<TerminalPingableSwapsPatch>();
+            RegisterPatch<HideCrosshairPatch>();
+            RegisterPatch<DropResourcesPatch>();
+            RegisterPatch<BetterWeaponSwapPatch>();
+            RegisterPatch<LatencyHUDPatch>();
 
             // Bug fixes
-            this.RegisterPatch<FixToolRefillBioScannerPatch>();
-            this.RegisterPatch<FixDoorCollisionPatch>();
-            this.RegisterPatch<FixDoorFramePingPatch>();
-            this.RegisterPatch<FixTerminalDisplayPingPatch>();
-            this.RegisterPatch<FixBioScannerNavMarkerPatch>();
-            this.RegisterPatch<FixLockerPingPatch>();
+            RegisterPatch<FixToolRefillBioScannerPatch>();
+            RegisterPatch<FixDoorCollisionPatch>();
+            RegisterPatch<FixDoorFramePingPatch>();
+            RegisterPatch<FixTerminalDisplayPingPatch>();
+            RegisterPatch<FixBioScannerNavMarkerPatch>();
+            RegisterPatch<FixLockerPingPatch>();
 
             // XXX: needs to execute after everything else
-            this.RegisterPatch<ReparentPickupPatch>();
+            RegisterPatch<ReparentPickupPatch>();
 
             this.Config.Save();
 
@@ -157,16 +158,22 @@ namespace QoLFix
             }
         }
 
-        public void RegisterPatch<T>() where T : IPatch, new()
+        public static void RegisterPatch<T>() where T : IPatch, new()
         {
-            if (this.harmony == null)
+            if (HarmonyInstance == null)
             {
-                this.harmony = new Harmony(GUID);
+                HarmonyInstance = new Harmony(GUID);
+            }
+
+            if (RegisteredPatches.ContainsKey(typeof(T)))
+            {
+                LogDebug($"Ignoring duplicate patch: {typeof(T).Name}");
+                return;
             }
 
             var patch = new T
             {
-                Harmony = this.harmony
+                Harmony = HarmonyInstance,
             };
 
             patch.Initialize();
@@ -176,6 +183,8 @@ namespace QoLFix
                 LogInfo($"Applying patch: {patch.Name}");
                 patch.Patch();
             }
+
+            RegisteredPatches[typeof(T)] = patch;
         }
 
         public static void LogDebug(object data) => Instance.Log.LogDebug(data);
