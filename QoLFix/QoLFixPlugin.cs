@@ -65,6 +65,7 @@ namespace QoLFix
             this.RegisterPatch<HideCrosshairPatch>();
             this.RegisterPatch<DropResourcesPatch>();
             this.RegisterPatch<BetterWeaponSwapPatch>();
+            this.RegisterPatch<LatencyHUDPatch>();
 
             // Bug fixes
             this.RegisterPatch<FixToolRefillBioScannerPatch>();
