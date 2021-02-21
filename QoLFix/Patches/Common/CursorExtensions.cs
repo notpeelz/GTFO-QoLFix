@@ -72,7 +72,6 @@ namespace QoLFix.Patches.Common
 
                 var pointerGO = GOFactory.CreateObject("Pointer", state.Cursor.transform,
                     out RectTransform t,
-                    out CanvasRenderer _,
                     out SpriteRenderer r);
 
                 pointerGO.SetActive(false);

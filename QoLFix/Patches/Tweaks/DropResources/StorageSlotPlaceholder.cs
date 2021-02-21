@@ -9,7 +9,8 @@ namespace QoLFix.Patches.Tweaks
     {
         public class StorageSlotPlaceholder : MonoBehaviour
         {
-            // This workaround is necessary because Unhollower doesn't expose fields/properties to IL2CPP
+            // This workaround is necessary to prevent the StorageSlot from getting
+            // garbage-collected in the IL2CPP domain.
             private static readonly Dictionary<int, StorageSlot> StorageSlots = new();
 
             public StorageSlotPlaceholder(IntPtr value)

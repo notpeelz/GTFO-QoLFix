@@ -75,7 +75,6 @@ namespace QoLFix.Patches.Tweaks
                 var go = GOFactory.CreateObject("Latency", watermark.transform,
                     out RectTransform t,
                     out TextMeshPro text,
-                    out CanvasRenderer _,
                     out Cell_TMProDisabler _,
                     out LatencyHUDElement _);
                 go.layer = LayerManager.LAYER_UI;

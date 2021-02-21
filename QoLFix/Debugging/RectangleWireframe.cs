@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace QoLFix.Debugging
 {
     public class RectangleWireframe : MonoBehaviour
     {
-        // This workaround is necessary because Unhollower doesn't expose fields/properties to IL2CPP
-        private static readonly Dictionary<int, Vector3> DefaultPositions = new();
-
         public RectangleWireframe(IntPtr value)
             : base(value) { }
 
@@ -16,11 +12,7 @@ namespace QoLFix.Debugging
         private Material material;
         private LineRenderer[] lines;
 
-        public Vector3 DefaultPosition
-        {
-            get => DefaultPositions[this.GetInstanceID()];
-            set => DefaultPositions[this.GetInstanceID()] = value;
-        }
+        public Vector3 DefaultPosition { get; set; }
 
         public Vector3 Center { get; set; }
 

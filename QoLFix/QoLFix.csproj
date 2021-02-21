@@ -12,6 +12,7 @@
     <FileVersion>$(Version)</FileVersion>
     <Version>0.1.0</Version>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <!--<DefineConstants>DEBUG_PLACEHOLDERS</DefineConstants>-->
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="$(BIELibsFolder)\*.dll" Private="false" />
