@@ -21,7 +21,7 @@ namespace QoLFix
     {
         internal const string ModName = "QoL Fix";
         internal const string GUID = "dev.peelz.qolfix";
-        internal const string RepoName = "louistakepillz/QoLFix";
+        internal const string RepoName = "louistakepillz/GTFO-QoLFix";
 
         public const int SupportedGameRevision = 21989;
 

@@ -133,7 +133,13 @@ namespace QoLFix.UI
 
         private static string GetUpdateMessage()
         {
-            return $"{QoLFixPlugin.ModName} was updated to v{UpdateManager.LatestVersion?.ToString() ?? "???"}\n" +
+            var versionName = $"v{UpdateManager.LatestRelease?.Version?.ToString()}";
+            if (UpdateManager.LatestRelease?.PreRelease == true)
+            {
+                versionName += " (pre-release)";
+            }
+
+            return $"{QoLFixPlugin.ModName} was updated to {versionName ?? "???"}\n" +
                 "Would you like like to update?";
         }
     }
