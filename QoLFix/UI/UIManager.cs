@@ -49,7 +49,14 @@ namespace QoLFix.UI
             Initialized?.Invoke();
         }
 
-        public static GameObject CreateButton(string label, Transform parent, out Text text, Color normalColor = default, Action callback = null)
+        public static GameObject CreateButton(string label,
+            Transform parent,
+            out Text text,
+            Color? normalColor = null,
+            Color? pressedColor = null,
+            Color? highlightedColor = null,
+            int fontSize = 15,
+            Action callback = null)
         {
             var buttonGO = GOFactory.CreateObject("Button", parent,
                 out Image img,
@@ -67,14 +74,14 @@ namespace QoLFix.UI
 
             SetDefaultColorTransitionValues(button);
 
-            if (normalColor != default)
-            {
-                var colors = button.colors;
-                colors.normalColor = normalColor;
-                button.colors = colors;
-            }
+            var colors = button.colors;
+            if (normalColor != default) colors.normalColor = (Color)normalColor;
+            if (pressedColor != default) colors.pressedColor = (Color)pressedColor;
+            if (highlightedColor != default) colors.highlightedColor = (Color)highlightedColor;
+            button.colors = colors;
 
             text.text = label;
+            text.fontSize = fontSize;
             text.color = DefaultTextColor;
             text.font = DefaultFont;
             text.alignment = TextAnchor.MiddleCenter;
@@ -114,7 +121,7 @@ namespace QoLFix.UI
             group.childControlHeight = true;
             group.childControlWidth = true;
             group.childForceExpandHeight = true;
-            group.childForceExpandWidth = true;
+            group.childForceExpandWidth = false;
 
             return go;
         }
@@ -162,6 +169,7 @@ namespace QoLFix.UI
         {
             var panelGO = GOFactory.CreateObject(name, parent,
                 out RectTransform panelTransform,
+                out ContentSizeFitter panelFitter,
                 out VerticalLayoutGroup panelGroup);
             panelGO.layer = LayerManager.LAYER_UI;
 
@@ -169,6 +177,9 @@ namespace QoLFix.UI
             panelTransform.anchorMax = Vector2.one;
             panelTransform.anchoredPosition = Vector2.zero;
             panelTransform.sizeDelta = Vector2.zero;
+
+            panelFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            panelFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
 
             panelGroup.childControlHeight = true;
             panelGroup.childControlWidth = true;
@@ -211,10 +222,11 @@ namespace QoLFix.UI
 
             canvas.renderMode = RenderMode.ScreenSpaceCamera;
             canvas.referencePixelsPerUnit = 100;
-            canvas.sortingOrder = 999;
+            canvas.sortingOrder = 998;
 
             scaler.referenceResolution = new Vector2(1920, 1080);
-            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Shrink;
 
             root.SetActive(true);
 

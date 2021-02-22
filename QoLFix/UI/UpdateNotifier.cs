@@ -48,11 +48,12 @@ namespace QoLFix.UI
         {
             UpdateNotification = UIManager.CreatePanel("UpdateNotification", UIManager.CanvasRoot.transform, out var content,
                 color: new Color(160 / 255f, 160 / 255f, 160 / 255f));
+
             UpdateNotification.SetActive(false);
             var panelTransform = UpdateNotification.GetComponent<RectTransform>();
 
-            var width = 0.1f;
-            var height = 0.08f;
+            var width = 0.125f;
+            var height = 0.1f;
             panelTransform.anchorMin = new Vector2(0.5f - width, 0.5f - height);
             panelTransform.anchorMax = new Vector2(0.5f + width, 0.5f + height);
 
@@ -77,15 +78,21 @@ namespace QoLFix.UI
             msgBoxGroup.padding = new RectOffset(3, 3, 3, 3);
 
             // Message
-            GOFactory.CreateObject("Message", msgBox.transform,
-                out UpdateText,
-                out LayoutElement textLayout);
+            var msg = GOFactory.CreateObject("Message", msgBox.transform,
+                out VerticalLayoutGroup msgGroup,
+                out LayoutElement msgLayout);
+
+            msgGroup.padding = new RectOffset(6, 6, 6, 12);
+            msgLayout.flexibleHeight = 5000;
+
+            // Message text
+            GOFactory.CreateObject("Text", msg.transform, out UpdateText);
+
             UpdateText.font = UIManager.DefaultFont;
             UpdateText.alignment = TextAnchor.MiddleCenter;
             UpdateText.supportRichText = true;
             UpdateText.text = GetUpdateMessage();
             UpdateText.fontSize = 15;
-            textLayout.flexibleHeight = 5000;
 
             // Buttons
             var buttons = GOFactory.CreateObject("ButtonGroup", msgBox.transform,
@@ -102,6 +109,9 @@ namespace QoLFix.UI
             buttonLayout.flexibleHeight = 1;
 
             UIManager.CreateButton("Yes", buttons.transform, out _,
+                normalColor: Color.green.RGBMultiplied(0.7f),
+                pressedColor: Color.green.RGBMultiplied(0.5f),
+                highlightedColor: Color.green.RGBMultiplied(0.8f),
                 callback: () =>
                 {
                     var url = UpdateManager.LatestReleaseUrl;
