@@ -3,11 +3,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading;
 using System.Threading.Tasks;
 using BepInEx.Configuration;
 using Newtonsoft.Json.Linq;
-using QoLFix.UI;
+using UnityEngine;
 
 namespace QoLFix
 {
@@ -15,6 +14,8 @@ namespace QoLFix
     {
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(nameof(UpdateManager), "Enabled");
         private static readonly ConfigDefinition ConfigNotifyPrerelease = new ConfigDefinition(nameof(UpdateManager), "NotifyPrerelease");
+
+        private static bool ConfigInitialized;
 
         private static JArray Releases;
 
@@ -24,38 +25,57 @@ namespace QoLFix
 
         public static string LatestReleaseUrl { get; private set; }
 
+        public static bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+
         public static void Initialize()
         {
+            if (ConfigInitialized) return;
+            ConfigInitialized = true;
 
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Enables the update notification system."));
             QoLFixPlugin.Instance.Config.Bind(ConfigNotifyPrerelease, false, new ConfigDescription("Displays update notifications for pre-release versions."));
-
-            if (!QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value) return;
-
-            new Thread(async () => await CheckForUpdate()).Start();
         }
 
-        public static async Task CheckForUpdate(bool force = false)
+        public static void OpenReleasePage()
+        {
+            Application.OpenURL(LatestReleaseUrl ?? $"https://github.com/{QoLFixPlugin.RepoName}");
+        }
+
+        public static string GetLatestReleaseName()
+        {
+            var versionName = $"v{LatestRelease?.Version?.ToString()}";
+            if (LatestRelease?.PreRelease == true)
+            {
+                versionName += " (pre-release)";
+            }
+
+            return versionName;
+        }
+
+        public static async Task<bool> CheckForUpdate(bool includePrerelease = false, bool force = false)
         {
             LogInfo("Checking for updates");
-            LatestRelease = await GetLatestRelease(force);
-            if (LatestRelease == null) return;
+            LatestRelease = await GetLatestRelease(includePrerelease, force);
+
+            if (LatestRelease == null) throw new FailedUpdateException("Failed fetching the latest release");
 
             if (LatestRelease.Version > CurrentVersion)
             {
                 LogInfo($"New version available: {LatestRelease.Version}");
-                UpdateNotifier.SetNotificationVisibility(true);
+                return true;
             }
+
+            return false;
         }
 
-        public static async Task<ReleaseInfo> GetLatestRelease(bool force = false)
+        public static async Task<ReleaseInfo> GetLatestRelease(bool includePrerelease = false, bool force = false)
         {
             var tag = default(string);
             try
             {
                 if (!force && Releases != null || await UpdateReleaseObject())
                 {
-                    var allowPrerelease = QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigNotifyPrerelease).Value;
+                    var allowPrerelease = includePrerelease || QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigNotifyPrerelease).Value;
                     var release = Releases.Children<JObject>().FirstOrDefault(release => allowPrerelease ^ (bool)release["prerelease"]);
 
                     tag = (string)release["tag_name"];
@@ -71,11 +91,11 @@ namespace QoLFix
             }
             catch (FormatException ex)
             {
-                LogError($"Failed to parse version ({tag}) : {ex}");
+                throw new FailedUpdateException($"Failed to parse version ({tag})", ex);
             }
             catch (Exception ex)
             {
-                LogError($"Failed to fetch the latest release version: {ex}");
+                throw new FailedUpdateException($"Failed to fetch the latest release version", ex);
             }
 
             return null;

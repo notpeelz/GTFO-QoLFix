@@ -1,8 +1,10 @@
-﻿using BepInEx.IL2CPP;
+﻿using System;
+using System.Threading;
+using System.Linq;
+using BepInEx.IL2CPP;
 using BepInEx;
 using HarmonyLib;
 using BepInEx.Configuration;
-using System;
 using QoLFix.Patches.Common;
 using QoLFix.UI;
 using QoLFix.Patches.Misc;
@@ -45,6 +47,7 @@ namespace QoLFix
 
             if (!this.CheckConfigVersion()) return;
 
+            UpdateManager.Initialize();
             this.CheckGameVersion();
             this.CheckUnityLibs();
 
@@ -89,7 +92,22 @@ namespace QoLFix
             UIManager.Initialized += () =>
             {
                 UpdateNotifier.Initialize();
-                UpdateManager.Initialize();
+
+                if (!UpdateManager.Enabled) return;
+                new Thread(async () =>
+                {
+                    try
+                    {
+                        if (await UpdateManager.CheckForUpdate())
+                        {
+                            UpdateNotifier.SetNotificationVisibility(true);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        LogError($"Failed checking for update: {ex}");
+                    }
+                }).Start();
             };
         }
 
@@ -119,39 +137,97 @@ namespace QoLFix
             var currentGameVersion = CellBuildData.GetRevision();
             this.Config.Bind(ConfigGameVersion, currentGameVersion, new ConfigDescription("Last known game version"));
             var knownGameVersionEntry = this.Config.GetConfigEntry<int>(ConfigGameVersion);
-            if (currentGameVersion == knownGameVersionEntry.Value) return;
 
+            // Up to date
+            if (currentGameVersion == SupportedGameRevision) return;
+
+            // Check if we're on a downgraded game version
+            if (currentGameVersion < SupportedGameRevision)
+            {
+                if (currentGameVersion == knownGameVersionEntry.Value) return;
+                knownGameVersionEntry.Value = currentGameVersion;
+
+                NativeMethods.MessageBox(
+                    hWnd: IntPtr.Zero,
+                    text: $"You are attempting to run {ModName} {VersionInfo.Version} on an outdated version of the game.\n" +
+                            $"Your current version of {ModName} was built for: {SupportedGameRevision}\n" +
+                            $"The current game version is: {currentGameVersion}\n\n" +
+                            $"This may result in stability problems or crashes.\n" +
+                            $"This warning will NOT be shown again.",
+                    caption: "Outdated game revision",
+                    options: (int)(NativeMethods.MB_OK | NativeMethods.MB_ICONWARNING | NativeMethods.MB_SYSTEMMODAL));
+
+                return;
+            }
+
+            // We're running on a newer game version
+            var btn = NativeMethods.MessageBox(
+                hWnd: IntPtr.Zero,
+                text: $"You are attempting to run {ModName} {VersionInfo.Version} on a newer version of the game.\n" +
+                        $"Your current version of {ModName} was built for: {SupportedGameRevision}\n" +
+                        $"The current game version is: {currentGameVersion}\n\n" +
+                        $"This may result in stability problems or crashes.\n" +
+                        $"Would you like to check if there's a new update available?",
+                caption: "Outdated mod version",
+                options: (int)(NativeMethods.MB_YESNO | NativeMethods.MB_ICONWARNING | NativeMethods.MB_SYSTEMMODAL));
+
+            if (btn != NativeMethods.IDYES) return;
+
+            bool updateAvailable;
             try
             {
-                if (currentGameVersion < SupportedGameRevision)
-                {
-                    NativeMethods.MessageBox(
-                        hWnd: IntPtr.Zero,
-                        text: $"You are attempting to run {ModName} {VersionInfo.Version} on an outdated version of the game.\n" +
-                              $"Your current version of {ModName} was built for rev {SupportedGameRevision}.\n" +
-                              $"The current game version is: {currentGameVersion}\n\n" +
-                              $"This may result in stability problems or even crashes.\n" +
-                              $"This warning will NOT be shown again.",
-                        caption: "Outdated game revision",
-                        options: (int)(NativeMethods.MB_OK | NativeMethods.MB_ICONWARNING | NativeMethods.MB_SYSTEMMODAL));
-                }
-                else if (currentGameVersion > SupportedGameRevision)
-                {
-                    NativeMethods.MessageBox(
-                        hWnd: IntPtr.Zero,
-                        text: $"You are attempting to run {ModName} {VersionInfo.Version} on a newer version of the game.\n" +
-                              $"Your current version of {ModName} was built for rev {SupportedGameRevision}.\n" +
-                              $"The current game version is: {currentGameVersion}\n\n" +
-                              $"This may result in stability problems or even crashes.\n" +
-                              $"This warning will NOT be shown again.",
-                        caption: "Outdated mod version",
-                        options: (int)(NativeMethods.MB_OK | NativeMethods.MB_ICONWARNING | NativeMethods.MB_SYSTEMMODAL));
-                }
+                // Yes, this is blocking... however it doesn't matter because
+                // the game hasn't booted yet :)
+                var updateCheck = UpdateManager.CheckForUpdate(includePrerelease: true);
+                updateCheck.Wait();
+                updateAvailable = updateCheck.Result;
             }
-            finally
+            catch (AggregateException aggregateException)
             {
-                knownGameVersionEntry.Value = currentGameVersion;
+                var exceptions = aggregateException.InnerExceptions;
+                if (exceptions.Any())
+                {
+                    for (var i = 0; i < exceptions.Count; i++)
+                    {
+                        LogError($"Failed checking for update (ex[{i}]): {exceptions[i]}");
+                    }
+                    NativeMethods.MessageBox(
+                        hWnd: IntPtr.Zero,
+                        text: "Failed to check for updates; check your BepInEx logs.",
+                        caption: $"{ModName} - Failed to check for updates",
+                        options: (int)(NativeMethods.MB_OK | NativeMethods.MB_ICONERROR | NativeMethods.MB_SYSTEMMODAL));
+                }
+                else
+                {
+                    NativeMethods.MessageBox(
+                        hWnd: IntPtr.Zero,
+                        text: "Failed to check for updates (unknown reason)",
+                        caption: $"{ModName} - Failed to check for updates",
+                        options: (int)(NativeMethods.MB_OK | NativeMethods.MB_ICONERROR | NativeMethods.MB_SYSTEMMODAL));
+                }
+
+                return;
             }
+
+            if (!updateAvailable)
+            {
+                NativeMethods.MessageBox(
+                    hWnd: IntPtr.Zero,
+                    text: "No update available yet; check again later.",
+                    caption: $"{ModName} - No update available",
+                    options: (int)(NativeMethods.MB_OK | NativeMethods.MB_ICONINFORMATION | NativeMethods.MB_SYSTEMMODAL));
+                return;
+            }
+
+            NativeMethods.MessageBox(
+                hWnd: IntPtr.Zero,
+                text: $"A new update is available: {UpdateManager.GetLatestReleaseName()}\n" +
+                      $"Press 'OK' to open the download page.",
+                caption: $"{ModName} - Update available",
+                options: (int)(NativeMethods.MB_OK | NativeMethods.MB_ICONINFORMATION | NativeMethods.MB_SYSTEMMODAL));
+
+            UpdateManager.OpenReleasePage();
+            Application.Quit();
         }
 
         private bool CheckUnityLibs()

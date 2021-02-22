@@ -114,11 +114,7 @@ namespace QoLFix.UI
                 highlightedColor: Color.green.RGBMultiplied(0.8f),
                 callback: () =>
                 {
-                    var url = UpdateManager.LatestReleaseUrl;
-                    // Use the repo page as fallback
-                    url ??= $"https://github.com/{QoLFixPlugin.RepoName}";
-
-                    Application.OpenURL(url);
+                    UpdateManager.OpenReleasePage();
                     UIManager.UnlockCursor = false;
                     SetNotificationVisibility(false);
                     Application.Quit();
@@ -133,14 +129,8 @@ namespace QoLFix.UI
 
         private static string GetUpdateMessage()
         {
-            var versionName = $"v{UpdateManager.LatestRelease?.Version?.ToString()}";
-            if (UpdateManager.LatestRelease?.PreRelease == true)
-            {
-                versionName += " (pre-release)";
-            }
-
-            return $"{QoLFixPlugin.ModName} was updated to {versionName ?? "???"}\n" +
-                "Would you like like to update?";
+            return $"{QoLFixPlugin.ModName} was updated to {UpdateManager.GetLatestReleaseName()}\n" +
+                "Press 'Yes' to open the download page.";
         }
     }
 }
