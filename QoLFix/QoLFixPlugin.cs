@@ -10,6 +10,8 @@ using QoLFix.Patches.Annoyances;
 using QoLFix.Patches.Tweaks;
 using QoLFix.Patches.Bugfixes;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace QoLFix
 {
@@ -44,6 +46,7 @@ namespace QoLFix
             if (!this.CheckConfigVersion()) return;
 
             this.CheckGameVersion();
+            this.CheckUnityLibs();
 
             this.Config.SaveOnConfigSet = true;
 
@@ -90,12 +93,6 @@ namespace QoLFix
             };
         }
 
-        public override bool Unload()
-        {
-            LogInfo("Unloading");
-            return base.Unload();
-        }
-
         private bool CheckConfigVersion()
         {
             this.Config.Bind(ConfigVersion, VersionInfo.Version, new ConfigDescription("Used internally for config upgrades; don't touch!"));
@@ -111,7 +108,6 @@ namespace QoLFix
             else if (configVersion > UpdateManager.CurrentVersion)
             {
                 LogError($"The current config is from a newer version of the plugin. If you're trying to downgrade, you should delete the config file and let it regenerate.");
-                this.Unload();
                 return false;
             }
 
@@ -156,6 +152,45 @@ namespace QoLFix
             {
                 knownGameVersionEntry.Value = currentGameVersion;
             }
+        }
+
+        private bool CheckUnityLibs()
+        {
+            var unstripped = true;
+            try
+            {
+                var sceneManager = typeof(SceneManager).GetMethod(nameof(SceneManager.add_sceneLoaded));
+                unstripped &= sceneManager != null;
+                var goActive = typeof(GameObject).GetMethod($"get_{nameof(GameObject.active)}");
+                unstripped &= goActive != null;
+                var colorAlpha = typeof(Color).GetMethod(nameof(Color.AlphaMultiplied));
+                unstripped &= colorAlpha != null;
+            }
+            catch
+            {
+                unstripped = false;
+            }
+
+            if (!unstripped)
+            {
+                var btn = NativeMethods.MessageBox(
+                    hWnd: IntPtr.Zero,
+                    text: $"Looks like you don't have the Unity libraries installed. {ModName} requires unstripped assemblies in order to work properly.\n" +
+                          $"Would you like to open the installation instructions?\n" +
+                          $"Pressing 'No' will launch your game without {ModName}.",
+                    caption: $"{ModName} - Missing Unity libraries",
+                    options: (int)(NativeMethods.MB_YESNO | NativeMethods.MB_ICONWARNING | NativeMethods.MB_SYSTEMMODAL));
+
+                if (btn == NativeMethods.IDYES)
+                {
+                    Application.OpenURL($"https://github.com/{RepoName}/blob/master/README.md");
+                    Application.Quit();
+                }
+
+                return false;
+            }
+
+            return true;
         }
 
         public static void RegisterPatch<T>() where T : IPatch, new()
