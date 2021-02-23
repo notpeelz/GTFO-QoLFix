@@ -224,20 +224,19 @@ namespace QoLFix.Patches.Tweaks
             // This seems to return the same thing as SNet_Player.Ping
             //SNet.MasterManagement.GetPing(player, ref ping, ref quality);
 
+            //var pingLocation = SNet.Master.Load<pPingLocation>().pingLocation;
+            //latency = SteamNetworkingUtils.EstimatePingTimeFromLocalHost(ref pingLocation);
+
             int? latency = null;
             if (player != null && !player.IsLocal)
             {
+                if (player.IsMaster) return "HOST";
                 latency = player?.Ping;
             }
             else if (SNet.Master != null)
             {
-                latency = 0;
-                if (!SNet.Master.IsLocal)
-                {
-                    latency = SNet.Master.Ping;
-                    //var pingLocation = SNet.Master.Load<pPingLocation>().pingLocation;
-                    //latency = SteamNetworkingUtils.EstimatePingTimeFromLocalHost(ref pingLocation);
-                }
+                if (SNet.Master.IsLocal) return "HOST";
+                latency = SNet.Master?.Ping;
             }
 
             return $"{latency?.ToString() ?? "???"} ms";
