@@ -16,7 +16,7 @@ namespace QoLFix.Patches.Bugfixes
         public void Initialize()
         {
             Instance = this;
-            QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Makes the frame of the doors from the Tech tileset pingable (useful for pinging closed doors)."));
+            QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Makes the door frames of the tech tileset pingable (useful for pinging closed doors)."));
         }
 
         public string Name { get; } = PatchName;
