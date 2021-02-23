@@ -17,7 +17,7 @@ namespace QoLFix.Patches.Bugfixes
         public void Initialize()
         {
             Instance = this;
-            QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription($"Fixes the bug where monitor-only terminals on Tech tilesets aren't pingable.\n{WarningMessage}"));
+            QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription($"Fixes the bug where monitor-only terminals on the tech tileset aren't pingable.\n{WarningMessage}"));
         }
 
         public string Name { get; } = PatchName;
