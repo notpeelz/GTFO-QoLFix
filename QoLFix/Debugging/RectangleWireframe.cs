@@ -115,7 +115,7 @@ namespace QoLFix.Debugging
         private void OnDestroy()
         {
             if (this.lines == null) return;
-            for (var i = 0; i < lines.Length; i++)
+            for (var i = 0; i < this.lines.Length; i++)
             {
                 Destroy(this.lines[i]);
                 Destroy(this.lines[i].gameObject);

@@ -23,11 +23,11 @@ namespace QoLFix
             this.comparer = propertyComparer ?? EqualityComparer<TProperty>.Default;
         }
 
-        public new bool Equals(object x, object y) => Equals(x as T, y as T);
+        public new bool Equals(object x, object y) => this.Equals(x as T, y as T);
 
         public bool Equals(T x, T y) => this.comparer.Equals(this.projection(x), this.projection(y));
 
-        public int GetHashCode(object obj) => GetHashCode(obj as T);
+        public int GetHashCode(object obj) => this.GetHashCode(obj as T);
 
         public int GetHashCode(T obj) => obj == null ? 0 : this.projection(obj)?.GetHashCode() ?? 0;
     }

@@ -49,7 +49,7 @@ namespace QoLFix.Patches.Tweaks
             });
         }
 
-        private static bool CellSoundPlayer__Post__Prefix(CellSoundPlayer __instance, uint eventID)
+        private static bool CellSoundPlayer__Post__Prefix(uint eventID)
         {
             if (eventID == EVENTS.AMMOPACK_APPLY) return InterceptSound(nameof(EVENTS.AMMOPACK_APPLY));
             if (eventID == EVENTS.MEDPACK_APPLY) return InterceptSound(nameof(EVENTS.MEDPACK_APPLY));

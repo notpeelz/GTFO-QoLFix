@@ -31,7 +31,7 @@ namespace QoLFix.Patches.Tweaks
         public void Patch()
         {
             QoLFixPlugin.RegisterPatch<PlayerNameExtPatch>();
-            PlayerNameExtPatch.CursorUpdate += OnCursorUpdate;
+            PlayerNameExtPatch.CursorUpdate += this.OnCursorUpdate;
         }
 
         private void OnCursorUpdate(CM_PageBase page, Vector2 pos, ref RaycastHit2D rayHit, bool hovering, bool clicked, Lazy<SNet_Player> player)

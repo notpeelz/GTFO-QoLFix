@@ -60,7 +60,7 @@ namespace QoLFix.Patches.Tweaks
             //this.PatchMethod<SNet_Core_STEAM>(nameof(SNet_Core_STEAM.UpdateConnectionStatus), PatchType.Postfix);
 
             QoLFixPlugin.RegisterPatch<PlayerNameExtPatch>();
-            PlayerNameExtPatch.CursorUpdate += OnCursorUpdate;
+            PlayerNameExtPatch.CursorUpdate += this.OnCursorUpdate;
         }
 
         private GameObject popupGO;
@@ -69,10 +69,10 @@ namespace QoLFix.Patches.Tweaks
 
         private void InitializePopup(CM_PageBase page)
         {
-            popupGO = GOFactory.CreateObject("PlayerInfoPopup", null, out RectTransform t);
+            this.popupGO = GOFactory.CreateObject("PlayerInfoPopup", null, out RectTransform t);
 
-            popupGO.layer = LayerManager.LAYER_UI;
-            popupGO.SetActive(false);
+            this.popupGO.layer = LayerManager.LAYER_UI;
+            this.popupGO.SetActive(false);
 
             t.anchorMin = new Vector2(0.5f, 0.5f);
             t.anchorMax = new Vector2(0.5f, 0.5f);
@@ -81,24 +81,24 @@ namespace QoLFix.Patches.Tweaks
             t.offsetMax = Vector2.zero;
             t.localPosition = Vector2.zero;
 
-            var bgGO = GOFactory.CreateObject("Background", popupGO.transform,
+            var bgGO = GOFactory.CreateObject("Background", this.popupGO.transform,
                 out RectTransform bgTransform,
-                out bgSprite);
+                out this.bgSprite);
             bgGO.layer = LayerManager.LAYER_UI;
 
-            bgSprite.sortingOrder = 50;
-            bgSprite.color = new Color(0.4f, 0.4f, 0.4f, 1);
+            this.bgSprite.sortingOrder = 50;
+            this.bgSprite.color = new Color(0.4f, 0.4f, 0.4f, 1);
 
             bgTransform.pivot = new Vector2(0.5f, 0.5f);
             bgTransform.localScale = new Vector3(31f, 8f, 1f);
             bgTransform.localPosition = Vector2.zero;
 
             var tex = Resources.Load<Texture2D>("gui/gear/frames/cellUI_Frame_BoxFiled");
-            bgSprite.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), t.pivot, 100f);
+            this.bgSprite.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), t.pivot, 100f);
 
-            var textGO = GOFactory.CreateObject("Text", popupGO.transform,
+            var textGO = GOFactory.CreateObject("Text", this.popupGO.transform,
                 out RectTransform textTransform,
-                out pingText,
+                out this.pingText,
                 out Cell_TMProDisabler _,
                 out LatencyWatermark _);
             textGO.layer = LayerManager.LAYER_UI;
@@ -112,16 +112,16 @@ namespace QoLFix.Patches.Tweaks
                 this.LogError("Failed to find font 'ShareTechMono'");
             }
 
-            pingText.color = Color.white;
-            pingText.alpha = 1f;
-            pingText.fontSize = 18;
-            pingText.font = techFont;
-            pingText.alignment = TextAlignmentOptions.CenterGeoAligned;
-            pingText.enableWordWrapping = false;
-            pingText.isOrthographic = true;
-            pingText.autoSizeTextContainer = true;
-            pingText.sortingOrder = bgSprite.sortingOrder + 1;
-            pingText.UpdateMaterial();
+            this.pingText.color = Color.white;
+            this.pingText.alpha = 1f;
+            this.pingText.fontSize = 18;
+            this.pingText.font = techFont;
+            this.pingText.alignment = TextAlignmentOptions.CenterGeoAligned;
+            this.pingText.enableWordWrapping = false;
+            this.pingText.isOrthographic = true;
+            this.pingText.autoSizeTextContainer = true;
+            this.pingText.sortingOrder = this.bgSprite.sortingOrder + 1;
+            this.pingText.UpdateMaterial();
 
             textTransform.offsetMin = Vector2.zero;
             textTransform.offsetMax = Vector2.zero;
@@ -141,13 +141,13 @@ namespace QoLFix.Patches.Tweaks
         {
             if (this.popupGO == null)
             {
-                InitializePopup(page);
+                this.InitializePopup(page);
             }
 
             if (hovering) UpdatePosition();
 
             if (this.lastState == hovering) return;
-            lastState = hovering;
+            this.lastState = hovering;
 
             if (!hovering)
             {
@@ -160,14 +160,14 @@ namespace QoLFix.Patches.Tweaks
 
             this.pingText.SetText(GetPlayerPing(player.Value));
             this.pingText.ForceMeshUpdate(true);
-            this.pingTextWidth = pingText.GetRenderedWidth(false);
-            this.pingTextHeight = pingText.GetRenderedHeight(false);
+            this.pingTextWidth = this.pingText.GetRenderedWidth(false);
+            this.pingTextHeight = this.pingText.GetRenderedHeight(false);
 
             UpdatePosition();
 
             void UpdatePosition()
             {
-                popupGO.transform.position = PopupCursorOffset + new Vector3(cursorPos.x, cursorPos.y + this.pingTextHeight / 2f, this.popupGO.transform.position.z);
+                this.popupGO.transform.position = PopupCursorOffset + new Vector3(cursorPos.x, cursorPos.y + this.pingTextHeight / 2f, this.popupGO.transform.position.z);
             }
         }
 

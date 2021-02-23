@@ -48,7 +48,7 @@ namespace QoLFix.Patches.Tweaks
             {
                 Instance.LogDebug($"{nameof(PlaceholderInteractionMonitor)}.{nameof(OnTrigger)}()");
 
-                switch (playerAgent.Inventory?.WieldedSlot)
+                switch (this.playerAgent.Inventory?.WieldedSlot)
                 {
                     case InventorySlot.ResourcePack:
                     case InventorySlot.Consumable:
@@ -58,7 +58,7 @@ namespace QoLFix.Patches.Tweaks
                         return;
                 }
 
-                var wieldedItem = playerAgent.Inventory.WieldedItem;
+                var wieldedItem = this.playerAgent.Inventory.WieldedItem;
                 if (wieldedItem == null)
                 {
                     Instance.LogError($"Wielded item is null?");
@@ -94,7 +94,7 @@ namespace QoLFix.Patches.Tweaks
                         break;
                 }
 
-                currentPlaceholder.enabled = false;
+                this.currentPlaceholder.enabled = false;
 
                 var backpack = PlayerBackpackManager.GetLocalOrSyncBackpack();
                 var slotAmmo = backpack.AmmoStorage.GetInventorySlotAmmo(inventorySlot);
