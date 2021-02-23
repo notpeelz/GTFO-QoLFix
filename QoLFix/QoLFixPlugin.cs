@@ -74,6 +74,7 @@ namespace QoLFix
             RegisterPatch<DropResourcesPatch>();
             RegisterPatch<BetterWeaponSwapPatch>();
             RegisterPatch<LatencyHUDPatch>();
+            RegisterPatch<ResourceAudioCuePatch>();
 
             // Bug fixes
             RegisterPatch<FixToolRefillBioScannerPatch>();
