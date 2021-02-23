@@ -76,7 +76,7 @@ namespace QoLFix.Patches.Tweaks
 
             t.anchorMin = new Vector2(0.5f, 0.5f);
             t.anchorMax = new Vector2(0.5f, 0.5f);
-            t.pivot = new Vector2(0, 1);
+            t.pivot = new Vector2(0.5f, 0.5f);
             t.offsetMin = Vector2.zero;
             t.offsetMax = Vector2.zero;
             t.localPosition = Vector2.zero;
@@ -89,7 +89,7 @@ namespace QoLFix.Patches.Tweaks
             bgSprite.sortingOrder = 50;
             bgSprite.color = new Color(0.4f, 0.4f, 0.4f, 1);
 
-            bgTransform.pivot = new Vector2(0, 1);
+            bgTransform.pivot = new Vector2(0.5f, 0.5f);
             bgTransform.localScale = new Vector3(31f, 8f, 1f);
             bgTransform.localPosition = Vector2.zero;
 
@@ -116,7 +116,7 @@ namespace QoLFix.Patches.Tweaks
             pingText.alpha = 1f;
             pingText.fontSize = 18;
             pingText.font = techFont;
-            pingText.alignment = TextAlignmentOptions.TopLeft;
+            pingText.alignment = TextAlignmentOptions.CenterGeoAligned;
             pingText.enableWordWrapping = false;
             pingText.isOrthographic = true;
             pingText.autoSizeTextContainer = true;
@@ -125,8 +125,12 @@ namespace QoLFix.Patches.Tweaks
 
             textTransform.offsetMin = Vector2.zero;
             textTransform.offsetMax = Vector2.zero;
-            textTransform.pivot = new Vector2(0, 1);
+            textTransform.pivot = new Vector2(0.5f, 0.5f);
             textTransform.localPosition = Vector2.zero;
+
+            var extentX = this.bgSprite.bounds.size.x / 2f;
+            textTransform.anchorMin = new Vector2(0.5f - extentX, 0.5f);
+            textTransform.anchorMax = new Vector2(0.5f + extentX, 0.5f);
         }
 
         private float pingTextWidth;
@@ -158,12 +162,6 @@ namespace QoLFix.Patches.Tweaks
             this.pingText.ForceMeshUpdate(true);
             this.pingTextWidth = pingText.GetRenderedWidth(false);
             this.pingTextHeight = pingText.GetRenderedHeight(false);
-
-            // There's invisible pixels on the background sprite, so we need
-            // to account for that when centering
-            const float bgOffset = 8f;
-            var gap = this.bgSprite.bounds.size.x - this.pingTextWidth;
-            this.pingText.transform.localPosition = new Vector3(gap / 2f + bgOffset, 0, 0);
 
             UpdatePosition();
 
