@@ -21,7 +21,7 @@ namespace QoLFix.Patches.Tweaks
         public void Initialize()
         {
             Instance = this;
-            QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Lets you (terminal) ping resource packs that were swapped out."));
+            QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Relists swapped out items on terminals. This lets you list/ping/query items after moving them."));
         }
 
         public string Name { get; } = PatchName;
