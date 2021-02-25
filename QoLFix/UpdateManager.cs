@@ -76,7 +76,7 @@ namespace QoLFix
                 if (!force && Releases != null || await UpdateReleaseObject())
                 {
                     var allowPrerelease = includePrerelease || QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigNotifyPrerelease).Value;
-                    var release = Releases.Children<JObject>().FirstOrDefault(release => allowPrerelease ^ (bool)release["prerelease"]);
+                    var release = Releases.Children<JObject>().FirstOrDefault(release => !(bool)release["prerelease"] || allowPrerelease);
 
                     if (release == null) return null;
 
