@@ -136,7 +136,7 @@ namespace QoLFix
         private void CheckGameVersion()
         {
             var currentGameVersion = CellBuildData.GetRevision();
-            this.Config.Bind(ConfigGameVersion, currentGameVersion, new ConfigDescription("Last known game version"));
+            this.Config.Bind(ConfigGameVersion, currentGameVersion, new ConfigDescription("Last known game version; don't touch!"));
             var knownGameVersionEntry = this.Config.GetConfigEntry<int>(ConfigGameVersion);
 
             // Up to date
