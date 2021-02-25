@@ -5,7 +5,7 @@ A general [GTFO](https://store.steampowered.com/app/493520/GTFO) improvement mod
 
 1. Download the latest [IL2CPP x64 BepInEx build](https://builds.bepis.io/projects/bepinex_be)
 2. Extract the archive to your game folder (`steamapps/common/GTFO`)
-3. [Download the latest version of QoL Fix](https://github.com/louistakepillz/GTFO-QoLFix/releases) and and put the DLL file in `BepInEx/plugins`
+3. [Download the latest version of QoL Fix](https://github.com/notpeelz/GTFO-QoLFix/releases) and and put the DLL file in `BepInEx/plugins`
 4. Download the [Unity 2019.4.1 libraries archive](https://github.com/LavaGang/Unity-Runtime-Libraries/raw/master/2019.4.1.zip) and extract it in `BepInEx/unity-libs`. Create the folder if it doesn't exist.
 5. Launch your game
 
