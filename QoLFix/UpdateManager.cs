@@ -23,8 +23,6 @@ namespace QoLFix
 
         public static ReleaseInfo LatestRelease { get; private set; }
 
-        public static string LatestReleaseUrl { get; private set; }
-
         public static bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
         public static void Initialize()
@@ -38,7 +36,7 @@ namespace QoLFix
 
         public static void OpenReleasePage()
         {
-            Application.OpenURL(LatestReleaseUrl ?? $"https://github.com/{QoLFixPlugin.RepoName}");
+            Application.OpenURL(LatestRelease?.DownloadUrl ?? $"https://github.com/{QoLFixPlugin.RepoName}");
         }
 
         public static string GetLatestReleaseName()
