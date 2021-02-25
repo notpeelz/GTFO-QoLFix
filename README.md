@@ -42,7 +42,7 @@ Lets you open the steam profile of your teammates by clicking on their name.
 
 Changes the weapon swap order dynamically based on the drama state of the game (stealth, combat, etc.)
 
-This prevents accidentally switching back to your primary weapon after, e.g running out of glowsticks.
+This prevents accidentally switching back to your primary weapon after, e.g., running out of glowsticks.
 
 <a href="https://i.imgur.com/Q4cZQff.mp4">
   <img height="240" alt="betterweaponswap thumbnail" src="img/betterweaponswap_thumbnail.jpg">
@@ -104,7 +104,7 @@ Disables Steam Rich Presence updates; also prevents Steam friends from seeing yo
 ## Bugfixes
 
 Fixes these bugs:
-- bio tracker tags would remain on the screen after multiple scans; no more floating triangles everywhere!
+- bio tracker tags would remain on screen after multiple scans; no more floating triangles everywhere!
 
   <img height="240" alt="biotracker navmarker" src="img/biotracker_navmarker.jpg">
 
@@ -113,7 +113,7 @@ Fixes these bugs:
 
   <img height="120" alt="resource in locker ping" src="img/fixlockerping.jpg">
 
-- collision bug where c-foam globs could go through if aimed at the cracks
+- c-foam globs could go through doors if aimed at the cracks
 - the door frames on the tech tileset aren't pingable
 - monitor-only terminals on the tech tileset aren't pingable
 
