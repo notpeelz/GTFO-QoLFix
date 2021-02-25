@@ -89,7 +89,6 @@ namespace QoLFix
 
             this.Config.Save();
 
-            UIManager.Initialize();
             UIManager.Initialized += () =>
             {
                 UpdateNotifier.Initialize();
@@ -110,6 +109,7 @@ namespace QoLFix
                     }
                 }).Start();
             };
+            UIManager.Initialize();
         }
 
         private bool CheckConfigVersion()
