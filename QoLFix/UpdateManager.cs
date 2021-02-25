@@ -78,6 +78,8 @@ namespace QoLFix
                     var allowPrerelease = includePrerelease || QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigNotifyPrerelease).Value;
                     var release = Releases.Children<JObject>().FirstOrDefault(release => allowPrerelease ^ (bool)release["prerelease"]);
 
+                    if (release == null) return null;
+
                     tag = (string)release["tag_name"];
                     if (tag.StartsWith("v")) tag = tag[1..];
 
