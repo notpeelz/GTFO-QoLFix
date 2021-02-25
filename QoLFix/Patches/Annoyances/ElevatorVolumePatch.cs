@@ -36,25 +36,28 @@ namespace QoLFix.Patches.Annoyances
         private static void CellSettingsManager__OnApplicationFocus__Postfix(bool focus)
         {
             Focused = focus;
-            UpdateAudio(GameStateManager.CurrentStateName);
+            UpdateAudio();
         }
 
         private static void GameStateManager__ChangeState__Postfix(eGameStateName nextState) => UpdateAudio(nextState);
 
-        private static void UpdateAudio(eGameStateName state)
+        private static bool UpdateAudio(eGameStateName? state = null)
         {
-            if (!Focused) return;
+            if (state == null) state = GameStateManager.CurrentStateName;
 
             switch (state)
             {
                 case eGameStateName.Generating:
                 case eGameStateName.ReadyToStopElevatorRide:
                 case eGameStateName.StopElevatorRide:
+                case eGameStateName.ReadyToStartLevel:
+                    if (!Focused) return true;
                     CellSound.SetGlobalRTPCValue(GAME_PARAMETERS.VOLUME_SETTING_SFX, QoLFixPlugin.Instance.Config.GetConfigEntry<float>(ConfigVolume).Value * 100f);
-                    break;
-                case eGameStateName.InLevel:
+                    return true;
+                default:
+                    if (!Focused) return false;
                     CellSettingsManager.SettingsData.Audio.ApplyAllValues();
-                    break;
+                    return false;
             }
         }
     }
