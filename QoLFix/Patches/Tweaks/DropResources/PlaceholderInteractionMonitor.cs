@@ -2,6 +2,7 @@
 using LevelGeneration;
 using Player;
 using SNetwork;
+using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
 #if DEBUG_PLACEHOLDERS
@@ -127,6 +128,7 @@ namespace QoLFix.Patches.Tweaks
                 return levelItem.TryCast<T>();
             }
 
+            [HideFromIl2Cpp]
             private void UpdateInteractionMessage(string message) =>
                 this.interact.SetAction(message, InputAction.Use);
 
