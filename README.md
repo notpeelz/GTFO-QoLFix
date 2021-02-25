@@ -108,14 +108,14 @@ Fixes these bugs:
 
   <img height="240" alt="biotracker navmarker" src="img/biotracker_navmarker.jpg">
 
-- bio tracker can be given tool refills
-- resources inside of lockers/boxes aren't individually pingable
+- bio tracker could be given tool refills
+- resources inside of lockers/boxes weren't individually pingable
 
   <img height="120" alt="resource in locker ping" src="img/fixlockerping.jpg">
 
 - c-foam globs could go through doors if aimed at the cracks
-- the door frames on the tech tileset aren't pingable
-- monitor-only terminals on the tech tileset aren't pingable
+- the door frames on the tech tileset weren't pingable
+- monitor-only terminals on the tech tileset weren't pingable
 
 ## Credits
 
