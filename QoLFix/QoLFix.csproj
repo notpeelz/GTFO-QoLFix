@@ -10,7 +10,7 @@
     <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <!--<DefineConstants>DEBUG_PLACEHOLDERS</DefineConstants>-->
   </PropertyGroup>
