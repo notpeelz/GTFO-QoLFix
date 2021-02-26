@@ -121,7 +121,7 @@ Fixes these bugs:
 ## Credits
 
 Thanks a lot to:
-- DarkCactus, fanta, Solakka, Gorilla and Phanstasm for helping me test during development
+- DarkCactus, fanta, Solakka, Gorilla and Phantasm for helping me test during development
 - knah, Spartan, js6pak, dak and ghorsington for answering my thousands of questions
 
 ## Licensing
