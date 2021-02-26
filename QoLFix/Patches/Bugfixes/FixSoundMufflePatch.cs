@@ -35,7 +35,7 @@ namespace QoLFix.Patches.Bugfixes
                 case eGameStateName.NoLobby:
                 case eGameStateName.Lobby:
                 case eGameStateName.Generating:
-                    CellSound.SetGlobalRTPCValue(GAME_PARAMETERS.SOUND_EFFECT_MUFFLE, 0);
+                    CellSound.SetGlobalRTPCValue(GAME_PARAMETERS.SCOUT_SCREAM_DUCKING, 0);
                     break;
             }
         }
