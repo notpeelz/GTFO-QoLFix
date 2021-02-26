@@ -9,7 +9,7 @@ namespace QoLFix.Patches.Bugfixes
     public class FixTerminalDisplayPingPatch : IPatch
     {
         private static readonly string PatchName = nameof(FixTerminalDisplayPingPatch);
-        private static readonly string WarningMessage = "WARNING: this patch causes exceptions to show up in the logs. This is unfortunately unavoidable but it shouldn't cause any issues.";
+        private static readonly string WarningMessage = "NOTICE: this patch is forcefully disabled due to a bug in GTFO code causing world generation issues.";
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
         public static IPatch Instance { get; private set; }
@@ -22,7 +22,7 @@ namespace QoLFix.Patches.Bugfixes
 
         public string Name { get; } = PatchName;
 
-        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public bool Enabled => false; // QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
         public Harmony Harmony { get; set; }
 
