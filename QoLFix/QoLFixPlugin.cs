@@ -84,6 +84,7 @@ namespace QoLFix
             RegisterPatch<FixBioScannerNavMarkerPatch>();
             RegisterPatch<FixLockerPingPatch>();
             RegisterPatch<FixSoundMufflePatch>();
+            RegisterPatch<FixFlashlightStatePatch>();
 
             // XXX: needs to execute after everything else
             RegisterPatch<ReparentPickupPatch>();
