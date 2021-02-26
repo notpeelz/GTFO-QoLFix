@@ -116,7 +116,7 @@ Fixes these bugs:
 - c-foam globs could go through doors if aimed at the cracks
 - the door frames on the tech tileset weren't pingable
 - the scout muffle sound effect wouldn't get reset when exiting a game too early
-- the flashlight would turn off when dropping/swapping items in lockers
+- the flashlight would turn off when dropping/swapping items
 
 ## Credits
 
