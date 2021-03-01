@@ -12,10 +12,12 @@ using UnityEngine;
 namespace QoLFix.Patches.Tweaks
 {
     /// <summary>
+    /// <para>
     /// This patch displays a network latency information on your HUD.
     /// It displays your latency to the host on the bottom right corner.
     /// Additionaly, the latency to every player is displayed on the map menu.
-    ///
+    /// </para>
+    /// <para>
     /// Known bugs:
     /// The latency doesn't update correctly throughout the game for some
     /// unknown reason. This might be because the pPingLocation struct doesn't
@@ -31,10 +33,11 @@ namespace QoLFix.Patches.Tweaks
     ///     If you need to do that, convert it to a string representation using
     ///     the methods in ISteamNetworkingUtils
     /// See: https://partner.steamgames.com/doc/api/steamnetworkingtypes#SteamNetworkPingLocation_t
+    /// </para>
     /// </summary>
     public partial class LatencyHUDPatch : IPatch
     {
-        private static readonly string PatchName = nameof(LatencyHUDPatch);
+        private const string PatchName = nameof(LatencyHUDPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
         private static readonly Vector3 PopupCursorOffset = new Vector3(0, 5f, 0);
@@ -167,7 +170,10 @@ namespace QoLFix.Patches.Tweaks
 
             void UpdatePosition()
             {
-                this.popupGO.transform.position = PopupCursorOffset + new Vector3(cursorPos.x, cursorPos.y + this.pingTextHeight / 2f, this.popupGO.transform.position.z);
+                this.popupGO.transform.position = PopupCursorOffset + new Vector3(
+                    cursorPos.x,
+                    cursorPos.y + (this.pingTextHeight / 2f),
+                    this.popupGO.transform.position.z);
             }
         }
 
@@ -226,7 +232,7 @@ namespace QoLFix.Patches.Tweaks
             //latency = SteamNetworkingUtils.EstimatePingTimeFromLocalHost(ref pingLocation);
 
             int? latency = null;
-            if (player != null && !player.IsLocal)
+            if (player?.IsLocal == false)
             {
                 if (player.IsMaster) return "HOST";
                 latency = player?.Ping;

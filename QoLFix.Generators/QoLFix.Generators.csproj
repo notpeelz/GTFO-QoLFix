@@ -10,6 +10,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.8.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
+    <PackageReference Include="Roslynator.Core" Version="2.0.0" />
     <PackageReference Include="Roslynator.CSharp" Version="2.0.0" />
   </ItemGroup>
 </Project>

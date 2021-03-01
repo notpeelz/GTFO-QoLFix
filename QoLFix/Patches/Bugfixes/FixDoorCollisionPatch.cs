@@ -6,6 +6,7 @@ using UnityEngine;
 namespace QoLFix.Patches.Bugfixes
 {
     /// <summary>
+    /// <para>
     /// WeakDoor has two states: Skinned and Simple (default).
     /// The door switches to the Skinned state when damaged or c-foamed.
     /// The Simple state uses a single BoxCollider, whereas Skinned is split
@@ -14,12 +15,12 @@ namespace QoLFix.Patches.Bugfixes
     /// problems, namely:
     ///   - c-foam can pass right through the gap and hit enemies behind them
     ///   - players can hit both colliders at once by aiming at the gap
-    ///
-    /// This patch increases the collision hitbox of the individual "parts".
+    /// </para>
+    /// <para>This patch increases the collision hitbox of the individual "parts".</para>
     /// </summary>
     public class FixDoorCollisionPatch : IPatch
     {
-        private static readonly string PatchName = nameof(FixDoorCollisionPatch);
+        private const string PatchName = nameof(FixDoorCollisionPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
         public static IPatch Instance { get; private set; }

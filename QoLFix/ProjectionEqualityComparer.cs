@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace QoLFix
 {
-    public class ProjectionEqualityComparer
+    public static class ProjectionEqualityComparer
     {
         public static IEqualityComparer<T> Create<T, TProperty>(Func<T, TProperty> projection, IEqualityComparer<TProperty> propertyComparer = null)
             where T : class

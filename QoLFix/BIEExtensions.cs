@@ -73,7 +73,7 @@ namespace QoLFix
 
             MethodInfo postfix = null, prefix = null;
 
-            if (patchType.HasFlag(PatchType.Prefix))
+            if ((patchType & PatchType.Prefix) != 0)
             {
                 try
                 {
@@ -85,7 +85,7 @@ namespace QoLFix
                 }
             }
 
-            if (patchType.HasFlag(PatchType.Postfix))
+            if ((patchType & PatchType.Postfix) != 0)
             {
                 try
                 {

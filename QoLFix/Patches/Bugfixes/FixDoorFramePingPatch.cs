@@ -8,7 +8,7 @@ namespace QoLFix.Patches.Bugfixes
 {
     public class FixDoorFramePingPatch : IPatch
     {
-        private static readonly string PatchName = nameof(FixDoorFramePingPatch);
+        private const string PatchName = nameof(FixDoorFramePingPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
         public static IPatch Instance { get; private set; }
@@ -32,7 +32,7 @@ namespace QoLFix.Patches.Bugfixes
 
         private static readonly string[] CollisionNames = new[] { "c_weakDoor_8x4_tech", "c_weakDoor_4x4_tech" };
 
-        private static void LG_BuildGateJob__SetupDoor__Postfix(LG_BuildGateJob __instance, ref iLG_Door_Core __result)
+        private static void LG_BuildGateJob__SetupDoor__Postfix(LG_BuildGateJob __instance)
         {
             var colliders = __instance.m_gate.gameObject.GetComponentsInChildren<MeshCollider>();
 

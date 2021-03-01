@@ -26,7 +26,7 @@ namespace QoLFix.Patches.Tweaks
 
             public static bool DisableInteractions { get; private set; }
 
-            private void Awake()
+            internal void Awake()
             {
                 Instance.LogDebug($"{nameof(PlaceholderInteractionMonitor)}.{nameof(Awake)}()");
                 this.playerAgent = this.gameObject.GetComponent<PlayerAgent>();
@@ -62,7 +62,7 @@ namespace QoLFix.Patches.Tweaks
                 var wieldedItem = this.playerAgent.Inventory.WieldedItem;
                 if (wieldedItem == null)
                 {
-                    Instance.LogError($"Wielded item is null?");
+                    Instance.LogError("Wielded item is null?");
                     return;
                 }
 
@@ -156,7 +156,7 @@ namespace QoLFix.Patches.Tweaks
                     _ => false,
                 };
 
-                if (!raycast || placeholder == null || !placeholder.enabled || !isDroppable)
+                if (!raycast || placeholder?.enabled != true || !isDroppable)
                 {
                     if (this.currentPlaceholder != null)
                     {

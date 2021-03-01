@@ -18,7 +18,7 @@ namespace QoLFix.Patches.Tweaks
 {
     public partial class DropResourcesPatch : IPatch
     {
-        private static readonly string PatchName = nameof(DropResourcesPatch);
+        private const string PatchName = nameof(DropResourcesPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
         public static IPatch Instance { get; private set; }
@@ -166,7 +166,7 @@ namespace QoLFix.Patches.Tweaks
                     out BoxCollider collider,
                     out StorageSlotPlaceholder placeholder);
 
-                slotGO.transform.localPosition = (slotSettings?.Offset - size / 2f) ?? defaultPos;
+                slotGO.transform.localPosition = (slotSettings?.Offset - (size / 2f)) ?? defaultPos;
                 slotGO.transform.localRotation = slotSettings?.Rotation ?? Quaternion.identity;
                 slotGO.layer = LayerManager.LAYER_INTERACTION;
 

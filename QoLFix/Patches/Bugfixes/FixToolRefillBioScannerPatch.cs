@@ -6,7 +6,7 @@ namespace QoLFix.Patches.Bugfixes
 {
     public class FixToolRefillBioScannerPatch : IPatch
     {
-        private static readonly string PatchName = nameof(FixToolRefillBioScannerPatch);
+        private const string PatchName = nameof(FixToolRefillBioScannerPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
         public static IPatch Instance { get; private set; }

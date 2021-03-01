@@ -13,7 +13,7 @@ namespace QoLFix.Patches.Tweaks
     /// </summary>
     public class TerminalPingableSwapsPatch : IPatch
     {
-        private static readonly string PatchName = nameof(TerminalPingableSwapsPatch);
+        private const string PatchName = nameof(TerminalPingableSwapsPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
         public static IPatch Instance { get; private set; }
@@ -39,7 +39,7 @@ namespace QoLFix.Patches.Tweaks
         {
             __instance.m_sync.add_OnSyncStateChange(
                 (Il2CppSystem.Action<ePickupItemStatus, pPickupPlacement, PlayerAgent, bool>)(
-                    (status, placement, _, _) => ResourcePackPickup__OnSyncStateChange(__instance, status)
+                    (status, _, _, _) => ResourcePackPickup__OnSyncStateChange(__instance, status)
                 )
             );
         }

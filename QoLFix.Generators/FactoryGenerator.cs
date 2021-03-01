@@ -64,14 +64,14 @@ public static GameObject CreateObject<{Params(genericTypes)}>(string name, Trans
 {{
     var obj = CreateObject(name, parent, comps: new Il2CppSystem.Type[]
     {{
-        {Lines(genericTypes.Select(x => $"Il2CppType.Of<{x}>(),"), 8)}
+        {Lines(genericTypes.Select(x => $"Il2CppType.Of<{x}>(),"))}
     }});
     {Lines(assignments)}
     return obj;
 }}
 ";
 
-                static string Lines(IEnumerable<string> lines, int indent = 0) => string.Join("\n", lines);
+                static string Lines(IEnumerable<string> lines) => string.Join("\n", lines);
 
                 static string Params(IEnumerable<string> @params) => string.Join(", ", @params);
             }

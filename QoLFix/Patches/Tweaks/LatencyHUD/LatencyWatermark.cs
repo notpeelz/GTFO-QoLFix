@@ -19,12 +19,12 @@ namespace QoLFix.Patches.Tweaks
 
             public PlayerAgent Player { get; set; }
 
-            private void Awake()
+            internal void Awake()
             {
                 this.text = this.GetComponent<TextMeshPro>();
             }
 
-            private void Update()
+            internal void Update()
             {
                 if ((Time.time - this.lastUpdated) < 0.25f) return;
                 this.lastUpdated = Time.time;

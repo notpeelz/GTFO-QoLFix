@@ -74,7 +74,7 @@ namespace QoLFix
                 }
             }
 
-            if (resourceContainer != null && !resourceContainer.m_intOpen.enabled)
+            if (resourceContainer?.m_intOpen.enabled == false)
             {
                 var storageChildren = resourceContainer.m_storageComp.gameObject
                    .GetChildren()
@@ -113,9 +113,7 @@ namespace QoLFix
                 }
             }
 
-            if (comp == null) return false;
-
-            return true;
+            return comp != null;
         }
 
         public static LG_WeakResourceContainer GetParentResourceContainer(Vector3 position)
@@ -125,14 +123,14 @@ namespace QoLFix
                 .Cast<LG_WeakResourceContainer>()
                 .ToArray();
 
-            if (!resourceContainers.Any()) return null;
+            if (resourceContainers.Length == 0) return null;
 
-            if (resourceContainers.Count() > 1)
+            if (resourceContainers.Length > 1)
             {
                 QoLFixPlugin.LogError($"{nameof(ItemInLevel)} is inside of multiple resource containers!?");
             }
 
-            return resourceContainers.First();
+            return resourceContainers[0];
         }
     }
 }

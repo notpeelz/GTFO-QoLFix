@@ -12,9 +12,9 @@ namespace QoLFix.Patches.Bugfixes
     /// This patch overrides the ping selection target if the camera is aimed
     /// at a resource inside the container.
     /// </summary>
-    public class FixLockerPingPatch : IPatch 
+    public class FixLockerPingPatch : IPatch
     {
-        private static readonly string PatchName = nameof(FixLockerPingPatch);
+        private const string PatchName = nameof(FixLockerPingPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
         public static IPatch Instance { get; private set; }

@@ -6,7 +6,7 @@ namespace QoLFix.Patches.Annoyances
 {
     public class IntroSkipPatch : IPatch
     {
-        private static readonly string PatchName = nameof(IntroSkipPatch);
+        private const string PatchName = nameof(IntroSkipPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
         private static readonly ConfigDefinition ConfigSkipRundownInfo = new ConfigDefinition(PatchName, "SkipRundownInfo");
         private static readonly ConfigDefinition ConfigSkipRundownConnect = new ConfigDefinition(PatchName, "SkipRundownConnect");

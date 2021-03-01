@@ -128,7 +128,7 @@ namespace QoLFix
             }
             else if (configVersion > UpdateManager.CurrentVersion)
             {
-                LogError($"The current config is from a newer version of the plugin. If you're trying to downgrade, you should delete the config file and let it regenerate.");
+                LogError("The current config is from a newer version of the plugin. If you're trying to downgrade, you should delete the config file and let it regenerate.");
                 return false;
             }
 
@@ -153,10 +153,10 @@ namespace QoLFix
                 NativeMethods.MessageBox(
                     hWnd: IntPtr.Zero,
                     text: $"You are attempting to run {ModName} {VersionInfo.Version} on an outdated version of the game.\n" +
-                            $"Your current version of {ModName} was built for: {SupportedGameRevision}\n" +
-                            $"The current game version is: {currentGameVersion}\n\n" +
-                            $"This may result in stability problems or crashes.\n" +
-                            $"This warning will NOT be shown again.",
+                        $"Your current version of {ModName} was built for: {SupportedGameRevision}\n" +
+                        $"The current game version is: {currentGameVersion}\n\n" +
+                        "This may result in stability problems or crashes.\n" +
+                        "This warning will NOT be shown again.",
                     caption: "Outdated game revision",
                     options: (int)(NativeMethods.MB_OK | NativeMethods.MB_ICONWARNING | NativeMethods.MB_SYSTEMMODAL));
 
@@ -167,10 +167,10 @@ namespace QoLFix
             var btn = NativeMethods.MessageBox(
                 hWnd: IntPtr.Zero,
                 text: $"You are attempting to run {ModName} {VersionInfo.Version} on a newer version of the game.\n" +
-                        $"Your current version of {ModName} was built for: {SupportedGameRevision}\n" +
-                        $"The current game version is: {currentGameVersion}\n\n" +
-                        $"This may result in stability problems or crashes.\n" +
-                        $"Would you like to check if there's a new update available?",
+                    $"Your current version of {ModName} was built for: {SupportedGameRevision}\n" +
+                    $"The current game version is: {currentGameVersion}\n\n" +
+                    "This may result in stability problems or crashes.\n" +
+                    "Would you like to check if there's a new update available?",
                 caption: "Outdated mod version",
                 options: (int)(NativeMethods.MB_YESNO | NativeMethods.MB_ICONWARNING | NativeMethods.MB_SYSTEMMODAL));
 
@@ -188,7 +188,7 @@ namespace QoLFix
             catch (AggregateException aggregateException)
             {
                 var exceptions = aggregateException.InnerExceptions;
-                if (exceptions.Any())
+                if (exceptions.Count > 0)
                 {
                     for (var i = 0; i < exceptions.Count; i++)
                     {
@@ -225,7 +225,7 @@ namespace QoLFix
             NativeMethods.MessageBox(
                 hWnd: IntPtr.Zero,
                 text: $"A new update is available: {UpdateManager.GetLatestReleaseName()}\n" +
-                      $"Press 'OK' to open the download page.",
+                    "Press 'OK' to open the download page.",
                 caption: $"{ModName} - Update available",
                 options: (int)(NativeMethods.MB_OK | NativeMethods.MB_ICONINFORMATION | NativeMethods.MB_SYSTEMMODAL));
 
@@ -255,8 +255,8 @@ namespace QoLFix
                 var btn = NativeMethods.MessageBox(
                     hWnd: IntPtr.Zero,
                     text: $"Looks like you don't have the Unity libraries installed. {ModName} requires unstripped assemblies in order to work properly.\n" +
-                          $"Would you like to open the installation instructions?\n" +
-                          $"Pressing 'No' will launch your game without {ModName}.",
+                        "Would you like to open the installation instructions?\n" +
+                        $"Pressing 'No' will launch your game without {ModName}.",
                     caption: $"{ModName} - Missing Unity libraries",
                     options: (int)(NativeMethods.MB_YESNO | NativeMethods.MB_ICONWARNING | NativeMethods.MB_SYSTEMMODAL));
 

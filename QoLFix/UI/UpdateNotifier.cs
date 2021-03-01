@@ -19,7 +19,7 @@ namespace QoLFix.UI
             ShouldUpdate = true;
         }
 
-        private void Update()
+        internal void Update()
         {
             if (UpdateNotification == null) return;
             if (!ShouldUpdate) return;
@@ -52,8 +52,8 @@ namespace QoLFix.UI
             UpdateNotification.SetActive(false);
             var panelTransform = UpdateNotification.GetComponent<RectTransform>();
 
-            var width = 0.125f;
-            var height = 0.1f;
+            const float width = 0.125f;
+            const float height = 0.1f;
             panelTransform.anchorMin = new Vector2(0.5f - width, 0.5f - height);
             panelTransform.anchorMax = new Vector2(0.5f + width, 0.5f + height);
 

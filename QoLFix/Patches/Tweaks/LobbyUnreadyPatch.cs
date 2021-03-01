@@ -8,7 +8,7 @@ namespace QoLFix.Patches.Tweaks
 {
     public class LobbyUnreadyPatch : IPatch
     {
-        private static readonly string PatchName = nameof(LobbyUnreadyPatch);
+        private const string PatchName = nameof(LobbyUnreadyPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
         public static IPatch Instance { get; private set; }

@@ -14,7 +14,7 @@ namespace QoLFix.Patches.Bugfixes
     /// </summary>
     public class FixBioScannerNavMarkerPatch : IPatch
     {
-        private static readonly string PatchName = nameof(FixBioScannerNavMarkerPatch);
+        private const string PatchName = nameof(FixBioScannerNavMarkerPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
         public static IPatch Instance { get; private set; }

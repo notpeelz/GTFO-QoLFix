@@ -6,7 +6,7 @@ namespace QoLFix.Patches.Tweaks
 {
     public class NoiseRemovalPatch : IPatch
     {
-        private static readonly string PatchName = nameof(NoiseRemovalPatch);
+        private const string PatchName = nameof(NoiseRemovalPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
         public static IPatch Instance { get; private set; }

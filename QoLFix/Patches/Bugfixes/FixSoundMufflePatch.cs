@@ -6,7 +6,7 @@ namespace QoLFix.Patches.Bugfixes
 {
     public class FixSoundMufflePatch : IPatch
     {
-        private static readonly string PatchName = nameof(FixSoundMufflePatch);
+        private const string PatchName = nameof(FixSoundMufflePatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
         public static IPatch Instance { get; private set; }

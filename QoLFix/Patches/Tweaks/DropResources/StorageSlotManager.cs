@@ -169,7 +169,6 @@ namespace QoLFix.Patches.Tweaks
 
             private static readonly SlotSettings[] BoxSettings = new[]
             {
-
                 new SlotSettings
                 {
                     Size = new Vector3(0.33f, 0.5f, 0.4f),

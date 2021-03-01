@@ -6,7 +6,7 @@ namespace QoLFix.Patches.Tweaks
 {
     public class HideCrosshairPatch : IPatch
     {
-        private static readonly string PatchName = nameof(HideCrosshairPatch);
+        private const string PatchName = nameof(HideCrosshairPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
         private static readonly ConfigDefinition ConfigShowForMelee = new ConfigDefinition(PatchName, "ShowForMelee");
         private static readonly ConfigDefinition ConfigShowForConsumables = new ConfigDefinition(PatchName, "ShowForConsumables");

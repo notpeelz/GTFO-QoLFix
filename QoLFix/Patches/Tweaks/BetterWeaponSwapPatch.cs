@@ -6,7 +6,7 @@ namespace QoLFix.Patches.Tweaks
 {
     public class BetterWeaponSwapPatch : IPatch
     {
-        private static readonly string PatchName = nameof(BetterWeaponSwapPatch);
+        private const string PatchName = nameof(BetterWeaponSwapPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
         private static readonly ConfigDefinition ConfigSwapModeDefault = new ConfigDefinition(PatchName, "SwapModeDefault");
         private static readonly ConfigDefinition ConfigSwapModeCombat = new ConfigDefinition(PatchName, "SwapModeCombat");
@@ -18,9 +18,9 @@ namespace QoLFix.Patches.Tweaks
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Changes the weapon fallback priority dynamically based on the drama state of the game (stealth, combat, etc.)"));
-            QoLFixPlugin.Instance.Config.Bind(ConfigSwapModeDefault, SwapMode.Melee, new ConfigDescription($"Controls the default behavior."));
-            QoLFixPlugin.Instance.Config.Bind(ConfigSwapModeCombat, SwapMode.Melee, new ConfigDescription($"Controls the behavior during combat."));
-            QoLFixPlugin.Instance.Config.Bind(ConfigSwapModeStealth, SwapMode.HackingTool, new ConfigDescription($"Controls the behavior during stealth."));
+            QoLFixPlugin.Instance.Config.Bind(ConfigSwapModeDefault, SwapMode.Melee, new ConfigDescription("Controls the default behavior."));
+            QoLFixPlugin.Instance.Config.Bind(ConfigSwapModeCombat, SwapMode.Melee, new ConfigDescription("Controls the behavior during combat."));
+            QoLFixPlugin.Instance.Config.Bind(ConfigSwapModeStealth, SwapMode.HackingTool, new ConfigDescription("Controls the behavior during stealth."));
         }
 
         public string Name { get; } = PatchName;

@@ -8,8 +8,8 @@ namespace QoLFix.Patches.Bugfixes
 {
     public class FixTerminalDisplayPingPatch : IPatch
     {
-        private static readonly string PatchName = nameof(FixTerminalDisplayPingPatch);
-        private static readonly string WarningMessage = "NOTICE: this patch is forcefully disabled due to a bug in GTFO code causing world generation issues.";
+        private const string PatchName = nameof(FixTerminalDisplayPingPatch);
+        private const string WarningMessage = "NOTICE: this patch is forcefully disabled due to a bug in GTFO code causing world generation issues.";
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
         public static IPatch Instance { get; private set; }
@@ -34,8 +34,8 @@ namespace QoLFix.Patches.Bugfixes
         private static void LG_MarkerFactory__InstantiateMarkerGameObject__Postfix(ref GameObject __result)
         {
             if (__result == null) return;
-            var terminals = __result?.GetComponentsInChildren<LG_ComputerTerminal>();
-            if (terminals == null || !terminals.Any()) return;
+            var terminals = __result?.GetComponentsInChildren<LG_ComputerTerminal>().ToArray();
+            if (terminals?.Length == 0) return;
 
             var count = 0;
             foreach (var terminal in terminals)

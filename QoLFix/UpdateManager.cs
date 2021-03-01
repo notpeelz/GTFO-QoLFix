@@ -95,7 +95,7 @@ namespace QoLFix
             }
             catch (Exception ex)
             {
-                throw new FailedUpdateException($"Failed to fetch the latest release version", ex);
+                throw new FailedUpdateException("Failed to fetch the latest release version", ex);
             }
 
             return null;
@@ -126,7 +126,7 @@ namespace QoLFix
             }
             catch (Exception ex)
             {
-                LogError($"Failed to fetch release info: " + ex);
+                LogError($"Failed to fetch release info: {ex}");
             }
 
             return false;

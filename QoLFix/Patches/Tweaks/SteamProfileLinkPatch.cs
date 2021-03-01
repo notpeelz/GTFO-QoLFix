@@ -11,7 +11,7 @@ namespace QoLFix.Patches.Tweaks
 {
     public class SteamProfileLinkPatch : IPatch
     {
-        private static readonly string PatchName = nameof(SteamProfileLinkPatch);
+        private const string PatchName = nameof(SteamProfileLinkPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
         public static IPatch Instance { get; private set; }

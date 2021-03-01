@@ -7,7 +7,7 @@ namespace QoLFix
         void Initialize();
 
         Harmony Harmony { get; set; }
-        
+
         string Name { get; }
 
         bool Enabled { get; }

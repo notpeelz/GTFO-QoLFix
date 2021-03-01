@@ -18,7 +18,7 @@ namespace QoLFix.Debugging
 
         public Vector3 Size { get; set; }
 
-        private void Awake()
+        internal void Awake()
         {
             this.material = new Material(Shader.Find("Unlit/Texture"));
             this.lines = new LineRenderer[LINE_COUNT];
@@ -37,7 +37,7 @@ namespace QoLFix.Debugging
             }
         }
 
-        private void OnDisable()
+        internal void OnDisable()
         {
             if (this.lines == null) return;
             foreach (var line in this.lines)
@@ -46,7 +46,7 @@ namespace QoLFix.Debugging
             }
         }
 
-        private void OnEnable()
+        internal void OnEnable()
         {
             if (this.lines == null) return;
             foreach (var line in this.lines)
@@ -55,7 +55,7 @@ namespace QoLFix.Debugging
             }
         }
 
-        private void Update()
+        internal void Update()
         {
             var width = this.Size.x;
             var length = this.Size.z;
@@ -70,14 +70,14 @@ namespace QoLFix.Debugging
             var forward = Vector3.forward;
             var left = Vector3.Cross(up, forward);
 
-            var backBottomRight = center - up * height - forward * length - left * width;
-            var frontBottomRight = center - up * height + forward * length - left * width;
-            var backBottomLeft = center - up * height - forward * length + left * width;
-            var frontBottomLeft = center - up * height + forward * length + left * width;
-            var backTopRight = center + up * height - forward * length - left * width;
-            var frontTopRight = center + up * height + forward * length - left * width;
-            var backTopLeft = center + up * height - forward * length + left * width;
-            var frontTopLeft = center + up * height + forward * length + left * width;
+            var backBottomRight = center - (up * height) - (forward * length) - (left * width);
+            var frontBottomRight = center - (up * height) + (forward * length) - (left * width);
+            var backBottomLeft = center - (up * height) - (forward * length) + (left * width);
+            var frontBottomLeft = center - (up * height) + (forward * length) + (left * width);
+            var backTopRight = center + (up * height) - (forward * length) - (left * width);
+            var frontTopRight = center + (up * height) + (forward * length) - (left * width);
+            var backTopLeft = center + (up * height) - (forward * length) + (left * width);
+            var frontTopLeft = center + (up * height) + (forward * length) + (left * width);
 
             var i = 0;
 
@@ -112,7 +112,7 @@ namespace QoLFix.Debugging
             }
         }
 
-        private void OnDestroy()
+        internal void OnDestroy()
         {
             if (this.lines == null) return;
             for (var i = 0; i < this.lines.Length; i++)
