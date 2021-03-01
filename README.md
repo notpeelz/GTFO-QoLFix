@@ -128,4 +128,5 @@ Thanks a lot to:
 
 This project uses code from:
 
-- (GPLv3) [UnityExplorer](https://github.com/sinai-dev/UnityExplorer) - uses its UI code for update notifications
+- (GPL-3.0) [UnityExplorer](https://github.com/sinai-dev/UnityExplorer) - uses its UI code for update notifications
+- (Apache-2.0) [Roslynator](https://github.com/JosefPihrt/Roslynator) - uses its C# analyzer extension methods
