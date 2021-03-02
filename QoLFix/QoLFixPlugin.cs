@@ -59,6 +59,7 @@ namespace QoLFix
 
             // Misc
             RegisterPatch<DisableSteamRichPresencePatch>();
+            RegisterPatch<RecentlyPlayedWithPatch>();
 
             // Annoyances
             RegisterPatch<IntroSkipPatch>();

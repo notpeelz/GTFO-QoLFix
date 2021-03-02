@@ -82,6 +82,12 @@ This lets you list/ping/query items after moving them.
 
 Known bugs: when pinging a swapped item, the ping icon will not show up for swapped items unless you're the host. The ping audio will still play regardless of being host or client.
 
+### RecentlyPlayedWidth
+
+Updates the Steam recent players list.
+
+<img height="180" alt="steam recent players" src="img/steamrecentplayers.jpg">
+
 ### NoiseRemoval
 <sub>(default: disabled)</sub>
 
