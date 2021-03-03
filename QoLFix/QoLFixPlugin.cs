@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using System.Linq;
 using BepInEx.IL2CPP;
 using BepInEx;
 using HarmonyLib;
@@ -14,6 +13,7 @@ using QoLFix.Patches.Bugfixes;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using QoLFix.Patches.Common.Cursor;
 
 namespace QoLFix
 {

@@ -3,6 +3,7 @@ using BepInEx.Configuration;
 using CellMenu;
 using HarmonyLib;
 using QoLFix.Patches.Common;
+using QoLFix.Patches.Common.Cursor;
 using SNetwork;
 using Steamworks;
 using UnityEngine;
@@ -36,7 +37,7 @@ namespace QoLFix.Patches.Tweaks
 
         private void OnCursorUpdate(CM_PageBase page, Vector2 pos, ref RaycastHit2D rayHit, bool hovering, bool clicked, Lazy<SNet_Player> player)
         {
-            page.SetCursorHovering(hovering);
+            page.SetCursorStyle(hovering ? CursorStyle.Hand : CursorStyle.Default);
             if (!clicked) return;
 
             Instance.LogInfo($"Opening steam profile for {player.Value.NickName} ({player.Value.Lookup})");

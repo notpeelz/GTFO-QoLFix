@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace QoLFix
 {
@@ -34,6 +35,30 @@ namespace QoLFix
             {
                 SetLayerRecursively(t.GetChild(i).gameObject, layer);
             }
+        }
+
+        public static Vector2 GetSize(this RectTransform t)
+        {
+            var size = new Vector2(t.rect.width, t.rect.height);
+
+            if (size == Vector2.zero)
+            {
+                size.x = LayoutUtility.GetPreferredWidth(t);
+                size.y = LayoutUtility.GetPreferredHeight(t);
+            }
+
+            if (size == Vector2.zero)
+            {
+                var layoutGroup = t.GetComponent<LayoutGroup>();
+
+                if (layoutGroup != null)
+                {
+                    size.x = layoutGroup.preferredWidth;
+                    size.y = layoutGroup.preferredHeight;
+                }
+            }
+
+            return size;
         }
     }
 }

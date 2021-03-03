@@ -4,10 +4,12 @@ using BepInEx.Configuration;
 using CellMenu;
 using HarmonyLib;
 using QoLFix.Patches.Common;
+using QoLFix.Patches.Common.Cursor;
 using SNetwork;
 using TMPro;
 using UnhollowerRuntimeLib;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace QoLFix.Patches.Tweaks
 {
@@ -40,6 +42,8 @@ namespace QoLFix.Patches.Tweaks
         private const string PatchName = nameof(LatencyHUDPatch);
         private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
 
+        private const float PING_UPDATE_INTERVAL = 0.25f;
+
         private static readonly Vector3 PopupCursorOffset = new Vector3(0, 5f, 0);
 
         public static IPatch Instance { get; private set; }
@@ -59,6 +63,7 @@ namespace QoLFix.Patches.Tweaks
         public void Patch()
         {
             ClassInjector.RegisterTypeInIl2Cpp<LatencyWatermark>();
+            ClassInjector.RegisterTypeInIl2Cpp<LatencyText>();
             this.PatchMethod<WatermarkGuiLayer>(nameof(WatermarkGuiLayer.Setup), new[] { typeof(Transform), typeof(string) }, PatchType.Postfix);
             //this.PatchMethod<SNet_Core_STEAM>(nameof(SNet_Core_STEAM.UpdateConnectionStatus), PatchType.Postfix);
 
@@ -66,45 +71,89 @@ namespace QoLFix.Patches.Tweaks
             PlayerNameExtPatch.CursorUpdate += this.OnCursorUpdate;
         }
 
-        private GameObject popupGO;
+        private RectTransform popupTransform;
+        private GameObject popupContent;
         private TextMeshPro pingText;
-        private SpriteRenderer bgSprite;
+        private LatencyText latencyText;
+        private float pingTextWidth;
+        private float pingTextHeight;
+        private bool hovering;
+
+        private void OnCursorUpdate(CM_PageBase page, Vector2 cursorPos, ref RaycastHit2D rayHit, bool hovering, bool clicked, Lazy<SNet_Player> player)
+        {
+            if (this.pingText == null)
+            {
+                this.InitializePopup(page);
+            }
+
+            var cursorState = page.GetCursorState();
+            if (hovering) UpdatePosition();
+
+            if (this.hovering == hovering) return;
+            this.hovering = hovering;
+
+            if (!hovering)
+            {
+                page.SetCursorTooltip(null);
+                return;
+            }
+
+            this.latencyText.Player = player.Value;
+            this.latencyText.UpdateText();
+            this.pingTextWidth = this.pingText.GetRenderedWidth(false);
+            this.pingTextHeight = this.pingText.GetRenderedHeight(false);
+
+            page.SetCursorTooltip(this.popupContent, new Vector2(62f, 16f));
+
+            var extentX = cursorState.TooltipSprite.bounds.size.x / 2f;
+            this.popupTransform.anchorMin = new Vector2(0.5f - extentX, 0.5f);
+            this.popupTransform.anchorMax = new Vector2(0.5f + extentX, 0.5f);
+
+            UpdatePosition();
+
+            void UpdatePosition()
+            {
+                cursorState.Tooltip.transform.position = PopupCursorOffset + new Vector3(
+                    cursorPos.x,
+                    cursorPos.y + (this.pingTextHeight / 2f),
+                    cursorState.TooltipSprite.transform.position.z);
+            }
+        }
 
         private void InitializePopup(CM_PageBase page)
         {
-            this.popupGO = GOFactory.CreateObject("PlayerInfoPopup", null, out RectTransform t);
+            var cursorState = page.GetCursorState();
 
-            this.popupGO.layer = LayerManager.LAYER_UI;
-            this.popupGO.SetActive(false);
+            this.popupContent = GOFactory.CreateObject("Content", null,
+                out this.popupTransform,
+                out VerticalLayoutGroup group);
 
-            t.anchorMin = new Vector2(0.5f, 0.5f);
-            t.anchorMax = new Vector2(0.5f, 0.5f);
-            t.pivot = new Vector2(0.5f, 0.5f);
-            t.offsetMin = Vector2.zero;
-            t.offsetMax = Vector2.zero;
-            t.localPosition = Vector2.zero;
+            this.popupTransform.offsetMin = Vector2.zero;
+            this.popupTransform.offsetMax = Vector2.zero;
+            this.popupTransform.pivot = new Vector2(0.5f, 0.5f);
+            this.popupTransform.localPosition = Vector2.zero;
 
-            var bgGO = GOFactory.CreateObject("Background", this.popupGO.transform,
-                out RectTransform bgTransform,
-                out this.bgSprite);
-            bgGO.layer = LayerManager.LAYER_UI;
+            group.childAlignment = TextAnchor.UpperLeft;
+            group.childControlWidth = true;
+            group.childControlHeight = true;
+            group.childForceExpandHeight = true;
+            group.childForceExpandWidth = true;
 
-            this.bgSprite.sortingOrder = 50;
-            this.bgSprite.color = new Color(0.4f, 0.4f, 0.4f, 1);
-
-            bgTransform.pivot = new Vector2(0.5f, 0.5f);
-            bgTransform.localScale = new Vector3(31f, 8f, 1f);
-            bgTransform.localPosition = Vector2.zero;
-
-            var tex = Resources.Load<Texture2D>("gui/gear/frames/cellUI_Frame_BoxFiled");
-            this.bgSprite.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), t.pivot, 100f);
-
-            var textGO = GOFactory.CreateObject("Text", this.popupGO.transform,
+            var textGO = GOFactory.CreateObject("Text", this.popupContent.transform,
                 out RectTransform textTransform,
+                out ContentSizeFitter fitter,
                 out this.pingText,
-                out Cell_TMProDisabler _,
-                out LatencyWatermark _);
+                out this.latencyText,
+                out Cell_TMProDisabler _);
+
+            // Disable updating the tooltip text since resizing the tooltip
+            // is already quite tricky.
+            this.latencyText.enabled = false;
+
             textGO.layer = LayerManager.LAYER_UI;
+
+            fitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+            fitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
 
             var techFont = page.GetComponentsInChildren<TextMeshPro>()
                 .FirstOrDefault(x => x.font?.name.Contains("ShareTechMono") == true)
@@ -115,6 +164,7 @@ namespace QoLFix.Patches.Tweaks
                 this.LogError("Failed to find font 'ShareTechMono'");
             }
 
+            this.pingText.margin = Vector4.zero;
             this.pingText.color = Color.white;
             this.pingText.alpha = 1f;
             this.pingText.fontSize = 18;
@@ -123,58 +173,13 @@ namespace QoLFix.Patches.Tweaks
             this.pingText.enableWordWrapping = false;
             this.pingText.isOrthographic = true;
             this.pingText.autoSizeTextContainer = true;
-            this.pingText.sortingOrder = this.bgSprite.sortingOrder + 1;
+            this.pingText.sortingOrder = cursorState.TooltipSprite.sortingOrder + 1;
             this.pingText.UpdateMaterial();
 
             textTransform.offsetMin = Vector2.zero;
             textTransform.offsetMax = Vector2.zero;
             textTransform.pivot = new Vector2(0.5f, 0.5f);
             textTransform.localPosition = Vector2.zero;
-
-            var extentX = this.bgSprite.bounds.size.x / 2f;
-            textTransform.anchorMin = new Vector2(0.5f - extentX, 0.5f);
-            textTransform.anchorMax = new Vector2(0.5f + extentX, 0.5f);
-        }
-
-        private float pingTextWidth;
-        private float pingTextHeight;
-        private bool lastState;
-
-        private void OnCursorUpdate(CM_PageBase page, Vector2 cursorPos, ref RaycastHit2D rayHit, bool hovering, bool clicked, Lazy<SNet_Player> player)
-        {
-            if (this.popupGO == null)
-            {
-                this.InitializePopup(page);
-            }
-
-            if (hovering) UpdatePosition();
-
-            if (this.lastState == hovering) return;
-            this.lastState = hovering;
-
-            if (!hovering)
-            {
-                this.popupGO.SetActive(false);
-                return;
-            }
-
-            this.popupGO.transform.SetParent(page.transform, false);
-            this.popupGO.SetActive(true);
-
-            this.pingText.SetText(GetPlayerPing(player.Value));
-            this.pingText.ForceMeshUpdate(true);
-            this.pingTextWidth = this.pingText.GetRenderedWidth(false);
-            this.pingTextHeight = this.pingText.GetRenderedHeight(false);
-
-            UpdatePosition();
-
-            void UpdatePosition()
-            {
-                this.popupGO.transform.position = PopupCursorOffset + new Vector3(
-                    cursorPos.x,
-                    cursorPos.y + (this.pingTextHeight / 2f),
-                    this.popupGO.transform.position.z);
-            }
         }
 
         private static void SNet_Core_STEAM__UpdateConnectionStatus__Postfix(SNet_Player player)
@@ -190,6 +195,7 @@ namespace QoLFix.Patches.Tweaks
                     out RectTransform t,
                     out TextMeshPro text,
                     out Cell_TMProDisabler _,
+                    out LatencyText _,
                     out LatencyWatermark _);
             go.layer = LayerManager.LAYER_UI;
 
@@ -223,7 +229,7 @@ namespace QoLFix.Patches.Tweaks
             text.UpdateFontAsset();
         }
 
-        private static string GetPlayerPing(SNet_Player player)
+        private static int GetPlayerPing(SNet_Player player = null)
         {
             // This seems to return the same thing as SNet_Player.Ping
             //SNet.MasterManagement.GetPing(player, ref ping, ref quality);
@@ -234,16 +240,17 @@ namespace QoLFix.Patches.Tweaks
             int? latency = null;
             if (player?.IsLocal == false)
             {
-                if (player.IsMaster) return "HOST";
+                if (player.IsMaster) return -1;
                 latency = player?.Ping;
             }
             else if (SNet.Master != null)
             {
-                if (SNet.Master.IsLocal) return "HOST";
+                if (SNet.Master.IsLocal) return -1;
                 latency = SNet.Master?.Ping;
             }
 
-            return $"{latency?.ToString() ?? "???"} ms";
+            if (latency < 0) return -2;
+            return latency ?? -3;
         }
     }
 }

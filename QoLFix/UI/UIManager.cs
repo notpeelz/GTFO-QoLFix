@@ -1,5 +1,6 @@
 ﻿using System;
-using QoLFix.Patches.Common;
+using QoLFix.Patches.Common.Cursor;
+using UnhollowerRuntimeLib;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -7,7 +8,7 @@ using UnityEngine.UI;
 
 namespace QoLFix.UI
 {
-    public static class UIManager
+    public static partial class UIManager
     {
         public static GameObject CanvasRoot { get; private set; }
 
@@ -39,6 +40,7 @@ namespace QoLFix.UI
 
         public static void Initialize()
         {
+            ClassInjector.RegisterTypeInIl2Cpp<ActionRunner>();
             SceneManager.add_sceneLoaded((UnityAction<Scene, LoadSceneMode>)OnSceneLoad);
         }
 
@@ -212,6 +214,7 @@ namespace QoLFix.UI
             var root = GOFactory.CreateObject($"{VersionInfo.RootNamespace}Canvas", null,
                 out Canvas canvas,
                 out CanvasScaler scaler,
+                out ActionRunner _,
                 out GraphicRaycaster _);
             root.layer = LayerManager.LAYER_UI;
 

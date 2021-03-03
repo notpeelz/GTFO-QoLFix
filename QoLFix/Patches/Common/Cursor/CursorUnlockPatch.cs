@@ -3,7 +3,7 @@ using HarmonyLib;
 using QoLFix.UI;
 using UnityEngine;
 
-namespace QoLFix.Patches.Common
+namespace QoLFix.Patches.Common.Cursor
 {
     public class CursorUnlockPatch : IPatch
     {
@@ -23,8 +23,8 @@ namespace QoLFix.Patches.Common
         public void Patch()
         {
             this.PatchMethod<CM_PageBase>(nameof(CM_PageBase.UpdateCursorPosition), PatchType.Prefix);
-            this.PatchMethod<Cursor>($"set_{nameof(Cursor.lockState)}", PatchType.Prefix);
-            this.PatchMethod<Cursor>($"set_{nameof(Cursor.visible)}", PatchType.Prefix);
+            this.PatchMethod<UnityEngine.Cursor>($"set_{nameof(UnityEngine.Cursor.lockState)}", PatchType.Prefix);
+            this.PatchMethod<UnityEngine.Cursor>($"set_{nameof(UnityEngine.Cursor.visible)}", PatchType.Prefix);
         }
 
         private static CursorLockMode savedLockMode;
@@ -32,8 +32,8 @@ namespace QoLFix.Patches.Common
 
         public static void RestoreCursorState()
         {
-            Cursor.lockState = savedLockMode;
-            Cursor.visible = savedVisible;
+            UnityEngine.Cursor.lockState = savedLockMode;
+            UnityEngine.Cursor.visible = savedVisible;
         }
 
         private static bool CM_PageBase__UpdateCursorPosition__Prefix()
@@ -47,7 +47,7 @@ namespace QoLFix.Patches.Common
             if (UIManager.UnlockCursor)
             {
                 value = CursorLockMode.None;
-                Cursor.visible = true;
+                UnityEngine.Cursor.visible = true;
             }
             else
             {

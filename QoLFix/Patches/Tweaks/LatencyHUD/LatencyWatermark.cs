@@ -1,5 +1,4 @@
 ﻿using System;
-using Player;
 using SNetwork;
 using TMPro;
 using UnityEngine;
@@ -17,8 +16,6 @@ namespace QoLFix.Patches.Tweaks
             private PUI_Watermark watermark;
             private TextMeshPro text;
 
-            public PlayerAgent Player { get; set; }
-
             internal void Awake()
             {
                 this.text = this.GetComponent<TextMeshPro>();
@@ -26,7 +23,7 @@ namespace QoLFix.Patches.Tweaks
 
             internal void Update()
             {
-                if ((Time.time - this.lastUpdated) < 0.25f) return;
+                if ((Time.time - this.lastUpdated) < PING_UPDATE_INTERVAL) return;
                 this.lastUpdated = Time.time;
 
                 if (this.watermark == null)
@@ -59,9 +56,6 @@ namespace QoLFix.Patches.Tweaks
                 this.text.transform.position = fpsShown
                     ? this.watermark.m_statusText.transform.position
                     : this.watermark.m_fpsText.transform.position;
-
-                this.text.SetText(GetPlayerPing(this.Player?.Owner));
-                this.text.ForceMeshUpdate(true);
             }
         }
     }
