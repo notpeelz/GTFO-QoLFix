@@ -79,7 +79,7 @@ namespace QoLFix.Patches.Tweaks
         private float pingTextHeight;
         private bool hovering;
 
-        private void OnCursorUpdate(CM_PageBase page, Vector2 cursorPos, ref RaycastHit2D rayHit, bool hovering, bool clicked, Lazy<SNet_Player> player)
+        private void OnCursorUpdate(CM_PageBase page, Vector2 cursorPos, ref RaycastHit2D rayHit, bool hovering, Lazy<SNet_Player> player)
         {
             if (this.pingText == null)
             {

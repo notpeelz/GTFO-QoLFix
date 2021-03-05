@@ -25,7 +25,6 @@ namespace QoLFix.Patches.Common
             Vector2 cursorPos,
             ref RaycastHit2D rayHit,
             bool hovering,
-            bool clicked,
             Lazy<SNet_Player> player);
 
         public static event CursorInteractionHandler CursorUpdate;
@@ -39,6 +38,8 @@ namespace QoLFix.Patches.Common
             this.PatchMethod<CM_PageBase>(nameof(CM_PageBase.UpdateButtonPress), PatchType.Postfix);
         }
 
+        private static readonly Lazy<SNet_Player> DefaultPlayer = new(() => null);
+
         private static void CM_PageBase__UpdateButtonPress__Postfix(CM_PageBase __instance)
         {
             if (!__instance.Is<CM_PageLoadout>() && !__instance.Is<CM_PageMap>()) return;
@@ -47,21 +48,19 @@ namespace QoLFix.Patches.Common
 
             if (!__instance.m_guiLayer.GuiLayerBase.m_cellUICanvas.Raycast(point, out var rayHit))
             {
-                CursorUpdate?.Invoke(__instance, point, ref rayHit, false, false, null);
+                CursorUpdate?.Invoke(__instance, point, ref rayHit, false, DefaultPlayer);
                 return;
             }
 
             var comp = rayHit.collider.GetComponent<CursorInteraction>();
             if (comp == null)
             {
-                CursorUpdate?.Invoke(__instance, point, ref rayHit, false, false, null);
+                CursorUpdate?.Invoke(__instance, point, ref rayHit, false, DefaultPlayer);
                 return;
             }
 
-            var clicked = InputMapper.GetButtonDown.Invoke(InputAction.MenuClick, eFocusState.None);
             var player = new Lazy<SNet_Player>(() => GetPlayerInfo(rayHit.collider.gameObject));
-
-            CursorUpdate?.Invoke(__instance, point, ref rayHit, true, clicked, player);
+            CursorUpdate?.Invoke(__instance, point, ref rayHit, true, player);
 
             static SNet_Player GetPlayerInfo(GameObject go)
             {

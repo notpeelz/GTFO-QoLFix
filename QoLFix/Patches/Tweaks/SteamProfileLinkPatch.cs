@@ -35,10 +35,10 @@ namespace QoLFix.Patches.Tweaks
             PlayerNameExtPatch.CursorUpdate += this.OnCursorUpdate;
         }
 
-        private void OnCursorUpdate(CM_PageBase page, Vector2 pos, ref RaycastHit2D rayHit, bool hovering, bool clicked, Lazy<SNet_Player> player)
+        private void OnCursorUpdate(CM_PageBase page, Vector2 pos, ref RaycastHit2D rayHit, bool hovering, Lazy<SNet_Player> player)
         {
             page.SetCursorStyle(hovering ? CursorStyle.Hand : CursorStyle.Default);
-            if (!clicked) return;
+            if (!hovering || !Input.GetMouseButtonUp(0)) return;
 
             Instance.LogInfo($"Opening steam profile for {player.Value.NickName} ({player.Value.Lookup})");
 
