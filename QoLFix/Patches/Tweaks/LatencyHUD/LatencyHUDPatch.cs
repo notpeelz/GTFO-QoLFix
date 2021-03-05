@@ -105,7 +105,7 @@ namespace QoLFix.Patches.Tweaks
 
             page.SetCursorTooltip(this.popupContent, new Vector2(62f, 16f));
 
-            var extentX = cursorState.TooltipSprite.bounds.size.x / 2f;
+            var extentX = cursorState.Tooltip.BackgroundSprite.bounds.size.x / 2f;
             this.popupTransform.anchorMin = new Vector2(0.5f - extentX, 0.5f);
             this.popupTransform.anchorMax = new Vector2(0.5f + extentX, 0.5f);
 
@@ -113,10 +113,10 @@ namespace QoLFix.Patches.Tweaks
 
             void UpdatePosition()
             {
-                cursorState.Tooltip.transform.position = PopupCursorOffset + new Vector3(
+                cursorState.Tooltip.GameObject.transform.position = PopupCursorOffset + new Vector3(
                     cursorPos.x,
                     cursorPos.y + (this.pingTextHeight / 2f),
-                    cursorState.TooltipSprite.transform.position.z);
+                    cursorState.Tooltip.BackgroundSprite.transform.position.z);
             }
         }
 
@@ -173,7 +173,7 @@ namespace QoLFix.Patches.Tweaks
             this.pingText.enableWordWrapping = false;
             this.pingText.isOrthographic = true;
             this.pingText.autoSizeTextContainer = true;
-            this.pingText.sortingOrder = cursorState.TooltipSprite.sortingOrder + 1;
+            this.pingText.sortingOrder = cursorState.Tooltip.BackgroundSprite.sortingOrder + 1;
             this.pingText.UpdateMaterial();
 
             textTransform.offsetMin = Vector2.zero;

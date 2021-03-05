@@ -9,125 +9,25 @@ namespace QoLFix.Patches.Common.Cursor
 {
     public static class CursorExtensions
     {
-        public class CursorState
-        {
-            private SpriteRenderer tooltipSprite;
-            private RectTransform tooltipTransform;
-            private GameObject tooltipContent;
-            private RectTransform tooltipContentTransform;
-            private Vector2 minScale = Vector2.zero;
-            private Vector2 maxScale = Vector2.positiveInfinity;
-
-            internal CursorState() { }
-
-            public GameObject Tooltip => this.TooltipSprite.transform.parent.gameObject;
-
-            public SpriteRenderer TooltipSprite => this.GetOrCreateTooltip();
-
-            public Vector3 TooltipScale
-            {
-                get
-                {
-                    this.GetOrCreateTooltip();
-                    return this.tooltipTransform.localScale;
-                }
-                internal set
-                {
-                    this.GetOrCreateTooltip();
-                    this.tooltipTransform.localScale = value;
-                }
-            }
-
-            public GameObject TooltipContent
-            {
-                get => this.tooltipContent;
-                internal set
-                {
-                    this.tooltipContent = value;
-                    this.tooltipContentTransform = value?.GetComponent<RectTransform>();
-                }
-            }
-
-            public SpriteRenderer HandSprite { get; internal set; }
-
-            public CM_Cursor Cursor { get; internal set; }
-
-            public CursorStyle Style { get; internal set; }
-
-            private SpriteRenderer GetOrCreateTooltip()
-            {
-                if (this.tooltipSprite != null) return this.tooltipSprite;
-
-                var tooltip = GOFactory.CreateObject("CursorTooltip", null,
-                    out RectTransform t,
-                    out CanvasGroup _);
-                tooltip.layer = LayerManager.LAYER_UI;
-                tooltip.SetActive(false);
-
-                t.anchorMin = new Vector2(0.5f, 0.5f);
-                t.anchorMax = new Vector2(0.5f, 0.5f);
-                t.pivot = new Vector2(0.5f, 0.5f);
-                t.offsetMin = Vector2.zero;
-                t.offsetMax = Vector2.zero;
-                t.localPosition = Vector2.zero;
-
-                var bgGO = GOFactory.CreateObject("Background", tooltip.transform,
-                    out this.tooltipTransform,
-                    out SpriteRenderer r);
-                bgGO.layer = LayerManager.LAYER_UI;
-
-                r.sortingOrder = 9999;
-                r.color = new Color(0.4f, 0.4f, 0.4f, 1);
-
-                this.tooltipTransform.pivot = new Vector2(0.5f, 0.5f);
-                this.tooltipTransform.localPosition = Vector2.zero;
-
-                var tex = Resources.Load<Texture2D>("gui/gear/frames/cellUI_Frame_BoxFiled");
-                r.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), t.pivot, 100f);
-
-                this.tooltipSprite = r;
-
-                return r;
-            }
-
-            public void ResizeTooltip(Vector2? minScale = null, Vector2? maxScale = null)
-            {
-                this.minScale = minScale ?? Vector2.zero;
-                this.maxScale = maxScale ?? Vector2.positiveInfinity;
-                this.PerformResize();
-            }
-
-            public void PerformResize()
-            {
-                var size = this.tooltipContentTransform?.GetSize() ?? Vector2.zero;
-
-                size.x = Math.Clamp(size.x, this.minScale.x, this.maxScale.x);
-                size.y = Math.Clamp(size.y, this.minScale.y, this.maxScale.y);
-                QoLFixPlugin.LogDebug($"Tooltip size: ({size.x}, {size.y})");
-
-                this.TooltipScale = new Vector3(size.x / 2f, size.y / 2f, 1f);
-            }
-        }
-
         private static readonly Dictionary<int, CursorState> CursorStates = new();
 
         public static void SetCursorTooltip(this CM_PageBase page, GameObject content, Vector2? minScale = null, Vector2? maxScale = null, bool updateOnNextFrame = true)
         {
             var state = page.GetCursorState();
 
-            if (state.TooltipContent != null)
+            if (state.Tooltip.Content != null)
             {
-                state.TooltipContent.transform.SetParent(null, false);
+                state.Tooltip.Content.transform.SetParent(null, false);
             }
 
-            state.TooltipContent = content;
+            state.Tooltip.Content = content;
 
-            state.Tooltip.transform.SetParent(page.transform, false);
-            state.Tooltip.SetActive(false);
+            state.Tooltip.GameObject.transform.SetParent(page.transform, false);
+            state.Tooltip.GameObject.SetActive(false);
 
             if (content != null)
             {
-                var canvasGroup = state.Tooltip.GetComponent<CanvasGroup>();
+                var canvasGroup = state.Tooltip.GameObject.GetComponent<CanvasGroup>();
                 UpdateContent();
 
                 if (updateOnNextFrame)
@@ -138,9 +38,9 @@ namespace QoLFix.Patches.Common.Cursor
 
                 void UpdateContent()
                 {
-                    state.TooltipContent.transform.SetParent(state.Tooltip.transform, false);
-                    state.Tooltip.SetActive(true);
-                    state.ResizeTooltip(minScale, maxScale);
+                    state.Tooltip.Content.transform.SetParent(state.Tooltip.GameObject.transform, false);
+                    state.Tooltip.GameObject.SetActive(true);
+                    state.Tooltip.Resize(minScale, maxScale);
                     canvasGroup.alpha = 1;
                 }
             }
