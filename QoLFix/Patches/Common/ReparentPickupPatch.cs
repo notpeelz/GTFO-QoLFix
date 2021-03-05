@@ -16,8 +16,6 @@ namespace QoLFix.Patches.Common
 
         public string Name => nameof(ReparentPickupPatch);
 
-        public bool Enabled => true;
-
         public Harmony Harmony { get; set; }
 
         public void Initialize()

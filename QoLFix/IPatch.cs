@@ -10,7 +10,7 @@ namespace QoLFix
 
         string Name { get; }
 
-        bool Enabled { get; }
+        bool Enabled => true;
 
         void Patch();
     }

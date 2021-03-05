@@ -16,8 +16,6 @@ namespace QoLFix.Patches.Common.Cursor
 
         public string Name { get; } = nameof(CursorUnlockPatch);
 
-        public bool Enabled => true;
-
         public Harmony Harmony { get; set; }
 
         public void Patch()

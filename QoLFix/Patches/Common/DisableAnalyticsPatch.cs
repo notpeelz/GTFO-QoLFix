@@ -14,8 +14,6 @@ namespace QoLFix.Patches.Common
 
         public string Name { get; } = nameof(DisableAnalyticsPatch);
 
-        public bool Enabled => true;
-
         public Harmony Harmony { get; set; }
 
         public void Patch()

@@ -18,8 +18,6 @@ namespace QoLFix.Patches.Common
 
         public string Name { get; } = nameof(PlayerNameExtPatch);
 
-        public bool Enabled => true;
-
         public Harmony Harmony { get; set; }
 
         public delegate void CursorInteractionHandler(
