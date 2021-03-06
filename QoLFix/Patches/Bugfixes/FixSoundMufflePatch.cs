@@ -14,7 +14,7 @@ namespace QoLFix.Patches.Bugfixes
         public void Initialize()
         {
             Instance = this;
-            QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Fixes the bug where the scout muffle sound effect doesn't go away when exiting a game too early."));
+            QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Fixes several bugs related to sound distortion."));
         }
 
         public string Name { get; } = PatchName;
@@ -36,6 +36,8 @@ namespace QoLFix.Patches.Bugfixes
                 case eGameStateName.Lobby:
                 case eGameStateName.Generating:
                     CellSound.SetGlobalRTPCValue(GAME_PARAMETERS.SCOUT_SCREAM_DUCKING, 0);
+                    CellSound.SetGlobalRTPCValue(GAME_PARAMETERS.GAME_MENU_MUFFLE, 0);
+                    CellSound.SetGlobalRTPCValue(GAME_PARAMETERS.MINIMAP_MUFFLE, 0);
                     break;
             }
         }
