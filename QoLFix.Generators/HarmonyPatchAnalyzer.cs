@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -94,7 +95,10 @@ namespace QoLFix.Generators
             if (!GetConstantArg("methodName", out string? methodName)) return;
             if (!GetConstantArg("patchType", out byte? patchType)) return;
 
-            var className = genericType.ToString().Replace("`", "__");
+            var className = genericType.ToString()
+                .Split('.')
+                .Last()
+                .Replace("`", "__");
 
             // Don't report warnings when we don't even have a valid method
             // to check for.
@@ -144,7 +148,7 @@ namespace QoLFix.Generators
                 var constant = context.SemanticModel.GetConstantValue(entry.Arg.Expression);
                 if (!constant.HasValue) return false;
 
-                value = (T)constant.Value;
+                if (constant.Value is not null) value = (T)constant.Value;
                 return true;
             }
         }
