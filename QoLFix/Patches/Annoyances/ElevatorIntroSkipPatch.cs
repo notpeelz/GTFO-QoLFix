@@ -6,7 +6,7 @@ namespace QoLFix.Patches.Annoyances
     public class ElevatorIntroSkipPatch : IPatch
     {
         private const string PatchName = nameof(ElevatorIntroSkipPatch);
-        private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
+        private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
         public static IPatch Instance { get; private set; }
 

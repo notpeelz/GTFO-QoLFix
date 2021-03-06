@@ -15,9 +15,9 @@ namespace QoLFix.Generators
 
 #pragma warning disable RS2008
         private static readonly DiagnosticDescriptor MissingPostfixError =
-            new DiagnosticDescriptor("BIE0001", "Missing postfix", "Missing postfix {0}", Category, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+            new("BIE0001", "Missing postfix", "Missing postfix {0}", Category, DiagnosticSeverity.Warning, isEnabledByDefault: true);
         private static readonly DiagnosticDescriptor MissingPrefixError =
-            new DiagnosticDescriptor("BIE0002", "Missing prefix", "Missing prefix {0}", Category, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+            new("BIE0002", "Missing prefix", "Missing prefix {0}", Category, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 #pragma warning restore RS2008
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>

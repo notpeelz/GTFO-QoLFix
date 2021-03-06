@@ -15,7 +15,7 @@ namespace QoLFix.Patches.Bugfixes
     public class FixLockerPingPatch : IPatch
     {
         private const string PatchName = nameof(FixLockerPingPatch);
-        private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
+        private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
         public static IPatch Instance { get; private set; }
 

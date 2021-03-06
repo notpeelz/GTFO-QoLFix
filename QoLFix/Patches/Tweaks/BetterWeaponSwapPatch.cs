@@ -7,10 +7,10 @@ namespace QoLFix.Patches.Tweaks
     public class BetterWeaponSwapPatch : IPatch
     {
         private const string PatchName = nameof(BetterWeaponSwapPatch);
-        private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
-        private static readonly ConfigDefinition ConfigSwapModeDefault = new ConfigDefinition(PatchName, "SwapModeDefault");
-        private static readonly ConfigDefinition ConfigSwapModeCombat = new ConfigDefinition(PatchName, "SwapModeCombat");
-        private static readonly ConfigDefinition ConfigSwapModeStealth = new ConfigDefinition(PatchName, "SwapModeStealth");
+        private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
+        private static readonly ConfigDefinition ConfigSwapModeDefault = new(PatchName, "SwapModeDefault");
+        private static readonly ConfigDefinition ConfigSwapModeCombat = new(PatchName, "SwapModeCombat");
+        private static readonly ConfigDefinition ConfigSwapModeStealth = new(PatchName, "SwapModeStealth");
 
         public static IPatch Instance { get; private set; }
 

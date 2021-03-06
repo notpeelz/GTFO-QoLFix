@@ -7,8 +7,8 @@ namespace QoLFix.Patches.Annoyances
     public class ElevatorVolumePatch : IPatch
     {
         private const string PatchName = nameof(ElevatorVolumePatch);
-        private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
-        private static readonly ConfigDefinition ConfigVolume = new ConfigDefinition(PatchName, "Volume");
+        private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
+        private static readonly ConfigDefinition ConfigVolume = new(PatchName, "Volume");
 
         public static IPatch Instance { get; private set; }
 

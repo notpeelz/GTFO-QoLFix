@@ -10,7 +10,7 @@ namespace QoLFix.Patches.Bugfixes
     {
         private const string PatchName = nameof(FixTerminalDisplayPingPatch);
         private const string WarningMessage = "NOTICE: this patch is forcefully disabled due to a bug in GTFO code causing world generation issues.";
-        private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
+        private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
         public static IPatch Instance { get; private set; }
 

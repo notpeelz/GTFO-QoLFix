@@ -12,8 +12,8 @@ namespace QoLFix
 {
     public static class UpdateManager
     {
-        private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(nameof(UpdateManager), "Enabled");
-        private static readonly ConfigDefinition ConfigNotifyPrerelease = new ConfigDefinition(nameof(UpdateManager), "NotifyPrerelease");
+        private static readonly ConfigDefinition ConfigEnabled = new(nameof(UpdateManager), "Enabled");
+        private static readonly ConfigDefinition ConfigNotifyPrerelease = new(nameof(UpdateManager), "NotifyPrerelease");
 
         private static bool ConfigInitialized;
 

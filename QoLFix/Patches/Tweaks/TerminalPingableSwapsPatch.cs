@@ -14,7 +14,7 @@ namespace QoLFix.Patches.Tweaks
     public class TerminalPingableSwapsPatch : IPatch
     {
         private const string PatchName = nameof(TerminalPingableSwapsPatch);
-        private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
+        private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
         public static IPatch Instance { get; private set; }
 

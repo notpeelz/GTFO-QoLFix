@@ -40,11 +40,11 @@ namespace QoLFix.Patches.Tweaks
     public partial class LatencyHUDPatch : IPatch
     {
         private const string PatchName = nameof(LatencyHUDPatch);
-        private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
+        private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
         private const float PING_UPDATE_INTERVAL = 0.25f;
 
-        private static readonly Vector3 PopupCursorOffset = new Vector3(0, 5f, 0);
+        private static readonly Vector3 PopupCursorOffset = new(0, 5f, 0);
 
         public static IPatch Instance { get; private set; }
 

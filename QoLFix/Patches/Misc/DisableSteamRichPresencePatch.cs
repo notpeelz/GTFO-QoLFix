@@ -7,7 +7,7 @@ namespace QoLFix.Patches.Misc
     public class DisableSteamRichPresencePatch : IPatch
     {
         private const string PatchName = nameof(DisableSteamRichPresencePatch);
-        private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
+        private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
         public static IPatch Instance { get; private set; }
 

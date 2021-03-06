@@ -10,7 +10,7 @@ namespace QoLFix.Patches.Tweaks
     public class ResourceAudioCuePatch : IPatch
     {
         private const string PatchName = nameof(ResourceAudioCuePatch);
-        private static readonly ConfigDefinition ConfigEnabled = new ConfigDefinition(PatchName, "Enabled");
+        private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
         public static IPatch Instance { get; private set; }
 

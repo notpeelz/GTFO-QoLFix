@@ -28,8 +28,8 @@ namespace QoLFix
         public const int SupportedGameRevision = 21989;
 
         private const string SectionMain = "Config";
-        private static readonly ConfigDefinition ConfigVersion = new ConfigDefinition(SectionMain, "Version");
-        private static readonly ConfigDefinition ConfigGameVersion = new ConfigDefinition(SectionMain, "GameVersion");
+        private static readonly ConfigDefinition ConfigVersion = new(SectionMain, "Version");
+        private static readonly ConfigDefinition ConfigGameVersion = new(SectionMain, "GameVersion");
 
         private static Harmony HarmonyInstance;
         private static readonly Dictionary<Type, IPatch> RegisteredPatches = new();
