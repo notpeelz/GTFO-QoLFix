@@ -130,16 +130,22 @@ namespace QoLFix
             this.Config.Bind(ConfigVersion, VersionInfo.Version, new ConfigDescription("Used internally for config upgrades; don't touch!"));
 
             var versionEntry = this.Config.GetConfigEntry<string>(ConfigVersion);
-            var configVersion = new Version(versionEntry.Value);
+            if (!SemVer.Version.TryParse(versionEntry.Value, true, out var configVersion))
+            {
+                LogError($"Failed parsing semver: {versionEntry.Value}");
+                return false;
+            }
+
             if (configVersion < UpdateManager.CurrentVersion)
             {
-                LogInfo($"Upgrading config to {UpdateManager.CurrentVersion}");
+                LogMessage($"Upgrading config to {UpdateManager.CurrentVersion}");
                 versionEntry.Value = VersionInfo.Version;
                 this.Config.Save();
             }
             else if (configVersion > UpdateManager.CurrentVersion)
             {
-                LogError("The current config is from a newer version of the plugin. If you're trying to downgrade, you should delete the config file and let it regenerate.");
+                LogError("The current config is from a newer version of the plugin."
+                    + " If you're trying to downgrade, you should delete the config file and let it regenerate.");
                 return false;
             }
 

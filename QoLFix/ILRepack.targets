@@ -1,8 +1,7 @@
 ﻿<Project>
   <Target Name="ILRepacker" AfterTargets="Build">
     <ItemGroup>
-      <InputAssemblies Include="$(OutputPath)$(TargetName)$(TargetExt)"/>
-      <InputAssemblies Include="$(OutputPath)*.dll" Exclude="$(OutputPath)$(TargetName)$(TargetExt)"/>
+      <EmbedAssemblies Include="$(OutputPath)$(TargetName)$(TargetExt)" />
       <LibraryPaths Include="$(BIELibsFolder)" />
       <LibraryPaths Include="$(UnhollowedLibsFolder)" />
     </ItemGroup>
@@ -17,7 +16,7 @@
       DebugInfo="$(CreateDebugInfo)"
       LibraryPath="@(LibraryPaths)"
       AllowDuplicateResources="false"
-      InputAssemblies="@(InputAssemblies)"
+      InputAssemblies="@(EmbedAssemblies)"
       TargetKind="SameAsPrimaryAssembly"
       KeyFile="$(KeyFile)"
       OutputFile="$(OutputPath)$(TargetName)$(TargetExt)"

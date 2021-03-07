@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace QoLFix.Updater
+﻿namespace QoLFix.Updater
 {
     public static partial class UpdateManager
     {
@@ -10,7 +8,7 @@ namespace QoLFix.Updater
 
             public string DownloadUrl { get; set; }
 
-            public Version Version { get; set; }
+            public SemVer.Version Version { get; set; }
 
             public bool PreRelease { get; set; }
         }

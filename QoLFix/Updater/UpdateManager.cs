@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using BepInEx.Configuration;
 using UnityEngine;
 
@@ -14,7 +13,7 @@ namespace QoLFix.Updater
 
         private static bool ConfigInitialized;
 
-        public static Version CurrentVersion { get; } = new Version(VersionInfo.Version);
+        public static SemVer.Version CurrentVersion { get; } = SemVer.Version.Parse(VersionInfo.Version);
 
         public static ReleaseInfo LatestRelease { get; private set; }
 

@@ -32,7 +32,7 @@ namespace QoLFix.Updater
 
                         return new ReleaseInfo
                         {
-                            Version = new Version(tag),
+                            Version = SemVer.Version.Parse(tag),
                             DownloadUrl = (string)release["html_url"],
                             PreRelease = (bool)release["prerelease"],
                         };

@@ -27,12 +27,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="$(BIELibsFolder)\*.dll" Private="false" />
+    <Reference Remove="$(BIELibsFolder)\SemVer.dll" />
     <Reference Include="$(UnhollowedLibsFolder)\*.dll" Private="false" />
     <Reference Remove="$(UnhollowedLibsFolder)\Newtonsoft.Json.dll" />
   </ItemGroup>
   <ItemGroup>
+    <EmbedAssemblies Include="$(OutputPath)Newtonsoft.Json.dll" />
+    <EmbedAssemblies Include="$(OutputPath)SemVer.dll" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="ILRepack.Lib.MSBuild" Version="2.1.16.1" PrivateAssets="all" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="SemanticVersioning" Version="1.3.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QoLFix.Generators\QoLFix.Generators.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
