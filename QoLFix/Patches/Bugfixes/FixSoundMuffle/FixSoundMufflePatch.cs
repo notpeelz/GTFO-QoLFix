@@ -1,10 +1,13 @@
 ﻿using AK;
 using BepInEx.Configuration;
+using Enemies;
 using HarmonyLib;
+using QoLFix.UI;
+using UnhollowerRuntimeLib;
 
 namespace QoLFix.Patches.Bugfixes
 {
-    public class FixSoundMufflePatch : IPatch
+    public partial class FixSoundMufflePatch : IPatch
     {
         private const string PatchName = nameof(FixSoundMufflePatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
@@ -23,10 +26,21 @@ namespace QoLFix.Patches.Bugfixes
 
         public Harmony Harmony { get; set; }
 
+        private static AudioResetTimer ResetTimer;
+
         public void Patch()
         {
             this.PatchMethod<GameStateManager>(nameof(GameStateManager.ChangeState), PatchType.Postfix);
+
+            ClassInjector.RegisterTypeInIl2Cpp<AudioResetTimer>();
+            UIManager.Initialized += () =>
+            {
+                GOFactory.CreateObject("ResetTimer", UIManager.CanvasRoot.transform, out ResetTimer);
+            };
+            this.PatchMethod<ES_ScoutScream>(nameof(ES_ScoutScream.Enter), PatchType.Postfix);
         }
+
+        private static void ES_ScoutScream__Enter__Postfix() => ResetTimer.ScheduleReset();
 
         private static void GameStateManager__ChangeState__Postfix(eGameStateName nextState)
         {

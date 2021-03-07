@@ -130,8 +130,7 @@ Fixes these bugs:
   Note: this bugfix also fixes the door double-hit exploit
 
 - the door frames on the tech tileset weren't pingable
-- the scout muffle sound effect wouldn't get reset when exiting a game too early
-- the map muffle sound effect wouldn't get reset under certain circumstances
+- the scout/map muffle sound effect wouldn't get reset under certain circumstances
 - the flashlight would turn off when dropping/swapping items
 
 ## Credits
