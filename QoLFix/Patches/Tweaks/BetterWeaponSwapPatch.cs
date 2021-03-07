@@ -44,18 +44,21 @@ namespace QoLFix.Patches.Tweaks
                 return HarmonyControlFlow.Execute;
             }
 
-            var wieldedSlot = playerAgent.Inventory.WieldedSlot;
-            switch (wieldedSlot)
+            var lastWanted = playerAgent.Sync.LastWantedSlot;
+            var bp = PlayerBackpackManager.LocalBackpack;
+            if (lastWanted == InventorySlot.None
+                && bp.TryGetBackpackItem(lastWanted, out var lastWantedItem)
+                && lastWantedItem.Status == eInventoryItemStatus.InBackpack)
             {
-                case InventorySlot.None:
-                case InventorySlot.ConsumableHeavy:
-                case InventorySlot.InLevelCarry:
-                    return HarmonyControlFlow.Execute;
-                default:
-                    var slot = GetInventorySlotByDrama();
-                    playerAgent.Sync.WantsToWieldSlot(slot);
-                    return HarmonyControlFlow.DontExecute;
+                Instance.LogDebug($"Switching to last wanted slot: {lastWanted}");
+                playerAgent.Sync.WantsToWieldSlot(lastWanted);
+                return HarmonyControlFlow.DontExecute;
             }
+
+            var slot = GetInventorySlotByDrama();
+            Instance.LogDebug($"Switching to slot: {slot}");
+            playerAgent.Sync.WantsToWieldSlot(slot);
+            return HarmonyControlFlow.DontExecute;
         }
 
         private static InventorySlot GetInventorySlotByDrama()
