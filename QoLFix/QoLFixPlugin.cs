@@ -62,6 +62,7 @@ namespace QoLFix
 
             // Common
             RegisterPatch<DisableAnalyticsPatch>();
+            RegisterPatch<DisableCrashReporterPatch>();
             RegisterPatch<CursorUnlockPatch>();
 
             // Misc
