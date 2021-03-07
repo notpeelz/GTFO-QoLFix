@@ -88,6 +88,12 @@ Updates the Steam recent players list.
 
 <img height="180" alt="steam recent players" src="img/steamrecentplayers.jpg">
 
+### ScreenLiquidRemoval
+
+<sub>(default: disabled)</sub>
+
+Prevents screen liquid effects from playing. This can be configured to remove blood, spitter or infection effects.
+
 ### NoiseRemoval
 <sub>(default: disabled)</sub>
 
