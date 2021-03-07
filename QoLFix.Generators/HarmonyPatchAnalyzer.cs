@@ -30,7 +30,7 @@ namespace QoLFix.Generators
             context.RegisterSyntaxNodeAction(AnalyzeCall, SyntaxKind.InvocationExpression);
         }
 
-        private static readonly string[] PatchMethod1Parameters = new[]
+        private static readonly string[] GenericPatchMethod1Parameters = new[]
         {
             "patch",
             "methodName",
@@ -40,9 +40,32 @@ namespace QoLFix.Generators
             "postfixMethodName",
         };
 
-        private static readonly string[] PatchMethod2Parameters = new[]
+        private static readonly string[] GenericPatchMethod2Parameters = new[]
         {
             "patch",
+            "methodName",
+            "parameters",
+            "patchType",
+            "generics",
+            "prefixMethodName",
+            "postfixMethodName",
+        };
+
+        private static readonly string[] NonGenericPatchMethod1Parameters = new[]
+        {
+            "patch",
+            "classType",
+            "methodName",
+            "patchType",
+            "generics",
+            "prefixMethodName",
+            "postfixMethodName",
+        };
+
+        private static readonly string[] NonGenericPatchMethod2Parameters = new[]
+        {
+            "patch",
+            "classType",
             "methodName",
             "parameters",
             "patchType",
@@ -61,8 +84,7 @@ namespace QoLFix.Generators
             var invocationExpr = (InvocationExpressionSyntax)context.Node;
             if (invocationExpr.Expression is not MemberAccessExpressionSyntax memberAccessExpr) return;
 
-            var genericName = memberAccessExpr.Name as GenericNameSyntax;
-            if (genericName?.Identifier.Text != "PatchMethod") return;
+            if (memberAccessExpr.Name.Identifier.Text != "PatchMethod") return;
 
             var memberSymbol = context.SemanticModel.GetSymbolInfo(memberAccessExpr).Symbol as IMethodSymbol;
             if (memberSymbol?.ContainingSymbol.ToString() != "QoLFix.BIEExtensions") return;
@@ -71,18 +93,10 @@ namespace QoLFix.Generators
             // extension method
             if (memberSymbol.MethodKind != MethodKind.ReducedExtension) return;
 
-            var genericArgs = genericName.TypeArgumentList.Arguments;
-            if (genericArgs.Count != 1) return;
-            var genericType = genericArgs[0];
-
             var constructedFrom = memberSymbol.GetConstructedReducedFrom();
             if (constructedFrom == null) return;
-            if (!constructedFrom.IsGenericMethod || constructedFrom.TypeArguments.Length != 1) return;
 
             var paramNames = constructedFrom.Parameters.Select(x => x.Name).ToArray();
-
-            if (!paramNames.SequenceEqual(PatchMethod1Parameters)
-                && !paramNames.SequenceEqual(PatchMethod2Parameters)) return;
 
             var args = invocationExpr.ArgumentList.Arguments
                 .Select(arg => new
@@ -92,64 +106,98 @@ namespace QoLFix.Generators
                 })
                 .ToDictionary(x => x.Param.Name);
 
-            if (!GetConstantArg("methodName", out string? methodName)) return;
-            if (!GetConstantArg("patchType", out byte? patchType)) return;
-
-            var className = genericType.ToString()
-                .Split('.')
-                .Last()
-                .Replace("`", "__");
-
-            // Don't report warnings when we don't even have a valid method
-            // to check for.
-            if (string.IsNullOrEmpty(className)) return;
-            if (string.IsNullOrEmpty(methodName)) return;
-
-            if ((patchType & PATCHTYPE_PREFIX) != 0)
+            var isGeneric = false;
+            isGeneric |= paramNames.SequenceEqual(GenericPatchMethod1Parameters);
+            isGeneric |= paramNames.SequenceEqual(GenericPatchMethod2Parameters);
+            if (isGeneric)
             {
-                GetConstantArg("prefixMethodName", out string? prefixMethodName);
-                CheckMethod(MissingPrefixError, prefixMethodName?.ToString() ?? $"{className}__{methodName}__Prefix");
+                if (!constructedFrom.IsGenericMethod || constructedFrom.TypeArguments.Length != 1) return;
+                if (memberAccessExpr.Name is not GenericNameSyntax genericName) return;
+
+                var genericArgs = genericName.TypeArgumentList.Arguments;
+                if (genericArgs.Count != 1) return;
+
+                var className = genericArgs[0].ToString()
+                    .Split('.')
+                    .Last()
+                    .Replace("`", "__");
+
+                CheckCall(className);
+                return;
             }
 
-            if ((patchType & PATCHTYPE_POSTFIX) != 0)
+            var isNonGeneric = false;
+            isNonGeneric |= paramNames.SequenceEqual(NonGenericPatchMethod1Parameters);
+            isNonGeneric |= paramNames.SequenceEqual(NonGenericPatchMethod2Parameters);
+            if (isNonGeneric)
             {
-                GetConstantArg("postfixMethodName", out string? postfixMethodName);
-                CheckMethod(MissingPostfixError, postfixMethodName?.ToString() ?? $"{className}__{methodName}__Postfix");
+                if (!args.TryGetValue("classType", out var entry)) return;
+
+                // Ignore anything that isn't a `typeof()` expression
+                if (entry.Arg.Expression is not TypeOfExpressionSyntax typeofExpr) return;
+
+                if (context.SemanticModel.GetSymbolInfo(typeofExpr.Type).Symbol is not ITypeSymbol typeSymbol) return;
+
+                CheckCall(typeSymbol.Name);
+                return;
             }
 
-            void CheckMethod(DiagnosticDescriptor descriptor, string methodName)
+            void CheckCall(string className)
             {
-                var methods = methodSymbol.ContainingType.GetMembers().OfType<IMethodSymbol>();
+                if (!GetConstantArg("methodName", out string? methodName)) return;
+                if (!GetConstantArg("patchType", out byte? patchType)) return;
 
-                // PatchMethod uses AccessTool.Method to find our
-                // prefix/postfix, which isn't super strict about the
-                // signature requirements.
-                // Looking up the function by name only should be sufficient.
-                var match = methods.FirstOrDefault(x => x.Name == methodName);
-                if (IsMethodValid()) return;
+                // Don't report warnings when we don't even have a valid method
+                // to check for.
+                if (string.IsNullOrEmpty(className)) return;
+                if (string.IsNullOrEmpty(methodName)) return;
 
-                context.ReportDiagnostic(Diagnostic.Create(descriptor, context.Node.GetLocation(), methodName));
-
-                bool IsMethodValid()
+                if ((patchType & PATCHTYPE_PREFIX) != 0)
                 {
-                    // TODO: check for arguments
-                    if (match == null) return false;
-                    if (!match.IsStatic) return false;
+                    GetConstantArg("prefixMethodName", out string? prefixMethodName);
+                    CheckMethod(MissingPrefixError, prefixMethodName?.ToString() ?? $"{className}__{methodName}__Prefix");
+                }
+
+                if ((patchType & PATCHTYPE_POSTFIX) != 0)
+                {
+                    GetConstantArg("postfixMethodName", out string? postfixMethodName);
+                    CheckMethod(MissingPostfixError, postfixMethodName?.ToString() ?? $"{className}__{methodName}__Postfix");
+                }
+
+                void CheckMethod(DiagnosticDescriptor descriptor, string methodName)
+                {
+                    var methods = methodSymbol.ContainingType.GetMembers().OfType<IMethodSymbol>();
+
+                    // PatchMethod uses AccessTool.Method to find our
+                    // prefix/postfix, which isn't super strict about the
+                    // signature requirements.
+                    // Looking up the function by name only should be sufficient.
+                    var match = methods.FirstOrDefault(x => x.Name == methodName);
+                    if (IsMethodValid()) return;
+
+                    context.ReportDiagnostic(Diagnostic.Create(descriptor, context.Node.GetLocation(), methodName));
+
+                    bool IsMethodValid()
+                    {
+                        // TODO: check for arguments
+                        if (match == null) return false;
+                        if (!match.IsStatic) return false;
+                        return true;
+                    }
+                }
+
+                bool GetConstantArg<T>(string name, out T? value)
+                {
+                    value = default;
+
+                    if (!args.TryGetValue(name, out var entry)) return false;
+
+                    var constant = context.SemanticModel.GetConstantValue(entry.Arg.Expression);
+                    if (!constant.HasValue) return false;
+
+                    if (constant.Value is not null) value = (T)constant.Value;
                     return true;
                 }
-            }
-
-            bool GetConstantArg<T>(string name, out T? value)
-            {
-                value = default;
-
-                if (!args.TryGetValue(name, out var entry)) return false;
-
-                var constant = context.SemanticModel.GetConstantValue(entry.Arg.Expression);
-                if (!constant.HasValue) return false;
-
-                if (constant.Value is not null) value = (T)constant.Value;
-                return true;
             }
         }
     }

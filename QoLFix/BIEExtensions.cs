@@ -35,6 +35,7 @@ namespace QoLFix
             PatchMethod<TClass>(patch, m, patchType, prefixMethodName, postfixMethodName);
         }
 
+        #region Generic PatchMethod overloads
         public static void PatchMethod<TClass>(
             this IPatch patch,
             string methodName,
@@ -65,9 +66,45 @@ namespace QoLFix
             PatchType patchType,
             string prefixMethodName = default,
             string postfixMethodName = default)
-            where TClass : class
+            where TClass : class =>
+            PatchMethod(patch, typeof(TClass), methodBase, patchType, prefixMethodName, postfixMethodName);
+        #endregion
+
+        #region Non-generic PatchMethod overloads
+        public static void PatchMethod(
+            this IPatch patch,
+            Type classType,
+            string methodName,
+            PatchType patchType,
+            Type[] generics = null,
+            string prefixMethodName = default,
+            string postfixMethodName = default) =>
+            PatchMethod(patch, classType, methodName, null, patchType, generics, prefixMethodName, postfixMethodName);
+
+        public static void PatchMethod(
+            this IPatch patch,
+            Type classType,
+            string methodName,
+            Type[] parameters,
+            PatchType patchType,
+            Type[] generics = null,
+            string prefixMethodName = default,
+            string postfixMethodName = default)
         {
-            var className = typeof(TClass).Name.Replace("`", "__");
+            var m = AccessTools.Method(classType, methodName, parameters, generics);
+            PatchMethod(patch, classType, m, patchType, prefixMethodName, postfixMethodName);
+        }
+        #endregion
+
+        public static void PatchMethod(
+            this IPatch patch,
+            Type classType,
+            MethodBase methodBase,
+            PatchType patchType,
+            string prefixMethodName = default,
+            string postfixMethodName = default)
+        {
+            var className = classType.Name.Replace("`", "__");
             var formattedMethodName = methodBase.ToString();
             var methodName = methodBase.IsConstructor ? "ctor" : methodBase.Name;
 
