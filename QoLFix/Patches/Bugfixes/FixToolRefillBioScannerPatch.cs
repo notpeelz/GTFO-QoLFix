@@ -36,11 +36,11 @@ namespace QoLFix.Patches.Bugfixes
                 if (item.Name == "Enemy Scanner")
                 {
                     __result = false;
-                    return false;
+                    return HarmonyControlFlow.DontExecute;
                 }
             }
 
-            return true;
+            return HarmonyControlFlow.Execute;
         }
     }
 }

@@ -37,11 +37,20 @@ namespace QoLFix.Patches.Tweaks
             var playerAgent = PlayerManager.GetLocalPlayerAgent();
             if (playerAgent == null) return true;
 
-            if (playerAgent.Inventory.WieldedSlot == InventorySlot.GearMelee) return true;
-            if (playerAgent.Inventory.WieldedSlot == InventorySlot.Consumable) return true;
-
-            __instance.HideAllCrosshairs();
-            return false;
+            switch (playerAgent.Inventory.WieldedSlot)
+            {
+                case InventorySlot.GearMelee:
+                    return QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigShowForMelee).Value
+                        ? HarmonyControlFlow.Execute
+                        : HarmonyControlFlow.DontExecute;
+                case InventorySlot.Consumable:
+                    return QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigShowForConsumables).Value
+                        ? HarmonyControlFlow.Execute
+                        : HarmonyControlFlow.DontExecute;
+                default:
+                    __instance.HideAllCrosshairs();
+                    return HarmonyControlFlow.DontExecute;
+            }
         }
     }
 }

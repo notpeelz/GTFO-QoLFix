@@ -54,13 +54,14 @@ namespace QoLFix.Patches.Tweaks
             if (eventID == EVENTS.AMMOPACK_APPLY) return InterceptSound(nameof(EVENTS.AMMOPACK_APPLY));
             if (eventID == EVENTS.MEDPACK_APPLY) return InterceptSound(nameof(EVENTS.MEDPACK_APPLY));
 
-            return true;
+            return HarmonyControlFlow.Execute;
 
             static bool InterceptSound(string soundName)
             {
                 Instance.LogDebug($"{(BlockApplySounds ? "Blocked" : "Playing")} sound: {soundName}");
-                if (BlockApplySounds) return false;
-                return true;
+                return BlockApplySounds
+                    ? HarmonyControlFlow.DontExecute
+                    : HarmonyControlFlow.Execute;
             }
         }
 

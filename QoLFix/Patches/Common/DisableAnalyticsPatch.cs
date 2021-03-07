@@ -36,8 +36,14 @@ namespace QoLFix.Patches.Common
             }
         }
 
-        private static bool AnalyticsManager__OnGameEvent__Prefix() => !NoAnalytics;
+        private static bool AnalyticsManager__OnGameEvent__Prefix() =>
+            NoAnalytics
+                ? HarmonyControlFlow.DontExecute
+                : HarmonyControlFlow.Execute;
 
-        private static bool AnalyticsManager__TryPostEvent__Prefix() => !NoAnalytics;
+        private static bool AnalyticsManager__TryPostEvent__Prefix() =>
+            NoAnalytics
+                ? HarmonyControlFlow.DontExecute
+                : HarmonyControlFlow.Execute;
     }
 }

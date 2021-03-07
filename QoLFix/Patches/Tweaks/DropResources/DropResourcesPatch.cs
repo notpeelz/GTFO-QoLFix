@@ -58,14 +58,12 @@ namespace QoLFix.Patches.Tweaks
             playerAgent.gameObject.AddComponent<PlaceholderInteractionMonitor>();
         }
 
-        private static bool PlayerInteraction__UpdateWorldInteractions__Prefix()
-        {
-            // If interactions are disabled, skip the original function to
-            // prevent it from interfering with our placeholder interaction.
-            if (PlaceholderInteractionMonitor.DisableInteractions) return false;
-
-            return true;
-        }
+        // If interactions are disabled, skip the original function to
+        // prevent it from interfering with our placeholder interaction.
+        private static bool PlayerInteraction__UpdateWorldInteractions__Prefix() =>
+            PlaceholderInteractionMonitor.DisableInteractions
+                ? HarmonyControlFlow.DontExecute
+                : HarmonyControlFlow.Execute;
 
         private static void LG_PickupItem_Sync__OnStateChange__Postfix(LG_PickupItem_Sync __instance)
         {

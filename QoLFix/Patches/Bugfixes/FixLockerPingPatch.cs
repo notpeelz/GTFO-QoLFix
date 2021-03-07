@@ -63,13 +63,13 @@ namespace QoLFix.Patches.Bugfixes
             if (GuiManager.PlayerMarkerIsVisibleAndInFocus(__instance))
             {
                 GuiManager.AttemptSetPlayerPingStatus(__instance, false);
-                return false;
+                return HarmonyControlFlow.DontExecute;
             }
 
             if (!GTFOUtils.GetComponentInSight<iPlayerPingTarget>(__instance, out var pingTarget, out var pingPos, 40f, LayerManager.MASK_PING_TARGET))
             {
                 GuiManager.CrosshairLayer.PopAngryPingIndicator();
-                return false;
+                return HarmonyControlFlow.DontExecute;
             }
 
             __instance.m_pingTarget = pingTarget;
@@ -81,7 +81,7 @@ namespace QoLFix.Patches.Bugfixes
                 __instance.m_lastPingedTarget = __instance.m_pingTarget;
             }
 
-            return false;
+            return HarmonyControlFlow.DontExecute;
         }
     }
 }

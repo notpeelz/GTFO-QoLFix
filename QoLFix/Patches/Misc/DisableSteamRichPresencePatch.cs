@@ -28,6 +28,6 @@ namespace QoLFix.Patches.Misc
             this.PatchMethod<SNet_Core_STEAM>(nameof(SNet_Core_STEAM.SetFriendsData), new[] { typeof(string), typeof(string) }, PatchType.Prefix);
         }
 
-        private static bool SNet_Core_STEAM__SetFriendsData__Prefix() => false;
+        private static bool SNet_Core_STEAM__SetFriendsData__Prefix() => HarmonyControlFlow.DontExecute;
     }
 }

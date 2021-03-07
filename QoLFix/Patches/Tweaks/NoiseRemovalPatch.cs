@@ -39,7 +39,7 @@ namespace QoLFix.Patches.Tweaks
             }
             Shader.SetGlobalTexture("_PE_BlueNoise", EmptyTexture);
             PE_BlueNoise.s_computeShader.SetTexture(0, "_PE_BlueNoise", EmptyTexture);
-            return false;
+            return HarmonyControlFlow.DontExecute;
         }
     }
 }

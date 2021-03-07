@@ -37,9 +37,12 @@ namespace QoLFix.Patches.Tweaks
         private static bool PlayerBackpackManager__WieldFirstLocalGear__Prefix()
         {
             var playerAgent = PlayerManager.GetLocalPlayerAgent();
-            if (playerAgent == null) return true;
+            if (playerAgent == null) return HarmonyControlFlow.Execute;
 
-            if (playerAgent.Locomotion.m_lastStateEnum == PlayerLocomotion.PLOC_State.ClimbLadder) return true;
+            if (playerAgent.Locomotion.m_lastStateEnum == PlayerLocomotion.PLOC_State.ClimbLadder)
+            {
+                return HarmonyControlFlow.Execute;
+            }
 
             var wieldedSlot = playerAgent.Inventory.WieldedSlot;
             switch (wieldedSlot)
@@ -47,11 +50,11 @@ namespace QoLFix.Patches.Tweaks
                 case InventorySlot.None:
                 case InventorySlot.ConsumableHeavy:
                 case InventorySlot.InLevelCarry:
-                    return true;
+                    return HarmonyControlFlow.Execute;
                 default:
                     var slot = GetInventorySlotByDrama();
                     playerAgent.Sync.WantsToWieldSlot(slot);
-                    return false;
+                    return HarmonyControlFlow.DontExecute;
             }
         }
 

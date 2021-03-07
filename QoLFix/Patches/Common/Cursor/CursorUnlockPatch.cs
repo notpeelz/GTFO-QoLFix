@@ -34,11 +34,10 @@ namespace QoLFix.Patches.Common.Cursor
             UnityEngine.Cursor.visible = savedVisible;
         }
 
-        private static bool CM_PageBase__UpdateCursorPosition__Prefix()
-        {
-            if (UIManager.UnlockCursor) return false;
-            return true;
-        }
+        private static bool CM_PageBase__UpdateCursorPosition__Prefix() =>
+            UIManager.UnlockCursor
+                ? HarmonyControlFlow.DontExecute
+                : HarmonyControlFlow.Execute;
 
         private static void Cursor__set_lockState__Prefix(ref CursorLockMode value)
         {

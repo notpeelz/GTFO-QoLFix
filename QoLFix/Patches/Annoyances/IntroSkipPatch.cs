@@ -51,7 +51,7 @@ namespace QoLFix.Patches.Annoyances
         private static bool CM_PageIntro__StartInitializing__Prefix(CM_PageIntro __instance)
         {
             SkipIntro(__instance);
-            return false;
+            return HarmonyControlFlow.DontExecute;
         }
 
         private static CM_IntroStep? previousStep;
