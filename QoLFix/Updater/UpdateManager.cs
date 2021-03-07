@@ -68,7 +68,7 @@ namespace QoLFix.Updater
 
             if (LatestRelease.Version > CurrentVersion)
             {
-                LogInfo($"New version available: {LatestRelease.Version}");
+                LogMessage($"New version available: {LatestRelease.Version}");
                 return true;
             }
 
