@@ -3,7 +3,7 @@ using HarmonyLib;
 using LevelGeneration;
 using Player;
 
-namespace QoLFix.Patches.Common
+namespace QoLFix.Patches.Misc
 {
     /// <summary>
     /// This is used to reparent an item pickup to its container

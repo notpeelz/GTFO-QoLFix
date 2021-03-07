@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using HarmonyLib;
 
-namespace QoLFix.Patches.Common
+namespace QoLFix.Patches.Misc
 {
     public class DisableAnalyticsPatch : IPatch
     {
