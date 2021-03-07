@@ -1,9 +1,10 @@
 ﻿using System;
+using QoLFix.UI;
 using UnhollowerRuntimeLib;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace QoLFix.UI
+namespace QoLFix.Updater.UI
 {
     public class UpdateNotifier : MonoBehaviour
     {

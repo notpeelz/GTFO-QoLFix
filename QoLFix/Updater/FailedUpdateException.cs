@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace QoLFix
+namespace QoLFix.Updater
 {
     public class FailedUpdateException : Exception
     {

@@ -15,17 +15,22 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
+		Release-Standalone|Any CPU = Release-Standalone|Any CPU
+		Release-Thunderstore|Any CPU = Release-Thunderstore|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{31EFDA69-63F2-4C86-88CB-0B01E2F8331C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{31EFDA69-63F2-4C86-88CB-0B01E2F8331C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{31EFDA69-63F2-4C86-88CB-0B01E2F8331C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{31EFDA69-63F2-4C86-88CB-0B01E2F8331C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31EFDA69-63F2-4C86-88CB-0B01E2F8331C}.Release-Standalone|Any CPU.ActiveCfg = Release-Standalone|Any CPU
+		{31EFDA69-63F2-4C86-88CB-0B01E2F8331C}.Release-Standalone|Any CPU.Build.0 = Release-Standalone|Any CPU
+		{31EFDA69-63F2-4C86-88CB-0B01E2F8331C}.Release-Thunderstore|Any CPU.ActiveCfg = Release-Thunderstore|Any CPU
+		{31EFDA69-63F2-4C86-88CB-0B01E2F8331C}.Release-Thunderstore|Any CPU.Build.0 = Release-Thunderstore|Any CPU
 		{0C641823-3D96-4518-9257-2CB6435E8BD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0C641823-3D96-4518-9257-2CB6435E8BD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0C641823-3D96-4518-9257-2CB6435E8BD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0C641823-3D96-4518-9257-2CB6435E8BD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C641823-3D96-4518-9257-2CB6435E8BD9}.Release-Standalone|Any CPU.ActiveCfg = Release|Any CPU
+		{0C641823-3D96-4518-9257-2CB6435E8BD9}.Release-Standalone|Any CPU.Build.0 = Release|Any CPU
+		{0C641823-3D96-4518-9257-2CB6435E8BD9}.Release-Thunderstore|Any CPU.ActiveCfg = Release|Any CPU
+		{0C641823-3D96-4518-9257-2CB6435E8BD9}.Release-Thunderstore|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

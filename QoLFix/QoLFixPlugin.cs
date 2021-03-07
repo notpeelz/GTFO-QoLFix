@@ -4,7 +4,6 @@ using BepInEx.IL2CPP;
 using BepInEx;
 using HarmonyLib;
 using BepInEx.Configuration;
-using QoLFix.Patches.Common;
 using QoLFix.UI;
 using QoLFix.Patches.Misc;
 using QoLFix.Patches.Annoyances;
@@ -14,6 +13,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using QoLFix.Patches.Common.Cursor;
+using QoLFix.Updater;
+using QoLFix.Updater.UI;
 
 namespace QoLFix
 {
@@ -44,6 +45,12 @@ namespace QoLFix
         public override void Load()
         {
             Instance = this;
+
+#if RELEASE_STANDALONE
+            LogInfo($"Initializing plugin (Standalone version)");
+#elif RELEASE_THUNDERSTORE
+            LogInfo($"Initializing plugin (Thunderstore version)");
+#endif
 
             if (!this.CheckConfigVersion()) return;
 
@@ -160,7 +167,7 @@ namespace QoLFix
                         $"The current game version is: {currentGameVersion}\n\n" +
                         "This may result in stability problems or crashes.\n" +
                         "This warning will NOT be shown again.",
-                    caption: "Outdated game revision",
+                    caption: $"{ModName} - Outdated game revision",
                     options: (int)(NativeMethods.MB_OK | NativeMethods.MB_ICONWARNING | NativeMethods.MB_SYSTEMMODAL));
 
                 return;
@@ -169,13 +176,24 @@ namespace QoLFix
             // We're running on a newer game version
             var btn = NativeMethods.MessageBox(
                 hWnd: IntPtr.Zero,
+                caption: $"{ModName} - Outdated mod version",
                 text: $"You are attempting to run {ModName} {VersionInfo.Version} on a newer version of the game.\n" +
                     $"Your current version of {ModName} was built for: {SupportedGameRevision}\n" +
                     $"The current game version is: {currentGameVersion}\n\n" +
-                    "This may result in stability problems or crashes.\n" +
-                    "Would you like to check if there's a new update available?",
-                caption: "Outdated mod version",
+                    "This may result in stability problems or crashes." +
+#if RELEASE_STANDALONE
+                    "\nWould you like to check if there's a new update available?",
                 options: (int)(NativeMethods.MB_YESNO | NativeMethods.MB_ICONWARNING | NativeMethods.MB_SYSTEMMODAL));
+#else
+#if RELEASE_THUNDERSTORE
+                    "\nCheck your mod manager for updates.",
+#else
+                    "",
+#endif
+                options: (int)(NativeMethods.MB_OK | NativeMethods.MB_ICONWARNING | NativeMethods.MB_SYSTEMMODAL));
+
+            return;
+#endif
 
             if (btn != NativeMethods.IDYES) return;
 
