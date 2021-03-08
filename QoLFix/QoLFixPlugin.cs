@@ -90,6 +90,7 @@ namespace QoLFix
             RegisterPatch<ResourceAudioCuePatch>();
             RegisterPatch<RecentlyPlayedWithPatch>();
             RegisterPatch<ScreenLiquidRemovalPatch>();
+            RegisterPatch<BetterInteractionsPatch>();
 
             // Bug fixes
             RegisterPatch<FixToolRefillBioScannerPatch>();

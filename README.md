@@ -64,6 +64,17 @@ Lowers the game volume during the elevator scene. No more alt-tabbing or screami
 
 Skips the intro that plays when dropping into a level.
 
+### BetterInteractions
+
+Fixes several quirks of the interaction system, namely:
+
+- Hacking tool minigame would get cancelled if you swapped weapons or moved too early
+- The mine deployer would prioritize interacting with doors over placing mines
+- Mines placed high up would be hard to pick up while jumping
+- Placing sentries/mines would get cancelled while the player is walking/running
+- Overlapping items (e.g. cells) would cause the interaction to cancel because the game couldn't decide which one you were trying to interact with
+- Reviving teammates would cancel for seemingly no reason; with this patch, you can **look around freely** while reviving.
+
 ### LobbyUnready
 
 Lets you unready after readying up.
