@@ -21,6 +21,7 @@ namespace QoLFix.Patches.Common.Cursor
         public void Patch()
         {
             this.PatchMethod<CM_PageBase>(nameof(CM_PageBase.UpdateCursorPosition), PatchType.Prefix);
+            this.PatchMethod<CM_PageBase>(nameof(CM_PageBase.UpdateButtonPress), PatchType.Prefix);
             this.PatchMethod<UnityEngine.Cursor>($"set_{nameof(UnityEngine.Cursor.lockState)}", PatchType.Prefix);
             this.PatchMethod<UnityEngine.Cursor>($"set_{nameof(UnityEngine.Cursor.visible)}", PatchType.Prefix);
         }
@@ -35,7 +36,12 @@ namespace QoLFix.Patches.Common.Cursor
         }
 
         private static bool CM_PageBase__UpdateCursorPosition__Prefix() =>
-            UIManager.UnlockCursor
+            UnityEngine.Cursor.lockState == CursorLockMode.None
+                ? HarmonyControlFlow.DontExecute
+                : HarmonyControlFlow.Execute;
+
+        private static bool CM_PageBase__UpdateButtonPress__Prefix() =>
+            UnityEngine.Cursor.lockState == CursorLockMode.None
                 ? HarmonyControlFlow.DontExecute
                 : HarmonyControlFlow.Execute;
 
