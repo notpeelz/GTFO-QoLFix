@@ -18,7 +18,7 @@ using QoLFix.Updater.UI;
 
 namespace QoLFix
 {
-    [BepInPlugin(GUID, ModName, VersionInfo.Version)]
+    [BepInPlugin(GUID, ModName, VersionInfo.SemVer)]
     [BepInProcess("GTFO.exe")]
     public class QoLFixPlugin : BasePlugin
     {
