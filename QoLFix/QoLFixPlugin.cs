@@ -47,9 +47,9 @@ namespace QoLFix
             Instance = this;
 
 #if RELEASE_STANDALONE
-            LogMessage("Initializing plugin (Standalone version)");
+            LogMessage($"Initializing plugin [{VersionInfo.SemVer}] (Standalone version)");
 #elif RELEASE_THUNDERSTORE
-            LogMessage("Initializing plugin (Thunderstore version)");
+            LogMessage($"Initializing plugin [{VersionInfo.SemVer}] (Thunderstore version)");
 #endif
 
             if (!this.CheckConfigVersion()) return;
