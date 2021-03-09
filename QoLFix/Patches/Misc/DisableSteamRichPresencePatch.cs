@@ -19,7 +19,11 @@ namespace QoLFix.Patches.Misc
 
         public string Name { get; } = PatchName;
 
+#if DEBUG
+        public bool Enabled => true;
+#else
         public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+#endif
 
         public Harmony Harmony { get; set; }
 
