@@ -24,6 +24,7 @@ namespace QoLFix.Patches.Common.Cursor
             this.PatchMethod<CM_PageBase>(nameof(CM_PageBase.UpdateButtonPress), PatchType.Prefix);
             this.PatchMethod<UnityEngine.Cursor>($"set_{nameof(UnityEngine.Cursor.lockState)}", PatchType.Prefix);
             this.PatchMethod<UnityEngine.Cursor>($"set_{nameof(UnityEngine.Cursor.visible)}", PatchType.Prefix);
+            this.PatchMethod<PlayerChatManager>(nameof(PlayerChatManager.UpdateTextChatInput), PatchType.Prefix);
             this.PatchMethod<InputMapper>(nameof(InputMapper.DoGetAxis), PatchType.Prefix);
             this.PatchMethod<InputMapper>(
                 methodName: nameof(InputMapper.DoGetButton),
@@ -47,6 +48,11 @@ namespace QoLFix.Patches.Common.Cursor
             UnityEngine.Cursor.lockState = savedLockMode;
             UnityEngine.Cursor.visible = savedVisible;
         }
+
+        private static bool PlayerChatManager__UpdateTextChatInput__Prefix() =>
+            UnityEngine.Cursor.lockState != CursorLockMode.None
+                ? HarmonyControlFlow.Execute
+                : HarmonyControlFlow.DontExecute;
 
         private static bool InputMapper__DoGetButton__Prefix(ref bool __result)
         {
