@@ -13,7 +13,7 @@ namespace QoLFix.Patches.Tweaks
             public LatencyText(IntPtr value)
                 : base(value) { }
 
-            private float lastUpdated;
+            private float time;
             private TextMeshPro text;
 
             public SNet_Player Player { get; set; }
@@ -28,8 +28,9 @@ namespace QoLFix.Patches.Tweaks
 
             internal void Update()
             {
-                if ((Time.time - this.lastUpdated) < this.UpdateInterval) return;
-                this.lastUpdated = Time.time;
+                this.time -= Time.deltaTime;
+                if (this.time > 0) return;
+                this.time = this.UpdateInterval;
 
                 this.UpdateText();
             }

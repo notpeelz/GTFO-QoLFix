@@ -13,13 +13,15 @@ namespace QoLFix.Patches.Bugfixes
             public AudioResetTimer(IntPtr value)
                 : base(value) { }
 
-            private float scheduledTime;
+            private float time;
 
             internal void Update()
             {
-                if (this.scheduledTime <= 0) return;
-                if (this.scheduledTime > Time.time) return;
-                this.scheduledTime = 0;
+                // Don't update unless the timer is ticking
+                if (this.time <= 0) return;
+
+                this.time -= Time.deltaTime;
+                if (this.time > 0) return;
 
                 Instance.LogDebug("Resetting");
                 CellSound.SetGlobalRTPCValue(GAME_PARAMETERS.SCOUT_SCREAM_DUCKING, 0);
@@ -28,7 +30,7 @@ namespace QoLFix.Patches.Bugfixes
             public void ScheduleReset()
             {
                 Instance.LogDebug("Scheduling audio reset");
-                this.scheduledTime = Time.time + RESET_DELAY;
+                this.time = RESET_DELAY;
             }
         }
     }

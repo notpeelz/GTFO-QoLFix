@@ -12,7 +12,7 @@ namespace QoLFix.Patches.Tweaks
             public LatencyWatermark(IntPtr value)
                 : base(value) { }
 
-            private float lastUpdated;
+            private float time;
             private PUI_Watermark watermark;
             private TextMeshPro text;
 
@@ -23,8 +23,9 @@ namespace QoLFix.Patches.Tweaks
 
             internal void Update()
             {
-                if ((Time.time - this.lastUpdated) < PING_UPDATE_INTERVAL) return;
-                this.lastUpdated = Time.time;
+                this.time -= Time.deltaTime;
+                if (this.time > 0) return;
+                this.time = PING_UPDATE_INTERVAL;
 
                 if (this.watermark == null)
                 {
