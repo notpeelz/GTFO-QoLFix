@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace QoLFix.Patches.Common.Cursor
 {
-    public class CursorUnlockPatch : IPatch
+    public class UnityCursorPatch : IPatch
     {
         public static IPatch Instance { get; private set; }
 
@@ -14,7 +14,7 @@ namespace QoLFix.Patches.Common.Cursor
             Instance = this;
         }
 
-        public string Name { get; } = nameof(CursorUnlockPatch);
+        public string Name { get; } = nameof(UnityCursorPatch);
 
         public Harmony Harmony { get; set; }
 

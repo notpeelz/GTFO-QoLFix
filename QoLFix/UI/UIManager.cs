@@ -18,7 +18,7 @@ namespace QoLFix.UI
             set
             {
                 unlockCursor = value;
-                CursorUnlockPatch.RestoreCursorState();
+                UnityCursorPatch.RestoreCursorState();
             }
         }
 
