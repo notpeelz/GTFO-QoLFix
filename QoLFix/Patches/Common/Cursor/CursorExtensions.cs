@@ -33,7 +33,7 @@ namespace QoLFix.Patches.Common.Cursor
                 if (updateOnNextFrame)
                 {
                     canvasGroup.alpha = 0;
-                    UIManager.OnNextFrame += UpdateContent;
+                    ActionScheduler.Schedule(UpdateContent);
                 }
 
                 void UpdateContent()
