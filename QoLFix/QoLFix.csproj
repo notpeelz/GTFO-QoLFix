@@ -18,10 +18,10 @@
     <DefineConstants>RELEASE_STANDALONE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release-Standalone'">
-    <DefineConstants>RELEASE_STANDALONE</DefineConstants>
+    <DefineConstants>RELEASE;RELEASE_STANDALONE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release-Thunderstore'">
-    <DefineConstants>RELEASE_THUNDERSTORE</DefineConstants>
+    <DefineConstants>RELEASE;RELEASE_THUNDERSTORE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="$(BIELibsFolder)\*.dll" Private="false" />

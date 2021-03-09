@@ -23,7 +23,11 @@ namespace QoLFix
     public class QoLFixPlugin : BasePlugin
     {
         internal const string ModName = "QoL Fix";
+#if RELEASE
         internal const string GUID = "dev.peelz.qolfix";
+#else
+        internal const string GUID = $"dev.peelz.qolfix.{VersionInfo.GitBranch}";
+#endif
         internal const string RepoName = "notpeelz/GTFO-QoLFix";
 
         public const int SupportedGameRevision = 21989;
