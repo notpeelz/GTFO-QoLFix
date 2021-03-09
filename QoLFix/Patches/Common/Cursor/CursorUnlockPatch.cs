@@ -24,6 +24,19 @@ namespace QoLFix.Patches.Common.Cursor
             this.PatchMethod<CM_PageBase>(nameof(CM_PageBase.UpdateButtonPress), PatchType.Prefix);
             this.PatchMethod<UnityEngine.Cursor>($"set_{nameof(UnityEngine.Cursor.lockState)}", PatchType.Prefix);
             this.PatchMethod<UnityEngine.Cursor>($"set_{nameof(UnityEngine.Cursor.visible)}", PatchType.Prefix);
+            this.PatchMethod<InputMapper>(nameof(InputMapper.DoGetAxis), PatchType.Prefix);
+            this.PatchMethod<InputMapper>(
+                methodName: nameof(InputMapper.DoGetButton),
+                patchType: PatchType.Prefix,
+                prefixMethodName: nameof(InputMapper__DoGetButton__Prefix));
+            this.PatchMethod<InputMapper>(
+                methodName: nameof(InputMapper.DoGetButtonUp),
+                patchType: PatchType.Prefix,
+                prefixMethodName: nameof(InputMapper__DoGetButton__Prefix));
+            this.PatchMethod<InputMapper>(
+                methodName: nameof(InputMapper.DoGetButtonDown),
+                patchType: PatchType.Prefix,
+                prefixMethodName: nameof(InputMapper__DoGetButton__Prefix));
         }
 
         private static CursorLockMode savedLockMode;
@@ -33,6 +46,20 @@ namespace QoLFix.Patches.Common.Cursor
         {
             UnityEngine.Cursor.lockState = savedLockMode;
             UnityEngine.Cursor.visible = savedVisible;
+        }
+
+        private static bool InputMapper__DoGetButton__Prefix(ref bool __result)
+        {
+            if (UnityEngine.Cursor.lockState != CursorLockMode.None) return HarmonyControlFlow.Execute;
+            __result = false;
+            return HarmonyControlFlow.DontExecute;
+        }
+
+        private static bool InputMapper__DoGetAxis__Prefix(ref float __result)
+        {
+            if (UnityEngine.Cursor.lockState != CursorLockMode.None) return HarmonyControlFlow.Execute;
+            __result = 0;
+            return HarmonyControlFlow.DontExecute;
         }
 
         private static bool CM_PageBase__UpdateCursorPosition__Prefix() =>
