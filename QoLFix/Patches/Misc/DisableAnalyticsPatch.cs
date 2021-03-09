@@ -28,7 +28,11 @@ namespace QoLFix.Patches.Misc
         private static void GS_Startup__Enter__Postfix()
         {
             var args = Il2CppSystem.Environment.GetCommandLineArgs();
+#if DEBUG
+            NoAnalytics = true;
+#else
             NoAnalytics = args.Skip(1).Contains("-noanalytics");
+#endif
 
             if (NoAnalytics)
             {
