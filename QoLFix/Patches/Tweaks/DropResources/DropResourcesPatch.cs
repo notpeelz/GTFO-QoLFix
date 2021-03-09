@@ -27,6 +27,12 @@ namespace QoLFix.Patches.Tweaks
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Lets you put resources/consumables back in lockers/boxes."));
+
+            ClassInjector.RegisterTypeInIl2Cpp<PlaceholderInteractionMonitor>();
+            ClassInjector.RegisterTypeInIl2Cpp<StorageSlotPlaceholder>();
+#if DEBUG_PLACEHOLDERS
+            ClassInjector.RegisterTypeInIl2Cpp<RectangleWireframe>();
+#endif
         }
 
         public string Name { get; } = PatchName;
@@ -37,12 +43,6 @@ namespace QoLFix.Patches.Tweaks
 
         public void Patch()
         {
-            ClassInjector.RegisterTypeInIl2Cpp<PlaceholderInteractionMonitor>();
-            ClassInjector.RegisterTypeInIl2Cpp<StorageSlotPlaceholder>();
-#if DEBUG_PLACEHOLDERS
-            ClassInjector.RegisterTypeInIl2Cpp<RectangleWireframe>();
-#endif
-
             this.PatchMethod<LocalPlayerAgentSettings>(nameof(LocalPlayerAgentSettings.OnLocalPlayerAgentEnable), PatchType.Postfix);
             this.PatchMethod<LG_ResourceContainer_Storage>(nameof(LG_ResourceContainer_Storage.EnablePickupInteractions), PatchType.Postfix);
             this.PatchMethod<LG_ResourceContainer_Storage>(nameof(LG_ResourceContainer_Storage.DisablePickupInteractions), PatchType.Postfix);

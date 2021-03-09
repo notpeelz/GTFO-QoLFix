@@ -52,6 +52,8 @@ namespace QoLFix.Patches.Tweaks
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Displays network latency on your HUD.\nNOTE: unfortunately, due to a bug with the way GTFO estimates network latency, the ping is only updated once upon joining a game."));
+            ClassInjector.RegisterTypeInIl2Cpp<LatencyWatermark>();
+            ClassInjector.RegisterTypeInIl2Cpp<LatencyText>();
         }
 
         public string Name { get; } = PatchName;
@@ -62,8 +64,6 @@ namespace QoLFix.Patches.Tweaks
 
         public void Patch()
         {
-            ClassInjector.RegisterTypeInIl2Cpp<LatencyWatermark>();
-            ClassInjector.RegisterTypeInIl2Cpp<LatencyText>();
             this.PatchMethod<WatermarkGuiLayer>(nameof(WatermarkGuiLayer.Setup), new[] { typeof(Transform), typeof(string) }, PatchType.Postfix);
             //this.PatchMethod<SNet_Core_STEAM>(nameof(SNet_Core_STEAM.UpdateConnectionStatus), PatchType.Postfix);
 

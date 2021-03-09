@@ -14,6 +14,7 @@ namespace QoLFix.Patches.Common
         public void Initialize()
         {
             Instance = this;
+            ClassInjector.RegisterTypeInIl2Cpp<CursorInteraction>();
         }
 
         public string Name { get; } = nameof(PlayerNameExtPatch);
@@ -31,7 +32,6 @@ namespace QoLFix.Patches.Common
 
         public void Patch()
         {
-            ClassInjector.RegisterTypeInIl2Cpp<CursorInteraction>();
             this.PatchMethod<CM_PlayerLobbyBar>(nameof(CM_PlayerLobbyBar.UpdatePlayer), PatchType.Postfix);
             this.PatchMethod<CM_PlayerLobbyBar>(nameof(CM_PlayerLobbyBar.SetupFromPage), PatchType.Postfix);
             this.PatchMethod<PUI_Inventory>(nameof(PUI_Inventory.Setup), new[] { typeof(GuiLayer) }, PatchType.Postfix);

@@ -18,6 +18,7 @@ namespace QoLFix.Patches.Bugfixes
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Fixes several bugs related to sound distortion."));
+            ClassInjector.RegisterTypeInIl2Cpp<AudioResetTimer>();
         }
 
         public string Name { get; } = PatchName;
@@ -32,7 +33,6 @@ namespace QoLFix.Patches.Bugfixes
         {
             this.PatchMethod<GameStateManager>(nameof(GameStateManager.ChangeState), PatchType.Postfix);
 
-            ClassInjector.RegisterTypeInIl2Cpp<AudioResetTimer>();
             UIManager.Initialized += () =>
             {
                 GOFactory.CreateObject("ResetTimer", UIManager.CanvasRoot.transform, out ResetTimer);
