@@ -38,6 +38,11 @@ namespace QoLFix.Patches.Tweaks
         private void OnCursorUpdate(CM_PageBase page, Vector2 pos, ref RaycastHit2D rayHit, bool hovering, Lazy<SNet_Player> player)
         {
             page.SetCursorStyle(hovering ? CursorStyle.Hand : CursorStyle.Default);
+
+            // This is necessary so that we don't open steam links while the
+            // mouse is unlocked.
+            if (Cursor.lockState == CursorLockMode.None) return;
+
             if (!hovering || !Input.GetMouseButtonUp(0)) return;
 
             Instance.LogInfo($"Opening steam profile for {player.Value.NickName} ({player.Value.Lookup})");
