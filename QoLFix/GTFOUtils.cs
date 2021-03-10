@@ -10,8 +10,6 @@ namespace QoLFix
 {
     public static class GTFOUtils
     {
-        private static readonly IEqualityComparer<UnityEngine.Object> InstanceIDComparer = ProjectionEqualityComparer.Create<UnityEngine.Object, int>(x => x.GetInstanceID());
-
         public static T[] GetComponentsInParentAtPosition<T>(Vector3 position, int? layerMask = null)
             where T : UnityEngine.Object =>
             GetComponentsAtPosition<T>(position, layerMask, x => x.GetComponentsInParent<T>());
@@ -24,7 +22,7 @@ namespace QoLFix
             where T : UnityEngine.Object
         {
             return Physics.OverlapSphere(position, float.Epsilon, layerMask ?? LayerManager.MASK_PING_TARGET)
-                .Distinct(InstanceIDComparer)
+                .Distinct(UnhollowerExtensions.InstanceIDComparer)
                 .Cast<Component>()
                 .SelectMany(x => getCompsFunc != null ? getCompsFunc(x) : x.GetComponents<T>())
                 .Where(x => x != null)
@@ -93,7 +91,7 @@ namespace QoLFix
                 T childComp = default;
                 foreach (var hit in hits)
                 {
-                    if (!storageChildren.Contains(hit.collider.gameObject, InstanceIDComparer)) continue;
+                    if (!storageChildren.Contains(hit.collider.gameObject, UnhollowerExtensions.InstanceIDComparer)) continue;
                     childComp = hit.collider.gameObject.GetComponentInChildren<T>();
                     if (childComp == null) continue;
                     if (predicate != null && !predicate(childComp)) continue;
@@ -119,7 +117,7 @@ namespace QoLFix
         public static LG_WeakResourceContainer GetParentResourceContainer(Vector3 position)
         {
             var resourceContainers = GetComponentsInParentAtPosition<LG_WeakResourceContainer>(position)
-                .Distinct(InstanceIDComparer)
+                .Distinct(UnhollowerExtensions.InstanceIDComparer)
                 .Cast<LG_WeakResourceContainer>()
                 .ToArray();
 
