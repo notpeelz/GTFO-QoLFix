@@ -15,6 +15,9 @@ namespace QoLFix.Patches.Common.Cursor
         {
             var state = page.GetCursorState();
 
+            // Make sure we cancel pending resize actions
+            state.Tooltip.ResizeAction?.Invalidate();
+
             if (state.Tooltip.Content != null)
             {
                 state.Tooltip.Content.transform.SetParent(null, false);
@@ -28,12 +31,15 @@ namespace QoLFix.Patches.Common.Cursor
             if (content != null)
             {
                 var canvasGroup = state.Tooltip.GameObject.GetComponent<CanvasGroup>();
+
                 UpdateContent();
 
                 if (updateOnNextFrame)
                 {
+                    // FIXME: for some reason, CanvasGroup::alpha doesn't
+                    // seem to have any effect on the tooltip.
                     canvasGroup.alpha = 0;
-                    ActionScheduler.Schedule(UpdateContent);
+                    state.Tooltip.ResizeAction = ActionScheduler.Schedule(UpdateContent);
                 }
 
                 void UpdateContent()

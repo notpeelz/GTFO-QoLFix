@@ -1,4 +1,5 @@
 ﻿using System;
+using QoLFix.UI;
 using UnityEngine;
 
 namespace QoLFix.Patches.Common.Cursor
@@ -17,6 +18,8 @@ namespace QoLFix.Patches.Common.Cursor
         public Vector2 MinScale { get; set; } = Vector2.zero;
 
         public Vector2 MaxScale { get; set; } = Vector2.positiveInfinity;
+
+        public IScheduledAction ResizeAction { get; set; }
 
         public GameObject Content
         {

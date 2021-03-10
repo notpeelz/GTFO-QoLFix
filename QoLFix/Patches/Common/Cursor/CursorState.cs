@@ -13,6 +13,5 @@ namespace QoLFix.Patches.Common.Cursor
         public CursorStyle Style { get; internal set; }
 
         public CursorTooltip Tooltip { get; } = new();
-
     }
 }
