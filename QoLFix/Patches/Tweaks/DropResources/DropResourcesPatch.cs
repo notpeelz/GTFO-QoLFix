@@ -74,6 +74,15 @@ namespace QoLFix.Patches.Tweaks
                 return;
             }
 
+            // We make sure that the container is open when an item gets
+            // synced. This is because LG_PickupItem_Sync::OnStateChange
+            // gets called when a player drops in mid-game.
+
+            // XXX: hopefully the replicators are in the correct state at
+            // this point.
+            var replicator = container.m_sync.Cast<LG_ResourceContainer_Sync>().m_stateReplicator;
+            if (replicator.State.status != eResourceContainerStatus.Open) return;
+
             // If an item is picked up or dropped in a container, update all
             // the placeholders.
             UpdatePlaceholders(container);
