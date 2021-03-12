@@ -14,7 +14,7 @@ namespace QoLFix.Patches.Misc
     {
         public static IPatch Instance { get; private set; }
 
-        public string Name => nameof(ReparentPickupPatch);
+        public string Name { get; } = nameof(ReparentPickupPatch);
 
         public Harmony Harmony { get; set; }
 

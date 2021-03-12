@@ -23,7 +23,7 @@ namespace QoLFix.Patches.Tweaks
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Lets you open the steam profile of your teammates by clicking on their name."));
         }
 
-        public string Name => PatchName;
+        public string Name { get; } = PatchName;
 
         public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 

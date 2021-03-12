@@ -1,7 +1,7 @@
 ﻿using BepInEx.Configuration;
-using GameData;
 using HarmonyLib;
 using Player;
+using QoLFix.Patches.Misc;
 
 namespace QoLFix.Patches.Tweaks
 {
@@ -26,32 +26,13 @@ namespace QoLFix.Patches.Tweaks
 
         public void Patch()
         {
+            QoLFixPlugin.RegisterPatch<ItemEquippableAnimationSequencePatch>();
             this.PatchMethod<PLOC_Stand>(nameof(PLOC_Stand.Update), PatchType.Prefix, prefixMethodName: nameof(PLOC__Update__Prefix));
             this.PatchMethod<PLOC_Crouch>(nameof(PLOC_Crouch.Update), PatchType.Prefix, prefixMethodName: nameof(PLOC__Update__Prefix));
-            this.PatchMethod<ItemEquippable>(nameof(ItemEquippable.DoTriggerWeaponAnimSequence), PatchType.Postfix);
             //this.PatchMethod<ItemEquippable._DoTriggerWeaponAnimSequence_d__97>(nameof(ItemEquippable._DoTriggerWeaponAnimSequence_d__97.MoveNext), PatchType.Postfix);
         }
 
         //private static void _DoTriggerWeaponAnimSequence_d__97__MoveNext__Postfix() => Instance.LogDebug("Entering coroutine");
-
-        private static Il2CppSystem.Collections.IEnumerator LastWeaponAnimationSequence;
-
-        private static void ItemEquippable__DoTriggerWeaponAnimSequence__Postfix(
-            ItemEquippable __instance,
-            ref Il2CppSystem.Collections.IEnumerator __result)
-        {
-            // Even though this shouldn't happen, check just in case.
-            if (!__instance.Owner.IsLocallyOwned) return;
-
-            if (!__instance.m_isWielded)
-            {
-                Instance.LogWarning($"{nameof(ItemEquippable.DoTriggerWeaponAnimSequence)} was called on an item that isn't being wielded?");
-                return;
-            }
-
-            Instance.LogDebug("Starting animation coroutine");
-            LastWeaponAnimationSequence = __result;
-        }
 
         private static void PLOC__Update__Prefix(PLOC_Stand __instance)
         {
@@ -79,18 +60,12 @@ namespace QoLFix.Patches.Tweaks
             var wieldedItem = itemHolder.WieldedItem;
 
             // If we're reloading, cancel it
-            if (wieldedItem?.IsReloading == true) return;
+            if (wieldedItem?.IsReloading != true) return;
             wieldedItem.IsReloading = false;
 
-            if (LastWeaponAnimationSequence != null)
-            {
-                Instance.LogDebug("Aborting animation coroutine");
-                wieldedItem.StopCoroutine(LastWeaponAnimationSequence);
-                LastWeaponAnimationSequence = null;
-            }
+            ItemEquippableAnimationSequencePatch.StopAnimation();
 
             var gearPartHolder = wieldedItem.GearPartHolder;
-
             gearPartHolder.FrontPartAnimator?.Rebind();
             gearPartHolder.ReceiverPartAnimator?.Rebind();
             gearPartHolder.StockPartAnimator?.Rebind();
