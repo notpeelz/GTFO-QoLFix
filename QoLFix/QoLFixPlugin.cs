@@ -102,6 +102,7 @@ namespace QoLFix
             RegisterPatch<FixLockerPingPatch>();
             RegisterPatch<FixSoundMufflePatch>();
             RegisterPatch<FixFlashlightStatePatch>();
+            RegisterPatch<FixWeaponAnimationsPatch>();
 
             // XXX: needs to execute after everything else
             RegisterPatch<ReparentPickupPatch>();

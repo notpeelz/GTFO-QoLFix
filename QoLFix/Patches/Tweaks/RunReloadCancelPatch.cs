@@ -63,13 +63,7 @@ namespace QoLFix.Patches.Tweaks
             if (wieldedItem?.IsReloading != true) return;
             wieldedItem.IsReloading = false;
 
-            ItemEquippableAnimationSequencePatch.StopAnimation();
-
-            var gearPartHolder = wieldedItem.GearPartHolder;
-            gearPartHolder.FrontPartAnimator?.Rebind();
-            gearPartHolder.ReceiverPartAnimator?.Rebind();
-            gearPartHolder.StockPartAnimator?.Rebind();
-            player.AnimatorArms?.Rebind();
+            ItemEquippableAnimationSequencePatch.StopAnimation(wieldedItem);
         }
     }
 }

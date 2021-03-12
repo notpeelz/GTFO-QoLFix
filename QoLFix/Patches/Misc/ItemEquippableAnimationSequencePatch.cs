@@ -23,11 +23,32 @@ namespace QoLFix.Patches.Misc
         private static ItemEquippable ActiveItem;
         private static Il2CppSystem.Collections.IEnumerator AnimationSequence;
 
-        public static void StopAnimation()
+        public static void StopAnimation(ItemEquippable item = null)
         {
-            if (ActiveItem == null) return;
+            if (ActiveItem?.Owner?.IsLocallyOwned != true) return;
+
             Instance.LogDebug("Aborting animation coroutine");
+            if (item != null && item.Owner != ActiveItem.Owner)
+            {
+                Instance.LogError("The item is not owned by the local player.");
+                return;
+            }
+
             ActiveItem.StopCoroutine(AnimationSequence);
+
+            if (item != null)
+            {
+                var gearPartHolder = item.GearPartHolder;
+                gearPartHolder.FrontPartAnimator?.Rebind();
+                gearPartHolder.ReceiverPartAnimator?.Rebind();
+                gearPartHolder.StockPartAnimator?.Rebind();
+                ActiveItem.Owner.AnimatorArms.Rebind();
+
+                // This resets the animation weights, which fixes the
+                // funky fingers created by rebinding AnimatorArms.
+                ActiveItem.Owner.Inventory.PlayAnimationsForWieldedItem();
+            }
+
             ActiveItem = null;
             AnimationSequence = null;
         }

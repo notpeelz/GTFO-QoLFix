@@ -147,6 +147,7 @@ Fixes these bugs:
 - the door frames on the tech tileset weren't pingable
 - the scout/map muffle sound effect wouldn't get reset under certain circumstances
 - the flashlight would turn off when dropping/swapping items
+- animation sequences (e.g. reload) would carry over when switching weapons
 
 ## Credits
 
