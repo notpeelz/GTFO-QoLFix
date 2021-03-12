@@ -23,19 +23,26 @@ namespace QoLFix.Updater
                     if (!force && Releases != null || await UpdateReleaseObject())
                     {
                         var allowPrerelease = includePrerelease || QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigNotifyPrerelease).Value;
-                        var release = Releases.Children<JObject>().FirstOrDefault(release => !(bool)release["prerelease"] || allowPrerelease);
+                        var releases = Releases
+                            .Children<JObject>()
+                            .Select(x =>
+                            {
+                                tag = (string)x["tag_name"];
+                                if (tag.StartsWith("v")) tag = tag[1..];
 
-                        if (release == null) return null;
+                                var version = SemVer.Version.Parse(tag);
+                                return new ReleaseInfo
+                                {
+                                    Version = version,
+                                    DownloadUrl = (string)x["html_url"],
+                                    PreRelease = (bool)x["prerelease"] || version.PreRelease != null,
+                                };
+                            })
+                            .OrderByDescending(x => x.Version);
 
-                        tag = (string)release["tag_name"];
-                        if (tag.StartsWith("v")) tag = tag[1..];
+                        var release = releases.FirstOrDefault(release => !release.PreRelease || allowPrerelease);
 
-                        return new ReleaseInfo
-                        {
-                            Version = SemVer.Version.Parse(tag),
-                            DownloadUrl = (string)release["html_url"],
-                            PreRelease = (bool)release["prerelease"],
-                        };
+                        return release;
                     }
                 }
                 catch (FormatException ex)
@@ -44,7 +51,7 @@ namespace QoLFix.Updater
                 }
                 catch (Exception ex)
                 {
-                    throw new FailedUpdateException("Failed to fetch the latest release version", ex);
+                    throw new FailedUpdateException("Failed fetching the latest release from GitHub", ex);
                 }
 
                 return null;
@@ -56,7 +63,7 @@ namespace QoLFix.Updater
                 {
                     using var client = new HttpClient()
                     {
-                        BaseAddress = new Uri($"https://api.github.com/repos/{QoLFixPlugin.RepoName}/releases"),
+                        BaseAddress = new Uri($"https://api.github.com/repos/{QoLFixPlugin.RepoName}/releases?per_page=100"),
                     };
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     client.DefaultRequestHeaders.UserAgent.TryParseAdd(QoLFixPlugin.GUID);
