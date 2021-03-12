@@ -75,6 +75,10 @@ Fixes several quirks of the interaction system, namely:
 - Overlapping items (e.g. cells) would cause the interaction to cancel because the game couldn't decide which one you were trying to interact with
 - Reviving teammates would cancel for seemingly no reason; with this patch, you can **look around freely** while reviving.
 
+### RunReloadCancel
+
+Lets you cancel your reload by sprinting rather than having to swap weapons.
+
 ### LobbyUnready
 
 Lets you unready after readying up.
