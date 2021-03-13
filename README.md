@@ -103,6 +103,10 @@ Updates the Steam recent players list.
 
 <img height="180" alt="steam recent players" src="img/steamrecentplayers.jpg">
 
+### FramerateLimiter
+
+Lowers your FPS when alt-tabbing to preserve system resources.
+
 ### ScreenLiquidRemoval
 
 <sub>(default: disabled)</sub>
