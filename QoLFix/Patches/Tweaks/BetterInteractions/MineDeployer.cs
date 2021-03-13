@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using AK;
+﻿using AK;
 
 namespace QoLFix.Patches.Tweaks
 {

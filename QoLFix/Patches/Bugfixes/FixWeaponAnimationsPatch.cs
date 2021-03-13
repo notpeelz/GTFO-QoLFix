@@ -1,5 +1,4 @@
 ﻿using BepInEx.Configuration;
-using GameData;
 using HarmonyLib;
 using QoLFix.Patches.Misc;
 
