@@ -34,27 +34,40 @@ namespace QoLFix.Patches.Bugfixes
                     typeof(pItemData)
                 },
                 patchType: PatchType.Both);
+            this.PatchMethod<PlayerBackpack>(nameof(PlayerBackpack.SetDeployed), PatchType.Both);
         }
 
         private static bool? FlashlightEnabled;
 
-        private static void PlayerBackpackManager__RemoveItem__Prefix(SNet_Player fromPlayer)
+        private static void PlayerBackpackManager__RemoveItem__Prefix(SNet_Player fromPlayer) =>
+            UpdateFlashlight__Prefix(fromPlayer);
+
+        private static void PlayerBackpackManager__RemoveItem__Postfix(SNet_Player fromPlayer) =>
+            UpdateFlashlight__Postfix(fromPlayer);
+
+        private static void PlayerBackpack__SetDeployed__Prefix(PlayerBackpack __instance) =>
+            UpdateFlashlight__Prefix(__instance.Owner);
+
+        private static void PlayerBackpack__SetDeployed__Postfix(PlayerBackpack __instance) =>
+            UpdateFlashlight__Postfix(__instance.Owner);
+
+        private static void UpdateFlashlight__Prefix(SNet_Player player)
         {
             FlashlightEnabled = null;
-            if (!fromPlayer.IsLocal) return;
-            if (!fromPlayer.HasPlayerAgent) return;
+            if (!player.IsLocal) return;
+            if (!player.HasPlayerAgent) return;
 
-            var playerAgent = fromPlayer.PlayerAgent.Cast<PlayerAgent>();
+            var playerAgent = player.PlayerAgent.Cast<PlayerAgent>();
             FlashlightEnabled = playerAgent.Inventory.FlashlightEnabled;
         }
 
-        private static void PlayerBackpackManager__RemoveItem__Postfix(SNet_Player fromPlayer)
+        private static void UpdateFlashlight__Postfix(SNet_Player player)
         {
-            if (!fromPlayer.IsLocal) return;
-            if (!fromPlayer.HasPlayerAgent) return;
+            if (!player.IsLocal) return;
+            if (!player.HasPlayerAgent) return;
             if (FlashlightEnabled == null) return;
 
-            var playerAgent = fromPlayer.PlayerAgent.Cast<PlayerAgent>();
+            var playerAgent = player.PlayerAgent.Cast<PlayerAgent>();
             playerAgent.Inventory.ReceiveSetFlashlightStatus((bool)FlashlightEnabled, true);
         }
     }
