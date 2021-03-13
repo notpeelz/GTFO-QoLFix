@@ -58,6 +58,8 @@ namespace QoLFix.Patches.Tweaks
             }
 
             if (!player.Locomotion.InputIsForwardEnoughForRun()) return;
+            if (isCrouching && !player.PlayerCharacterController.ColliderCanStand()) return;
+
             var itemHolder = player.FPItemHolder;
 
             // If the item isn't busy, we have nothing to patch
