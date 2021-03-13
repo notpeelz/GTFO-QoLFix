@@ -27,21 +27,27 @@ namespace QoLFix.Patches.Tweaks
         public void Patch()
         {
             QoLFixPlugin.RegisterPatch<ItemEquippableAnimationSequencePatch>();
-            this.PatchMethod<PLOC_Stand>(nameof(PLOC_Stand.Update), PatchType.Prefix, prefixMethodName: nameof(PLOC__Update__Prefix));
-            this.PatchMethod<PLOC_Crouch>(nameof(PLOC_Crouch.Update), PatchType.Prefix, prefixMethodName: nameof(PLOC__Update__Prefix));
+            this.PatchMethod<PLOC_Stand>(nameof(PLOC_Stand.Update), PatchType.Prefix);
+            this.PatchMethod<PLOC_Crouch>(nameof(PLOC_Crouch.Update), PatchType.Prefix);
             //this.PatchMethod<ItemEquippable._DoTriggerWeaponAnimSequence_d__97>(nameof(ItemEquippable._DoTriggerWeaponAnimSequence_d__97.MoveNext), PatchType.Postfix);
         }
 
         //private static void _DoTriggerWeaponAnimSequence_d__97__MoveNext__Postfix() => Instance.LogDebug("Entering coroutine");
 
-        private static void PLOC__Update__Prefix(PLOC_Stand __instance)
+        private static void PLOC_Stand__Update__Prefix(PLOC_Stand __instance) =>
+            PLOC__Update__Prefix(__instance, false);
+
+        private static void PLOC_Crouch__Update__Prefix(PLOC_Stand __instance) =>
+            PLOC__Update__Prefix(__instance, true);
+
+        private static void PLOC__Update__Prefix(PLOC_Stand __instance, bool isCrouching)
         {
             var player = __instance.m_owner;
 
             var toggleRun = PlayerLocomotion.RunToggleLock;
             try
             {
-                if (!PlayerLocomotion.RunInput(player, false)) return;
+                if (!PlayerLocomotion.RunInput(player, isCrouching)) return;
             }
             finally
             {
