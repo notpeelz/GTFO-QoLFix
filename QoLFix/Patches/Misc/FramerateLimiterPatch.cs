@@ -17,7 +17,7 @@ namespace QoLFix.Patches.Misc
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Lowers your FPS when alt-tabbing to preserve system resources."));
-            QoLFixPlugin.Instance.Config.Bind(ConfigMaxFPS, 15, new ConfigDescription("The maximum FPS to use when the game is out of focus."));
+            QoLFixPlugin.Instance.Config.Bind(ConfigMaxFPS, 30, new ConfigDescription("The maximum FPS to use when the game is out of focus."));
         }
 
         public string Name { get; } = PatchName;
