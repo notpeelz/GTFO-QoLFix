@@ -30,16 +30,23 @@ namespace QoLFix.Patches.Bugfixes
             this.PatchMethod<ItemEquippable>(nameof(ItemEquippable.OnUnWield), PatchType.Prefix);
             this.PatchMethod<ItemEquippable>(nameof(ItemEquippable.OnWield), PatchType.Both);
         }
-        private static void ItemEquippable__OnUnWield__Prefix() =>
+        private static void ItemEquippable__OnUnWield__Prefix(ItemEquippable __instance)
+        {
+            if (!__instance.Owner?.IsLocallyOwned == true) return;
             ItemEquippableAnimationSequencePatch.StopAnimation();
+        }
 
-        private static void ItemEquippable__OnWield__Prefix(ItemEquippable __instance) =>
+        private static void ItemEquippable__OnWield__Prefix(ItemEquippable __instance)
+        {
+            if (!__instance.Owner?.IsLocallyOwned == true) return;
             ItemEquippableAnimationSequencePatch.StopAnimation(__instance);
+        }
 
         private static void ItemEquippable__OnWield__Postfix(ItemEquippable __instance)
         {
+            if (!__instance.Owner.IsLocallyOwned) return;
             // This forces the existing animations to stop
-            __instance.Owner.FPItemHolder.OnIdleStart();
+            __instance.Owner?.FPItemHolder?.OnIdleStart();
         }
     }
 }
