@@ -47,24 +47,42 @@ namespace QoLFix.Patches.Tweaks
 
             if (__instance.FPItemHolder == null) return;
 
+            __instance.FPItemHolder.ItemHiddenTrigger = false;
+
+            // Don't trigger the cooldown for consumables
+            if (__instance.m_isConsumable)
+            {
+                IsMineCooldownActive = false;
+                Instance.LogDebug("Exiting OnStickyMineSpawned early");
+                return;
+            }
+
             // Put FPItemHolder in a down state instead of hidden state
             __instance.FPItemHolder.ItemDownTrigger = true;
-            __instance.FPItemHolder.ItemHiddenTrigger = false;
             Instance.LogDebug("Disabling mine deployer");
         }
 
-        private static void MineDeployerFirstPerson__ShowItem__Prefix(MineDeployerFirstPerson __instance)
+        private static bool MineDeployerFirstPerson__ShowItem__Prefix(MineDeployerFirstPerson __instance)
         {
+            // Don't trigger the cooldown for consumables
+            if (__instance.m_isConsumable)
+            {
+                Instance.LogDebug("Cancelling ShowItem callback");
+                return HarmonyControlFlow.DontExecute;
+            }
+
             Instance.LogDebug("Enabling mine deployer");
 
             IsMineCooldownActive = false;
-            if (__instance.FPItemHolder == null) return;
+            if (__instance.FPItemHolder == null) return HarmonyControlFlow.Execute;
 
             __instance.FPItemHolder.ItemDownTrigger = false;
 
             // Set this to true so that the game doesn't fudge the counter
             // when attempting to get out of the Hidden state.
             __instance.FPItemHolder.ItemHiddenTrigger = true;
+
+            return HarmonyControlFlow.Execute;
         }
 
         private static bool MineDeployerFirstPerson__ShowPlacementIndicator__Prefix(ref bool __result)
