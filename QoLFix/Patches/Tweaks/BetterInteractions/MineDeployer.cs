@@ -1,5 +1,6 @@
 ﻿using AK;
 using LevelGeneration;
+using Player;
 using UnityEngine;
 
 namespace QoLFix.Patches.Tweaks
@@ -31,8 +32,10 @@ namespace QoLFix.Patches.Tweaks
             this.PatchMethod<PlayerInteraction>($"get_{nameof(PlayerInteraction.HasWorldInteraction)}", PatchType.Prefix);
         }
 
-        private static void MineDeployerFirstPerson__OnStickyMineSpawned__Postfix(MineDeployerFirstPerson __instance)
+        private static void MineDeployerFirstPerson__OnStickyMineSpawned__Postfix(MineDeployerFirstPerson __instance, PlayerAgent sourceAgent)
         {
+            if (!sourceAgent.IsLocallyOwned) return;
+
             IsMineCooldownActive = true;
 
             __instance.m_lastCanPlace = false;
