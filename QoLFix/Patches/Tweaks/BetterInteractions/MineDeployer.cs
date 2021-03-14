@@ -17,7 +17,7 @@ namespace QoLFix.Patches.Tweaks
 
         private static bool CanPlaceMine;
         private static bool IgnoreWorldInteractions;
-        private static bool IsLookingAtMine;
+        private static bool UseWorldInteraction;
         private static bool IsMineCooldownActive;
 
         private void PatchMineDeployer()
@@ -149,7 +149,7 @@ namespace QoLFix.Patches.Tweaks
             // directly at a mine. HasWorldInteraction is used the vanilla
             // CheckCanPlace method, which causes world interactions to
             // suppress the mine deployer interaction.
-            IgnoreWorldInteractions = !IsLookingAtMine;
+            IgnoreWorldInteractions = !UseWorldInteraction;
 
             // Disables the placement indicator if we're looking at a ladder
             var playerInteraction = __instance.Owner.Interaction;
@@ -203,7 +203,16 @@ namespace QoLFix.Patches.Tweaks
             var obj = __instance.m_owner.FPSCamera?.CameraRayObject;
             if (obj == null) return null;
 
-            IsLookingAtMine = false;
+            UseWorldInteraction = false;
+
+            // Players probably don't want to put mines down while running,
+            // so let them use the world interactions.
+            if (__instance.m_owner.Locomotion.m_currentStateEnum == PlayerLocomotion.PLOC_State.Run)
+            {
+                UseWorldInteraction = true;
+                return HarmonyControlFlow.Execute;
+            }
+
             var interacts = obj.GetComponents<Interact_Timed>();
             foreach (var interact in interacts)
             {
@@ -217,7 +226,7 @@ namespace QoLFix.Patches.Tweaks
 
                 if (isMine && interact.enabled)
                 {
-                    IsLookingAtMine = true;
+                    UseWorldInteraction = true;
                     return HarmonyControlFlow.Execute;
                 }
             }
