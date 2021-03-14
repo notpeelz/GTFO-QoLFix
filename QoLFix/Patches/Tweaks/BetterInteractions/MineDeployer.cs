@@ -17,19 +17,56 @@ namespace QoLFix.Patches.Tweaks
         private static bool CanPlaceMine;
         private static bool IgnoreWorldInteractions;
         private static bool IsLookingAtMine;
+        private static bool IsMineCooldownActive;
 
         private void PatchMineDeployer()
         {
             this.PatchMethod<MineDeployerFirstPerson>(nameof(MineDeployerFirstPerson.Update), PatchType.Both);
-            this.PatchMethod<MineDeployerFirstPerson>(nameof(MineDeployerFirstPerson.OnUnWield), PatchType.Postfix);
+            this.PatchMethod<MineDeployerFirstPerson>(nameof(MineDeployerFirstPerson.OnUnWield), PatchType.Both);
+            this.PatchMethod<MineDeployerFirstPerson>(nameof(MineDeployerFirstPerson.OnWield), PatchType.Postfix);
             this.PatchMethod<MineDeployerFirstPerson>(nameof(MineDeployerFirstPerson.CheckCanPlace), PatchType.Prefix);
             this.PatchMethod<MineDeployerFirstPerson>(nameof(MineDeployerFirstPerson.ShowPlacementIndicator), PatchType.Prefix);
+            this.PatchMethod<MineDeployerFirstPerson>(nameof(MineDeployerFirstPerson.OnStickyMineSpawned), PatchType.Postfix);
+            this.PatchMethod<MineDeployerFirstPerson>(nameof(MineDeployerFirstPerson.ShowItem), PatchType.Prefix);
             this.PatchMethod<PlayerInteraction>($"get_{nameof(PlayerInteraction.HasWorldInteraction)}", PatchType.Prefix);
+        }
+
+        private static void MineDeployerFirstPerson__OnStickyMineSpawned__Postfix(MineDeployerFirstPerson __instance)
+        {
+            IsMineCooldownActive = true;
+
+            __instance.m_lastCanPlace = false;
+            __instance.m_lastShowIndicator = false;
+            // FIXME: for some reason the placement indicator is incredibly
+            // stubborn and won't disappear...
+            __instance.m_placementIndicator?.SetVisible(false);
+            __instance.m_placementIndicator?.SetPlacementEnabled(false);
+
+            if (__instance.FPItemHolder == null) return;
+
+            // Put FPItemHolder in a down state instead of hidden state
+            __instance.FPItemHolder.ItemDownTrigger = true;
+            __instance.FPItemHolder.ItemHiddenTrigger = false;
+            Instance.LogDebug("Disabling mine deployer");
+        }
+
+        private static void MineDeployerFirstPerson__ShowItem__Prefix(MineDeployerFirstPerson __instance)
+        {
+            Instance.LogDebug("Enabling mine deployer");
+
+            IsMineCooldownActive = false;
+            if (__instance.FPItemHolder == null) return;
+
+            __instance.FPItemHolder.ItemDownTrigger = false;
+
+            // Set this to true so that the game doesn't fudge the counter
+            // when attempting to get out of the Hidden state.
+            __instance.FPItemHolder.ItemHiddenTrigger = true;
         }
 
         private static bool MineDeployerFirstPerson__ShowPlacementIndicator__Prefix(ref bool __result)
         {
-            if (WorldInteractionOverride.state)
+            if (WorldInteractionOverride.state || IsMineCooldownActive)
             {
                 __result = false;
                 return HarmonyControlFlow.DontExecute;
@@ -40,7 +77,7 @@ namespace QoLFix.Patches.Tweaks
 
         private static bool MineDeployerFirstPerson__CheckCanPlace__Prefix(ref bool __result)
         {
-            if (WorldInteractionOverride.state)
+            if (WorldInteractionOverride.state || IsMineCooldownActive)
             {
                 __result = false;
                 return HarmonyControlFlow.DontExecute;
@@ -58,7 +95,30 @@ namespace QoLFix.Patches.Tweaks
 
         private static void MineDeployerFirstPerson__OnUnWield__Postfix()
         {
+            Instance.LogDebug("Unwielding mine deployer");
             CanPlaceMine = false;
+        }
+
+        private static void MineDeployerFirstPerson__OnUnWield__Prefix(MineDeployerFirstPerson __instance)
+        {
+            // We have to undo the Down effect since swapping weapons will
+            // cause the execution of ShowItem() to pause.
+            if (IsMineCooldownActive)
+            {
+                Instance.LogDebug("Removing ItemDownTrigger due to paused mine deployer cooldown");
+                __instance.FPItemHolder.ItemDownTrigger = false;
+            }
+        }
+
+        private static void MineDeployerFirstPerson__OnWield__Postfix(MineDeployerFirstPerson __instance)
+        {
+            // We have to resume the Down effect here since it was paused
+            // when we unwielded.
+            if (IsMineCooldownActive)
+            {
+                Instance.LogDebug("Reapplying ItemDownTrigger due to paused mine deployer cooldown");
+                __instance.FPItemHolder.ItemDownTrigger = true;
+            }
         }
 
         private static bool MineDeployerFirstPerson__Update__Prefix(MineDeployerFirstPerson __instance)
