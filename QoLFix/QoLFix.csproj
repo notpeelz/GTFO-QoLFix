@@ -9,7 +9,7 @@
     <Copyright>© peelz 2021</Copyright>
     <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
     <Version>0.3.0</Version>
-    <VersionPrerelease>rc2</VersionPrerelease>
+    <VersionPrerelease>rc3</VersionPrerelease>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <Configurations>Debug;Release-Standalone;Release-Thunderstore</Configurations>
     <!--<DefineConstants>DEBUG_PLACEHOLDERS</DefineConstants>-->
