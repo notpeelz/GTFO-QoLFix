@@ -1,22 +1,19 @@
-﻿using HarmonyLib;
-using UnityEngine.CrashReportHandler;
+﻿using UnityEngine.CrashReportHandler;
 
 namespace QoLFix.Patches.Misc
 {
-    public class DisableCrashReporterPatch : IPatch
+    public class DisableCrashReporterPatch : Patch
     {
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
         }
 
-        public string Name { get; } = nameof(DisableCrashReporterPatch);
+        public override string Name { get; } = nameof(DisableCrashReporterPatch);
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             CrashReportHandler.enableCaptureExceptions = false;
             this.PatchMethod<CrashReportHandler>($"set_{nameof(CrashReportHandler.enableCaptureExceptions)}", PatchType.Prefix);

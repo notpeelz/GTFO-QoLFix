@@ -1,32 +1,29 @@
 ﻿using System.Linq;
 using BepInEx.Configuration;
-using HarmonyLib;
 using LevelGeneration;
 using UnityEngine;
 
 namespace QoLFix.Patches.Bugfixes
 {
-    public class FixTerminalDisplayPingPatch : IPatch
+    public class FixTerminalDisplayPingPatch : Patch
     {
         private const string PatchName = nameof(FixTerminalDisplayPingPatch);
         private const string WarningMessage = "NOTICE: this patch is forcefully disabled due to a bug in GTFO code causing world generation issues.";
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription($"Fixes the bug where monitor-only terminals on the tech tileset aren't pingable.\n{WarningMessage}"));
         }
 
-        public string Name { get; } = PatchName;
+        public override string Name { get; } = PatchName;
 
-        public bool Enabled => false; // QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => false; // QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<LG_MarkerFactory>(nameof(LG_MarkerFactory.InstantiateMarkerGameObject), PatchType.Postfix);
         }

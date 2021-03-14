@@ -1,29 +1,26 @@
 ﻿using BepInEx.Configuration;
-using HarmonyLib;
 using UnityEngine;
 
 namespace QoLFix.Patches.Tweaks
 {
-    public class NoiseRemovalPatch : IPatch
+    public class NoiseRemovalPatch : Patch
     {
         private const string PatchName = nameof(NoiseRemovalPatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, false, new ConfigDescription("Disables the blue noise shader. This makes the game look clearer, although some areas might look a lot darker than normal."));
         }
 
-        public string Name { get; } = PatchName;
+        public override string Name { get; } = PatchName;
 
-        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<PE_BlueNoise>(nameof(PE_BlueNoise.Update), PatchType.Prefix);
         }

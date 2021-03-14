@@ -2,7 +2,6 @@
 using System.Linq;
 using BepInEx.Configuration;
 using GameData;
-using HarmonyLib;
 using LevelGeneration;
 using Player;
 using SNetwork;
@@ -16,14 +15,14 @@ using QoLFix.Debugging;
 
 namespace QoLFix.Patches.Tweaks
 {
-    public partial class DropResourcesPatch : IPatch
+    public partial class DropResourcesPatch : Patch
     {
         private const string PatchName = nameof(DropResourcesPatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Lets you put resources/consumables back in lockers/boxes."));
@@ -35,13 +34,11 @@ namespace QoLFix.Patches.Tweaks
 #endif
         }
 
-        public string Name { get; } = PatchName;
+        public override string Name { get; } = PatchName;
 
-        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<LocalPlayerAgentSettings>(nameof(LocalPlayerAgentSettings.OnLocalPlayerAgentEnable), PatchType.Postfix);
             this.PatchMethod<LG_ResourceContainer_Storage>(nameof(LG_ResourceContainer_Storage.EnablePickupInteractions), PatchType.Postfix);

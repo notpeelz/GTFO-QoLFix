@@ -1,35 +1,32 @@
 ﻿using AK;
 using BepInEx.Configuration;
 using Enemies;
-using HarmonyLib;
 using QoLFix.UI;
 using UnhollowerRuntimeLib;
 
 namespace QoLFix.Patches.Bugfixes
 {
-    public partial class FixSoundMufflePatch : IPatch
+    public partial class FixSoundMufflePatch : Patch
     {
         private const string PatchName = nameof(FixSoundMufflePatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Fixes several bugs related to sound distortion."));
             ClassInjector.RegisterTypeInIl2Cpp<AudioResetTimer>();
         }
 
-        public string Name { get; } = PatchName;
+        public override string Name { get; } = PatchName;
 
-        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
-
-        public Harmony Harmony { get; set; }
+        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
         private static AudioResetTimer ResetTimer;
 
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<GameStateManager>(nameof(GameStateManager.ChangeState), PatchType.Postfix);
 

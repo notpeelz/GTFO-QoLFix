@@ -1,28 +1,25 @@
 ﻿using BepInEx.Configuration;
-using HarmonyLib;
 
 namespace QoLFix.Patches.Tweaks
 {
-    public partial class BetterInteractionsPatch : IPatch
+    public partial class BetterInteractionsPatch : Patch
     {
         private const string PatchName = nameof(BetterInteractionsPatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Fixes several quirks of the interaction system."));
         }
 
-        public string Name { get; } = PatchName;
+        public override string Name { get; } = PatchName;
 
-        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<PlayerInteraction>(nameof(PlayerInteraction.UpdateWorldInteractions), PatchType.Prefix);
             this.PatchMethod<Weapon>($"get_{nameof(Weapon.AllowPlayerInteraction)}", PatchType.Prefix);

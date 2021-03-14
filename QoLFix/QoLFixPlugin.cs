@@ -37,7 +37,7 @@ namespace QoLFix
         private static readonly ConfigDefinition ConfigGameVersion = new(SectionMain, "GameVersion");
 
         private static Harmony HarmonyInstance;
-        private static readonly Dictionary<Type, IPatch> RegisteredPatches = new();
+        private static readonly Dictionary<Type, Patch> RegisteredPatches = new();
 
         public static QoLFixPlugin Instance { get; private set; }
 
@@ -309,7 +309,7 @@ namespace QoLFix
             return true;
         }
 
-        public static void RegisterPatch<T>() where T : IPatch, new()
+        public static void RegisterPatch<T>() where T : Patch, new()
         {
             if (HarmonyInstance == null)
             {
@@ -332,7 +332,7 @@ namespace QoLFix
             if (patch.Enabled)
             {
                 LogInfo($"Applying patch: {patch.Name}");
-                patch.Patch();
+                patch.Execute();
             }
 
             RegisteredPatches[typeof(T)] = patch;

@@ -1,29 +1,26 @@
 ﻿using BepInEx.Configuration;
-using HarmonyLib;
 using QoLFix.Patches.Misc;
 
 namespace QoLFix.Patches.Bugfixes
 {
-    public class FixWeaponAnimationsPatch : IPatch
+    public class FixWeaponAnimationsPatch : Patch
     {
         private const string PatchName = nameof(FixWeaponAnimationsPatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Fixes the bug where animation sequences would carry over to other items when switching weapons too early (e.g. the reload animation)."));
         }
 
-        public string Name { get; } = PatchName;
+        public override string Name { get; } = PatchName;
 
-        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             QoLFixPlugin.RegisterPatch<ItemEquippableAnimationSequencePatch>();
             this.PatchMethod<ItemEquippable>(nameof(ItemEquippable.OnUnWield), PatchType.Prefix);

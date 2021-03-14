@@ -1,31 +1,28 @@
 ﻿using AK;
 using BepInEx.Configuration;
-using HarmonyLib;
 
 namespace QoLFix.Patches.Annoyances
 {
-    public class ElevatorVolumePatch : IPatch
+    public class ElevatorVolumePatch : Patch
     {
         private const string PatchName = nameof(ElevatorVolumePatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
         private static readonly ConfigDefinition ConfigVolume = new(PatchName, "Volume");
 
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Adjusts the SFX volume during the elevator scene."));
             QoLFixPlugin.Instance.Config.Bind(ConfigVolume, 0.05f, new ConfigDescription("The new volume value to use during the scene (1 = 100%, 0.5 = 50%, etc.)"));
         }
 
-        public string Name { get; } = PatchName;
+        public override string Name { get; } = PatchName;
 
-        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<GameStateManager>(nameof(GameStateManager.ChangeState), PatchType.Postfix);
             this.PatchMethod<CellSettingsManager>(nameof(CellSettingsManager.OnApplicationFocus), PatchType.Postfix);

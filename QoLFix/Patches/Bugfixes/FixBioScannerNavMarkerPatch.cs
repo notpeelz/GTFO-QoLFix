@@ -1,6 +1,5 @@
 ﻿using BepInEx.Configuration;
 using Enemies;
-using HarmonyLib;
 
 namespace QoLFix.Patches.Bugfixes
 {
@@ -12,26 +11,24 @@ namespace QoLFix.Patches.Bugfixes
     /// on death.
     /// This patch forces the EnemyAgent to dispose of the previous marker.
     /// </summary>
-    public class FixBioScannerNavMarkerPatch : IPatch
+    public class FixBioScannerNavMarkerPatch : Patch
     {
         private const string PatchName = nameof(FixBioScannerNavMarkerPatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Fixes the bug where bio scanner tags would remain on the screen after multiple scans."));
         }
 
-        public string Name { get; } = PatchName;
+        public override string Name { get; } = PatchName;
 
-        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<EnemyAgent>(nameof(EnemyAgent.SyncPlaceNavMarkerTag), PatchType.Prefix);
         }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace QoLFix.Patches.Tweaks
 {
-    public partial class BetterInteractionsPatch : IPatch
+    public partial class BetterInteractionsPatch : Patch
     {
         // Used to keep track of whether to replace the mine interaction
         // with a world interaction (when looked directly at).

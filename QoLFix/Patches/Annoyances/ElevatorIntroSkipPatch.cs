@@ -1,28 +1,25 @@
 ﻿using BepInEx.Configuration;
-using HarmonyLib;
 
 namespace QoLFix.Patches.Annoyances
 {
-    public class ElevatorIntroSkipPatch : IPatch
+    public class ElevatorIntroSkipPatch : Patch
     {
         private const string PatchName = nameof(ElevatorIntroSkipPatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Skips the intro that plays when dropping into a level."));
         }
 
-        public string Name { get; } = PatchName;
+        public override string Name { get; } = PatchName;
 
-        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<ElevatorRide>(nameof(ElevatorRide.StartPreReleaseSequence), PatchType.Postfix);
         }

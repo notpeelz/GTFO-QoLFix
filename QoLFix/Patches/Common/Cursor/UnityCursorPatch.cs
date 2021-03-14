@@ -1,24 +1,21 @@
 ﻿using CellMenu;
-using HarmonyLib;
 using QoLFix.UI;
 using UnityEngine;
 
 namespace QoLFix.Patches.Common.Cursor
 {
-    public class UnityCursorPatch : IPatch
+    public class UnityCursorPatch : Patch
     {
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
         }
 
-        public string Name { get; } = nameof(UnityCursorPatch);
+        public override string Name { get; } = nameof(UnityCursorPatch);
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<CM_PageBase>(nameof(CM_PageBase.UpdateCursorPosition), PatchType.Prefix);
             this.PatchMethod<CM_PageBase>(nameof(CM_PageBase.UpdateButtonPress), PatchType.Prefix);

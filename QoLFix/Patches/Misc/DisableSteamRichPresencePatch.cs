@@ -1,33 +1,30 @@
 ﻿using BepInEx.Configuration;
-using HarmonyLib;
 using SNetwork;
 
 namespace QoLFix.Patches.Misc
 {
-    public class DisableSteamRichPresencePatch : IPatch
+    public class DisableSteamRichPresencePatch : Patch
     {
         private const string PatchName = nameof(DisableSteamRichPresencePatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, false, new ConfigDescription("Disables Steam Rich Presence updates; also prevents Steam friends from seeing your lobby from the rundown screen."));
         }
 
-        public string Name { get; } = PatchName;
+        public override string Name { get; } = PatchName;
 
 #if DEBUG
-        public bool Enabled => true;
+        public override bool Enabled => true;
 #else
-        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 #endif
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<SNet_Core_STEAM>(nameof(SNet_Core_STEAM.SetFriendsData), new[] { typeof(string), typeof(string) }, PatchType.Prefix);
         }

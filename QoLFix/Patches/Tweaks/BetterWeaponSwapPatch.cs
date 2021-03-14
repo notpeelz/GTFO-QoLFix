@@ -1,10 +1,9 @@
 ﻿using BepInEx.Configuration;
-using HarmonyLib;
 using Player;
 
 namespace QoLFix.Patches.Tweaks
 {
-    public class BetterWeaponSwapPatch : IPatch
+    public class BetterWeaponSwapPatch : Patch
     {
         private const string PatchName = nameof(BetterWeaponSwapPatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
@@ -12,9 +11,9 @@ namespace QoLFix.Patches.Tweaks
         private static readonly ConfigDefinition ConfigSwapModeCombat = new(PatchName, "SwapModeCombat");
         private static readonly ConfigDefinition ConfigSwapModeStealth = new(PatchName, "SwapModeStealth");
 
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Changes the weapon fallback priority dynamically based on the drama state of the game (stealth, combat, etc.)"));
@@ -23,13 +22,11 @@ namespace QoLFix.Patches.Tweaks
             QoLFixPlugin.Instance.Config.Bind(ConfigSwapModeStealth, SwapMode.HackingTool, new ConfigDescription("Controls the behavior during stealth."));
         }
 
-        public string Name { get; } = PatchName;
+        public override string Name { get; } = PatchName;
 
-        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<PlayerBackpackManager>(nameof(PlayerBackpackManager.WieldFirstLocalGear), PatchType.Prefix);
         }

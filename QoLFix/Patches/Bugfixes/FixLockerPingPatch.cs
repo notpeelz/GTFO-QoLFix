@@ -1,6 +1,5 @@
 ﻿using BepInEx.Configuration;
 using Gear;
-using HarmonyLib;
 using Player;
 using UnityEngine;
 
@@ -12,26 +11,24 @@ namespace QoLFix.Patches.Bugfixes
     /// This patch overrides the ping selection target if the camera is aimed
     /// at a resource inside the container.
     /// </summary>
-    public class FixLockerPingPatch : IPatch
+    public class FixLockerPingPatch : Patch
     {
         private const string PatchName = nameof(FixLockerPingPatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Fixes the bug where resources inside of lockers/boxes aren't individually pingable."));
         }
 
-        public string Name { get; } = PatchName;
+        public override string Name { get; } = PatchName;
 
-        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<PlayerAgent>(nameof(PlayerAgent.UpdateGlobalInput), PatchType.Prefix);
             this.PatchMethod<ResourcePackPickup>(nameof(ResourcePackPickup.Setup), PatchType.Postfix);

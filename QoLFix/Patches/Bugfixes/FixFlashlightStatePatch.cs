@@ -1,30 +1,27 @@
 ﻿using BepInEx.Configuration;
-using HarmonyLib;
 using Player;
 using SNetwork;
 
 namespace QoLFix.Patches.Bugfixes
 {
-    public class FixFlashlightStatePatch : IPatch
+    public class FixFlashlightStatePatch : Patch
     {
         private const string PatchName = nameof(FixFlashlightStatePatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Fixes the bug where your flashlight would turn off after dropping an item."));
         }
 
-        public string Name { get; } = PatchName;
+        public override string Name { get; } = PatchName;
 
-        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<PlayerBackpackManager>(
                 methodName: nameof(PlayerBackpackManager.RemoveItem),

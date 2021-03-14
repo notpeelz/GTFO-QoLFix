@@ -2,32 +2,29 @@
 using System.Linq;
 using System.Reflection;
 using BepInEx.Configuration;
-using HarmonyLib;
 
 namespace QoLFix.Patches.Tweaks
 {
-    public class ScreenLiquidRemovalPatch : IPatch
+    public class ScreenLiquidRemovalPatch : Patch
     {
         private const string PatchName = nameof(ScreenLiquidRemovalPatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
         private static readonly ConfigDefinition ConfigFilteredEffects = new(PatchName, "FilteredEffects");
 
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, false, new ConfigDescription("Prevents on-screen liquid effects from playing."));
             QoLFixPlugin.Instance.Config.Bind(ConfigFilteredEffects, ScreenLiquidCategory.None, new ConfigDescription("Controls what effects should be blocked from playing."));
         }
 
-        public string Name { get; } = PatchName;
+        public override string Name { get; } = PatchName;
 
-        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             var classType = typeof(ScreenLiquidManager);
             var methods = classType.GetMethods(BindingFlags.Static | BindingFlags.Public);

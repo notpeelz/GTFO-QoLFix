@@ -1,31 +1,28 @@
 ﻿using System.Linq;
 using BepInEx.Configuration;
-using HarmonyLib;
 using LevelGeneration;
 using UnityEngine;
 
 namespace QoLFix.Patches.Bugfixes
 {
-    public class FixDoorFramePingPatch : IPatch
+    public class FixDoorFramePingPatch : Patch
     {
         private const string PatchName = nameof(FixDoorFramePingPatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Makes the door frames of the tech tileset pingable (useful for pinging closed doors)."));
         }
 
-        public string Name { get; } = PatchName;
+        public override string Name { get; } = PatchName;
 
-        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<LG_BuildGateJob>(nameof(LG_BuildGateJob.SetupDoor), PatchType.Postfix);
         }

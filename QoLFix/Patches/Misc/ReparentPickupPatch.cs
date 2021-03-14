@@ -1,5 +1,4 @@
 ﻿using Gear;
-using HarmonyLib;
 using LevelGeneration;
 using Player;
 
@@ -10,20 +9,18 @@ namespace QoLFix.Patches.Misc
     /// so that GetComponentInChildren() can find pickups that
     /// were swapped.
     /// </summary>
-    public class ReparentPickupPatch : IPatch
+    public class ReparentPickupPatch : Patch
     {
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public string Name { get; } = nameof(ReparentPickupPatch);
+        public override string Name { get; } = nameof(ReparentPickupPatch);
 
-        public Harmony Harmony { get; set; }
-
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
         }
 
-        public void Patch()
+        public override void Execute()
         {
             // We can't patch ItemInLevel.Setup directly because it gets
             // executed before the ones from derived classes.

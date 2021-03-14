@@ -1,19 +1,18 @@
 ﻿using BepInEx.Configuration;
 using CellMenu;
-using HarmonyLib;
 
 namespace QoLFix.Patches.Annoyances
 {
-    public class IntroSkipPatch : IPatch
+    public class IntroSkipPatch : Patch
     {
         private const string PatchName = nameof(IntroSkipPatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
         private static readonly ConfigDefinition ConfigSkipRundownInfo = new(PatchName, "SkipRundownInfo");
         private static readonly ConfigDefinition ConfigSkipRundownConnect = new(PatchName, "SkipRundownConnect");
 
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Skips the intro on startup."));
@@ -21,13 +20,11 @@ namespace QoLFix.Patches.Annoyances
             QoLFixPlugin.Instance.Config.Bind(ConfigSkipRundownConnect, true, new ConfigDescription("Skips the rundown connect and reveal animation"));
         }
 
-        public string Name { get; } = PatchName;
+        public override string Name { get; } = PatchName;
 
-        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<CM_PageIntro>(nameof(CM_PageIntro.Update), PatchType.Postfix);
             this.PatchMethod<CM_PageIntro>(nameof(CM_PageIntro.StartInitializing), PatchType.Prefix);

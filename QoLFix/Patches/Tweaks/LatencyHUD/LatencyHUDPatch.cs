@@ -2,7 +2,6 @@
 using System.Linq;
 using BepInEx.Configuration;
 using CellMenu;
-using HarmonyLib;
 using QoLFix.Patches.Common;
 using QoLFix.Patches.Common.Cursor;
 using SNetwork;
@@ -37,7 +36,7 @@ namespace QoLFix.Patches.Tweaks
     /// See: https://partner.steamgames.com/doc/api/steamnetworkingtypes#SteamNetworkPingLocation_t
     /// </para>
     /// </summary>
-    public partial class LatencyHUDPatch : IPatch
+    public partial class LatencyHUDPatch : Patch
     {
         private const string PatchName = nameof(LatencyHUDPatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
@@ -46,9 +45,9 @@ namespace QoLFix.Patches.Tweaks
 
         private static readonly Vector3 PopupCursorOffset = new(0, 5f, 0);
 
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Displays network latency on your HUD.\nNOTE: unfortunately, due to a bug with the way GTFO estimates network latency, the ping is only updated once upon joining a game."));
@@ -56,13 +55,11 @@ namespace QoLFix.Patches.Tweaks
             ClassInjector.RegisterTypeInIl2Cpp<LatencyText>();
         }
 
-        public string Name { get; } = PatchName;
+        public override string Name { get; } = PatchName;
 
-        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<WatermarkGuiLayer>(nameof(WatermarkGuiLayer.Setup), new[] { typeof(Transform), typeof(string) }, PatchType.Postfix);
             //this.PatchMethod<SNet_Core_STEAM>(nameof(SNet_Core_STEAM.UpdateConnectionStatus), PatchType.Postfix);

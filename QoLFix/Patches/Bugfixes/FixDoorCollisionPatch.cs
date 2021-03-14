@@ -1,5 +1,4 @@
 ﻿using BepInEx.Configuration;
-using HarmonyLib;
 using LevelGeneration;
 using UnityEngine;
 
@@ -18,26 +17,24 @@ namespace QoLFix.Patches.Bugfixes
     /// </para>
     /// <para>This patch increases the collision hitbox of the individual "parts".</para>
     /// </summary>
-    public class FixDoorCollisionPatch : IPatch
+    public class FixDoorCollisionPatch : Patch
     {
         private const string PatchName = nameof(FixDoorCollisionPatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Fixes the door collision bug where c-foam globs could go through if aimed at the cracks."));
         }
 
-        public string Name { get; } = PatchName;
+        public override string Name { get; } = PatchName;
 
-        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<LG_WeakDoor_Destruction>(nameof(LG_WeakDoor_Destruction.Setup), PatchType.Postfix);
         }

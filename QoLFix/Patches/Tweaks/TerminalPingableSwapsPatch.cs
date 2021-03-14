@@ -1,6 +1,5 @@
 ﻿using BepInEx.Configuration;
 using Gear;
-using HarmonyLib;
 using LevelGeneration;
 using Player;
 
@@ -11,26 +10,24 @@ namespace QoLFix.Patches.Tweaks
     /// Known bugs:
     ///   - The ping doesn't show up unless the player is hosting
     /// </summary>
-    public class TerminalPingableSwapsPatch : IPatch
+    public class TerminalPingableSwapsPatch : Patch
     {
         private const string PatchName = nameof(TerminalPingableSwapsPatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
 
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Relists swapped out items on terminals. This lets you list/ping/query items after moving them."));
         }
 
-        public string Name { get; } = PatchName;
+        public override string Name { get; } = PatchName;
 
-        public bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<ResourcePackPickup>(nameof(ResourcePackPickup.Setup), PatchType.Postfix);
         }

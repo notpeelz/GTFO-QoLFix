@@ -1,21 +1,17 @@
-﻿using HarmonyLib;
-
-namespace QoLFix.Patches.Misc
+﻿namespace QoLFix.Patches.Misc
 {
-    public class DisableAnalyticsPatch : IPatch
+    public class DisableAnalyticsPatch : Patch
     {
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
         }
 
-        public string Name { get; } = nameof(DisableAnalyticsPatch);
+        public override string Name { get; } = nameof(DisableAnalyticsPatch);
 
-        public Harmony Harmony { get; set; }
-
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<GS_Startup>(nameof(GS_Startup.Enter), PatchType.Postfix);
             this.PatchMethod<AnalyticsManager>(nameof(AnalyticsManager.TryPostEvent), PatchType.Prefix);

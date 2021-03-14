@@ -1,25 +1,22 @@
 ﻿using System;
 using CellMenu;
-using HarmonyLib;
 using SNetwork;
 using UnhollowerRuntimeLib;
 using UnityEngine;
 
 namespace QoLFix.Patches.Common
 {
-    public partial class PlayerNameExtPatch : IPatch
+    public partial class PlayerNameExtPatch : Patch
     {
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
             ClassInjector.RegisterTypeInIl2Cpp<CursorInteraction>();
         }
 
-        public string Name { get; } = nameof(PlayerNameExtPatch);
-
-        public Harmony Harmony { get; set; }
+        public override string Name { get; } = nameof(PlayerNameExtPatch);
 
         public delegate void CursorInteractionHandler(
             CM_PageBase page,
@@ -30,7 +27,7 @@ namespace QoLFix.Patches.Common
 
         public static event CursorInteractionHandler CursorUpdate;
 
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<CM_PlayerLobbyBar>(nameof(CM_PlayerLobbyBar.UpdatePlayer), PatchType.Postfix);
             this.PatchMethod<CM_PlayerLobbyBar>(nameof(CM_PlayerLobbyBar.SetupFromPage), PatchType.Postfix);

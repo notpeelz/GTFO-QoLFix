@@ -1,21 +1,17 @@
-﻿using HarmonyLib;
-
-namespace QoLFix.Patches.Misc
+﻿namespace QoLFix.Patches.Misc
 {
-    public class ItemEquippableAnimationSequencePatch : IPatch
+    public class ItemEquippableAnimationSequencePatch : Patch
     {
-        public static IPatch Instance { get; private set; }
+        public static Patch Instance { get; private set; }
 
-        public string Name { get; } = nameof(ItemEquippableAnimationSequencePatch);
+        public override string Name { get; } = nameof(ItemEquippableAnimationSequencePatch);
 
-        public Harmony Harmony { get; set; }
-
-        public void Initialize()
+        public override void Initialize()
         {
             Instance = this;
         }
 
-        public void Patch()
+        public override void Execute()
         {
             this.PatchMethod<ItemEquippable>(nameof(ItemEquippable.DoTriggerWeaponAnimSequence), PatchType.Postfix);
         }

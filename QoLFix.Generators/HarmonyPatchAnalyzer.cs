@@ -15,9 +15,9 @@ namespace QoLFix.Generators
 
 #pragma warning disable RS2008
         private static readonly DiagnosticDescriptor MissingPostfixError =
-            new("BIE0001", "Missing postfix", "Missing postfix {0}", Category, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+            new("QOL0001", "Missing postfix", "Missing postfix {0}", Category, DiagnosticSeverity.Warning, isEnabledByDefault: true);
         private static readonly DiagnosticDescriptor MissingPrefixError =
-            new("BIE0002", "Missing prefix", "Missing prefix {0}", Category, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+            new("QOL0002", "Missing prefix", "Missing prefix {0}", Category, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 #pragma warning restore RS2008
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
@@ -32,7 +32,6 @@ namespace QoLFix.Generators
 
         private static readonly string[] GenericPatchMethod1Parameters = new[]
         {
-            "patch",
             "methodName",
             "patchType",
             "generics",
@@ -42,7 +41,6 @@ namespace QoLFix.Generators
 
         private static readonly string[] GenericPatchMethod2Parameters = new[]
         {
-            "patch",
             "methodName",
             "parameters",
             "patchType",
@@ -53,7 +51,6 @@ namespace QoLFix.Generators
 
         private static readonly string[] NonGenericPatchMethod1Parameters = new[]
         {
-            "patch",
             "classType",
             "methodName",
             "patchType",
@@ -64,7 +61,6 @@ namespace QoLFix.Generators
 
         private static readonly string[] NonGenericPatchMethod2Parameters = new[]
         {
-            "patch",
             "classType",
             "methodName",
             "parameters",
@@ -87,16 +83,9 @@ namespace QoLFix.Generators
             if (memberAccessExpr.Name.Identifier.Text != "PatchMethod") return;
 
             var memberSymbol = context.SemanticModel.GetSymbolInfo(memberAccessExpr).Symbol as IMethodSymbol;
-            if (memberSymbol?.ContainingSymbol.ToString() != "QoLFix.BIEExtensions") return;
+            if (memberSymbol?.ContainingSymbol.ToString() != "QoLFix.Patch") return;
 
-            // Don't bother checking explicit invocations of the
-            // extension method
-            if (memberSymbol.MethodKind != MethodKind.ReducedExtension) return;
-
-            var constructedFrom = memberSymbol.GetConstructedReducedFrom();
-            if (constructedFrom == null) return;
-
-            var paramNames = constructedFrom.Parameters.Select(x => x.Name).ToArray();
+            var paramNames = memberSymbol.Parameters.Select(x => x.Name).ToArray();
 
             var args = invocationExpr.ArgumentList.Arguments
                 .Select(arg => new
@@ -111,7 +100,7 @@ namespace QoLFix.Generators
             isGeneric |= paramNames.SequenceEqual(GenericPatchMethod2Parameters);
             if (isGeneric)
             {
-                if (!constructedFrom.IsGenericMethod || constructedFrom.TypeArguments.Length != 1) return;
+                if (!memberSymbol.IsGenericMethod || memberSymbol.TypeArguments.Length != 1) return;
                 if (memberAccessExpr.Name is not GenericNameSyntax genericName) return;
 
                 var genericArgs = genericName.TypeArgumentList.Arguments;
@@ -155,13 +144,13 @@ namespace QoLFix.Generators
                 if ((patchType & PATCHTYPE_PREFIX) != 0)
                 {
                     GetConstantArg("prefixMethodName", out string? prefixMethodName);
-                    CheckMethod(MissingPrefixError, prefixMethodName?.ToString() ?? $"{className}__{methodName}__Prefix");
+                    CheckMethod(MissingPrefixError, prefixMethodName ?? $"{className}__{methodName}__Prefix");
                 }
 
                 if ((patchType & PATCHTYPE_POSTFIX) != 0)
                 {
                     GetConstantArg("postfixMethodName", out string? postfixMethodName);
-                    CheckMethod(MissingPostfixError, postfixMethodName?.ToString() ?? $"{className}__{methodName}__Postfix");
+                    CheckMethod(MissingPostfixError, postfixMethodName ?? $"{className}__{methodName}__Postfix");
                 }
 
                 void CheckMethod(DiagnosticDescriptor descriptor, string methodName)
