@@ -1,4 +1,5 @@
 # QoL Fix
+
 A general [GTFO](https://store.steampowered.com/app/493520/GTFO) improvement mod that aims to fix quality of life issues, bugs and add various tweaks.
 
 ## How to install
@@ -126,7 +127,15 @@ Disables the blue noise shader. This makes the game look clearer, although some 
 | ------ | ----- |
 | <img height="120" alt="with noise" src="img/bluenoise_before.jpg"> | <img height="120" alt="without noise" src="img/bluenoise_after.jpg"> |
 
+### PlayerAmbientLight
+
+<sub>(default: disabled)</sub>
+
+This lets you alter the player ambient light range. The ambient light is often the only source of light in dark areas. Careful not to set it too low!
+NOTE: for balance reasons, you can't increase it past the default vanilla value (10)
+
 ### HideCrosshair
+
 <sub>(default: disabled)</sub>
 
 Hides the in-game crosshair when a weapon is out. Only useful if using [an external crosshair](https://github.com/notpeelz/reshade-xhair)... or if you fancy playing without a crosshair :)

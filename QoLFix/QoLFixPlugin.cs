@@ -94,6 +94,7 @@ namespace QoLFix
             RegisterPatch<BetterInteractionsPatch>();
             RegisterPatch<RunReloadCancelPatch>();
             RegisterPatch<BetterMovementPatch>();
+            RegisterPatch<PlayerAmbientLightPatch>();
 
             // Bug fixes
             RegisterPatch<FixToolRefillBioScannerPatch>();
