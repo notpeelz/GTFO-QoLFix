@@ -93,6 +93,7 @@ namespace QoLFix
             RegisterPatch<ScreenLiquidRemovalPatch>();
             RegisterPatch<BetterInteractionsPatch>();
             RegisterPatch<RunReloadCancelPatch>();
+            RegisterPatch<BetterMovementPatch>();
 
             // Bug fixes
             RegisterPatch<FixToolRefillBioScannerPatch>();

@@ -79,6 +79,10 @@ Fixes several quirks of the interaction system, namely:
 
 Lets you cancel your reload by sprinting rather than having to swap weapons.
 
+### BetterMovement
+
+Improves the GTFO movement system. Currently only lets you charge/reload your weapons mid-air.
+
 ### LobbyUnready
 
 Lets you unready after readying up.
