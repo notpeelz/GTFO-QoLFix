@@ -149,23 +149,23 @@ Disables Steam Rich Presence updates; also prevents Steam friends from seeing yo
 ## Bugfixes
 
 Fixes these bugs:
-- bio tracker tags would remain on screen after multiple scans; no more floating triangles everywhere!
+- (**FixBioScannerNavMarker**) bio tracker tags would remain on screen after multiple scans; no more floating triangles everywhere!
 
   <img height="240" alt="biotracker navmarker" src="img/biotracker_navmarker.jpg">
 
-- bio tracker could be given tool refills
-- resources inside of lockers/boxes weren't individually pingable
+- (**FixToolRefillBioScanner**) bio tracker could be given tool refills
+- (**FixLockerPing**) resources inside of lockers/boxes weren't individually pingable
 
   <img height="120" alt="resource in locker ping" src="img/fixlockerping.jpg">
 
-- c-foam globs could go through doors if aimed at the cracks
+- (**FixDoorCollisionPatch**) c-foam globs could go through doors if aimed at the cracks
 
   Note: this bugfix also fixes the door double-hit exploit
 
-- the door frames on the tech tileset weren't pingable
-- the scout/map muffle sound effect wouldn't get reset under certain circumstances
-- the flashlight would turn off when dropping/swapping items
-- animation sequences (e.g. reload) would carry over when switching weapons
+- (**FixDoorFramePing**) the door frames on the tech tileset weren't pingable
+- (**FixSoundMuffle**) the scout/map muffle sound effect wouldn't get reset under certain circumstances
+- (**FixFlashlightState**) the flashlight would turn off when dropping/swapping items
+- (**FixWeaponAnimations**) animation sequences (e.g. reload) would carry over when switching weapons
 
 ## Credits
 
