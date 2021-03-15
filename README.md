@@ -74,6 +74,7 @@ Fixes several quirks of the interaction system, namely:
 - Mines placed high up would be hard to pick up while jumping
 - Placing sentries/mines would get cancelled while the player is walking/running
 - Overlapping items (e.g. cells) would cause the interaction to cancel because the game couldn't decide which one you were trying to interact with
+- Reloading would disable interactions
 - Reviving teammates would cancel for seemingly no reason; with this patch, you can **look around freely** while reviving.
 
 ### RunReloadCancel
