@@ -2,6 +2,7 @@
 
 A general [GTFO](https://store.steampowered.com/app/493520/GTFO) improvement mod that aims to fix quality of life issues, bugs and add various tweaks.
 
+{{#ifEquals release "standalone"}}
 ## How to install
 
 1. Download the latest [IL2CPP x64 BepInEx build](https://builds.bepis.io/projects/bepinex_be)
@@ -10,19 +11,26 @@ A general [GTFO](https://store.steampowered.com/app/493520/GTFO) improvement mod
 4. Download the [Unity 2019.4.1 libraries archive](https://github.com/LavaGang/Unity-Runtime-Libraries/raw/master/2019.4.1.zip) and extract it in `BepInEx/unity-libs`. Create the folder if it doesn't exist.
 5. Launch your game
 
+{{/ifEquals}}
+{{#ifEquals release "thunderstore"}}
+[1. Features](#features)
+[2. Bugfixes](#bugfixes)
+[3. Changelog](#changelog)
+
+{{/ifEquals}}
 ## Features
 
 ### DropResources
 
 Lets you put resources/consumables back in lockers/boxes.
 
-[![dropresources](img/dropresources_thumbnail.jpg)](https://i.imgur.com/SfCT6dD.mp4)
+{{embedVideo name='dropresources' url='https://i.imgur.com/SfCT6dD.mp4'}}
 
 ### LatencyHUD
 
 Displays network latency on your HUD.
 
-![latencyhud_ping_hover](img/latencyhud_ping_hover.jpg) ![latencyhud_ping_watermark](img/latencyhud_ping_watermark.jpg)
+{{embedImage name='latencyhud_ping_hover'}} {{embedImage name='latencyhud_ping_watermark'}}
 
 Known bugs: due to a bug with the way GTFO estimates network latency, the ping is only updated once upon joining a game.
 
@@ -30,7 +38,7 @@ Known bugs: due to a bug with the way GTFO estimates network latency, the ping i
 
 Lets you open the steam profile of your teammates by clicking on their name.
 
-[![steamprofile](img/steamprofile_thumbnail.jpg)](https://i.imgur.com/iMfZv7S.mp4)
+{{embedVideo name='steamprofile' url='https://i.imgur.com/iMfZv7S.mp4'}}
 
 ### BetterWeaponSwap
 
@@ -38,13 +46,13 @@ Changes the weapon swap order dynamically based on the drama state of the game (
 
 This prevents accidentally switching back to your primary weapon after, e.g., running out of glowsticks.
 
-[![betterweaponswap](img/betterweaponswap_thumbnail.jpg)](https://i.imgur.com/Q4cZQff.mp4)
+{{embedVideo name='betterweaponswap' url='https://i.imgur.com/Q4cZQff.mp4'}}
 
 ### IntroSkip
 
 Skips the game intro on startup. Gets you on the rundown screen within seconds of launching the game!
 
-[![introskip](img/introskip_thumbnail.jpg)](https://i.imgur.com/4Z6XJe4.mp4)
+{{embedVideo name='introskip' url='https://i.imgur.com/4Z6XJe4.mp4'}}
 
 ### ElevatorVolume
 
@@ -78,7 +86,7 @@ Improves the GTFO movement system. Currently only lets you charge/reload your we
 
 Lets you unready after readying up.
 
-![lobbyunready](img/lobbyunready.jpg)
+{{embedImage name='lobbyunready'}}
 
 ### ResourceAudioCue
 
@@ -96,7 +104,7 @@ Known bugs: when pinging a swapped item, the ping icon will not show up for swap
 
 Updates the Steam recent players list.
 
-![steamrecentplayers](img/steamrecentplayers.jpg)
+{{embedImage name='steamrecentplayers'}}
 
 ### FramerateLimiter
 
@@ -115,7 +123,7 @@ Disables the blue noise shader. This makes the game look clearer, although some 
 
 | Before | After |
 | ------ | ----- |
-| ![bluenoise_before](img/bluenoise_before.jpg) | ![bluenoise_after](img/bluenoise_after.jpg) |
+| {{embedImage name='bluenoise_before'}} | {{embedImage name='bluenoise_after'}} |
 
 ### PlayerAmbientLight
 
@@ -140,12 +148,12 @@ Disables Steam Rich Presence updates; also prevents Steam friends from seeing yo
 Fixes these bugs:
 - (**FixBioScannerNavMarker**) bio tracker tags would remain on screen after multiple scans; no more floating triangles everywhere!
 
-  ![biotracker_navmarker](img/biotracker_navmarker.jpg)
+  {{embedImage name='biotracker_navmarker'}}
 
 - (**FixToolRefillBioScanner**) bio tracker could be given tool refills
 - (**FixLockerPing**) resources inside of lockers/boxes weren't individually pingable
 
-  ![fixlockerping](img/fixlockerping.jpg)
+  {{embedImage name='fixlockerping'}}
 
 - (**FixDoorCollisionPatch**) c-foam globs could go through doors if aimed at the cracks
 
@@ -168,3 +176,9 @@ This project uses code from:
 
 - (GPL-3.0) [UnityExplorer](https://github.com/sinai-dev/UnityExplorer) - uses its UI code for update notifications
 - (Apache-2.0) [Roslynator](https://github.com/JosefPihrt/Roslynator) - uses its C# analyzer extension methods
+{{#ifEquals release "thunderstore"}}
+
+## Changelog
+
+{{>changelog}}
+{{/ifEquals}}

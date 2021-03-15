@@ -1,0 +1,13 @@
+{
+  "name": "readme-generator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {},
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "handlebars": "^4.7.7"
+  }
+}
