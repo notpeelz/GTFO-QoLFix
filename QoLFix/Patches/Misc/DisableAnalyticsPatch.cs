@@ -1,4 +1,8 @@
-﻿namespace QoLFix.Patches.Misc
+﻿#if !DEBUG
+using System.Linq;
+#endif
+
+namespace QoLFix.Patches.Misc
 {
     public class DisableAnalyticsPatch : Patch
     {
