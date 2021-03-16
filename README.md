@@ -2,7 +2,7 @@
 
 # QoL Fix
 
-A general [GTFO](https://store.steampowered.com/app/493520/GTFO) improvement mod that aims to fix quality of life issues, bugs and add various tweaks.
+A general [GTFO](https://store.steampowered.com/app/493520/GTFO) improvement mod that aims to fix various quality of life issues.
 
 ## How to install
 
