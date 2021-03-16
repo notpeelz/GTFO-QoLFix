@@ -172,7 +172,7 @@ async function main() {
   }
 
   if (isWorktreeDirty) {
-    logger.warn("The git worktree is dirty. On the r2modman package will be created.")
+    logger.warn("The git worktree is dirty. Only the r2modman package will be created.")
   }
 
   await Promise.all([
