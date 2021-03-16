@@ -200,6 +200,7 @@ Fixes these bugs:
 Thanks a lot to:
 - DarkCactus, fanta, Solakka, Gorilla, Phantasm, easternunit100, Dex and Project Zaero for helping me test during development
 - knah, Spartan, js6pak, dak and ghorsington for answering my thousands of questions
+- dak for the designing the logo
 
 ## Licensing
 
