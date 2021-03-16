@@ -11,7 +11,7 @@ const mkdir = promisify(fs.mkdir)
 const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
 
-import { REPO_URL } from "../constants.mjs"
+import { REPO_URL, REPO_PATH } from "../constants.mjs"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -47,26 +47,37 @@ async function main() {
     return `![${name}](${imgPath})`
   })
 
-  const changelog = await readFile(path.join(__dirname, "CHANGELOG.md"), "utf8")
-  Handlebars.registerPartial("changelog", changelog)
+  const readTemplate = async (filename) => {
+    const tplPath = path.join(__dirname, filename)
+    const data = await readFile(tplPath, "utf8")
+    const relTplPath = path.relative(rootPath, tplPath).replace(new RegExp('\\\\', 'g'), '/')
+    return `[//]: # (THIS FILE WAS AUTOMATICALLY GENERATED FROM ${relTplPath})\n\n${data}`
+  }
 
-  const readme = Handlebars.compile(
-    await readFile(path.join(__dirname, "README.md"), "utf8")
-  )
+  const rawChangelog = await readTemplate("CHANGELOG.md")
+  Handlebars.registerPartial("changelog", rawChangelog)
+  const changelog = Handlebars.compile(rawChangelog)
+
+  const readme = Handlebars.compile(await readTemplate("README.md"))
 
   await mkdir(thunderstorePkgPath, { recursive: true })
   await mkdir(standalonePkgPath, { recursive: true })
 
+  const ctx = {
+    REPO_PATH,
+    REPO_URL,
+  }
+
   // Thunderstore
-  await writeFile(path.join(thunderstorePkgPath, "README.md"), readme({ release: "thunderstore" }))
+  await writeFile(path.join(thunderstorePkgPath, "README.md"), readme({ ...ctx, release: "thunderstore" }))
 
   // Standalone
-  await writeFile(path.join(standalonePkgPath, "README.md"), readme({ release: "standalone" }))
-  await writeFile(path.join(standalonePkgPath, "CHANGELOG.md"), changelog)
+  await writeFile(path.join(standalonePkgPath, "README.md"), readme({ ...ctx, release: "standalone" }))
+  await writeFile(path.join(standalonePkgPath, "CHANGELOG.md"), changelog({ ...ctx, release: "standalone" }))
 
   // Repo
-  await writeFile(path.join(rootPath, "README.md"), readme({ release: "standalone" }))
-  await writeFile(path.join(rootPath, "CHANGELOG.md"), changelog)
+  await writeFile(path.join(rootPath, "README.md"), readme({ ...ctx, release: "standalone" }))
+  await writeFile(path.join(rootPath, "CHANGELOG.md"), changelog({ ...ctx, release: "standalone" }))
 }
 
 if (await esMain(import.meta)) {

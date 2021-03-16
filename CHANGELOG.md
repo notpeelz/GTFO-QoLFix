@@ -1,3 +1,5 @@
+[//]: # (THIS FILE WAS AUTOMATICALLY GENERATED FROM scripts/readme/CHANGELOG.md)
+
 ## 0.3.0
 
 ### Features and changes
