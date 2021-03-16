@@ -4,17 +4,11 @@
 
 ### Features and changes
 
-- Added `BetterMovement`
-
-    Lets you charge/reload your weapons mid-air. This also fixes the bug where your melee weapon would release prematurely when bunny-hopping.
-
-- Added `FixWeaponAnimations`
-
-    Animation sequences (e.g. reload) would carry over when switching weapons.
-
 - Added `RunReloadCancel`
 
     Lets you cancel your reload by sprinting rather than having to swap weapons.
+
+    <a href="https://i.imgur.com/8XhBKdQ.mp4"><img height="240" src="img/runreloadcancel_thumbnail.jpg"></a>
 
 - Added `BetterInteractions`
 
@@ -30,7 +24,23 @@
 
     - Overlapping items (e.g. cells) would cause the interaction to cancel because the game couldn't decide which one you were trying to interact with
 
+    - Reloading would disable interactions
+
     - Reviving teammates would cancel for seemingly no reason; with this patch, you can **look around freely** while reviving.
+
+    <a href="https://i.imgur.com/Mi7jy8l.mp4"><img height="240" src="img/betterinteractions_thumbnail.jpg"></a>
+
+- Added `BetterMovement`
+
+    Lets you charge/reload your weapons mid-air. This also fixes the bug where your melee weapon would release prematurely when bunny-hopping.
+
+  <a href="https://i.imgur.com/yLqX835.mp4"><img height="240" src="img/bettermovement_thumbnail.jpg"></a>
+
+- Added `FixWeaponAnimations`
+
+    Animation sequences (e.g. reload) would carry over when switching weapons.
+
+    <a href="https://i.imgur.com/atcrG69.mp4"><img height="240" src="img/fixweaponanimations_thumbnail.jpg"></a>
 
 - Added `RecentlyPlayedWith`
 
@@ -74,7 +84,7 @@
 
 ### Miscellaneous
 
-- `UnityCursor` (for developers)
+- Added `UnityCursor` (for developers)
 
     Locks the cursor when Unity Explorer is open to prevent accidentally interacting with the game
 

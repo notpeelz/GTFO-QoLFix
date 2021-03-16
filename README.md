@@ -80,13 +80,19 @@ Fixes several quirks of the interaction system, namely:
 
 - Reviving teammates would cancel for seemingly no reason; with this patch, you can **look around freely** while reviving.
 
+<a href="https://i.imgur.com/Mi7jy8l.mp4"><img height="240" src="img/betterinteractions_thumbnail.jpg"></a>
+
 ### RunReloadCancel
 
 Lets you cancel your reload by sprinting rather than having to swap weapons.
 
+<a href="https://i.imgur.com/8XhBKdQ.mp4"><img height="240" src="img/runreloadcancel_thumbnail.jpg"></a>
+
 ### BetterMovement
 
 Improves the GTFO movement system. Currently only lets you charge/reload your weapons mid-air.
+
+<a href="https://i.imgur.com/yLqX835.mp4"><img height="240" src="img/bettermovement_thumbnail.jpg"></a>
 
 ### LobbyUnready
 
@@ -176,6 +182,8 @@ Fixes these bugs:
 - (**FixFlashlightState**) the flashlight would turn off when dropping/swapping items
 
 - (**FixWeaponAnimations**) animation sequences (e.g. reload) would carry over when switching weapons
+
+  <a href="https://i.imgur.com/atcrG69.mp4"><img height="240" src="img/fixweaponanimations_thumbnail.jpg"></a>
 
 ## Credits
 
