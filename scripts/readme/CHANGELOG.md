@@ -34,6 +34,8 @@
 
     Updates the Steam recent players list.
 
+    {{embedImage name='steamrecentplayers' height='180'}}
+
 - Added `FramerateLimiter`
 
     Lowers your FPS when alt-tabbing to preserve system resources.

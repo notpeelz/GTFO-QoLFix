@@ -10,6 +10,7 @@ import esMain from "../es-main.mjs"
 const mkdir = promisify(fs.mkdir)
 const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
+const esc = Handlebars.Utils.escapeExpression
 
 import { REPO_URL, REPO_PATH } from "../constants.mjs"
 
@@ -27,23 +28,43 @@ async function main() {
 
   Handlebars.registerHelper("sub", ({ hash: { text }, data }) => {
     if (data.root.release === "thunderstore") return new Handlebars.SafeString(text)
-    return new Handlebars.SafeString("<sub>" + Handlebars.Utils.escapeExpression(text) + "</sub>")
+    return new Handlebars.SafeString(`<sub>${esc(text)}</sub>`)
   })
 
   Handlebars.registerHelper("embedVideo", ({ hash, data }) => {
-    const { name, ext = "jpg", url } = hash
+    const { name, ext = "jpg", height, url } = hash
+    const isThunderstore = data.root.release === "thunderstore"
+
     let imgPath = `img/${name}_thumbnail.${ext}`
-    if (data.root.release === "thunderstore") {
+    if (isThunderstore) {
       imgPath = `${REPO_URL}/raw/master/${imgPath}`
     }
+
+    // Thunderstore's Markdown flavor doesn't support HTML tags :/
+    if (height != null && !isThunderstore) {
+      return new Handlebars.SafeString(
+        `<a href="${esc(url)}"><img height="${esc(height)}" src="${esc(imgPath)}"></a>`
+      )
+    }
+
     return `[![${name}](${imgPath})](${url})`
   })
 
-  Handlebars.registerHelper("embedImage", ({ hash: { name, ext = "jpg" }, data }) => {
+  Handlebars.registerHelper("embedImage", ({ hash, data }) => {
+    const { name, ext = "jpg", height } = hash
+    const isThunderstore = data.root.release === "thunderstore"
+
     let imgPath = `img/${name}.${ext}`
     if (data.root.release === "thunderstore") {
       imgPath = `${REPO_URL}/raw/master/${imgPath}`
     }
+
+    if (height != null && !isThunderstore) {
+      return new Handlebars.SafeString(
+        `<img height="${esc(height)}" src="${esc(imgPath)}">`
+      )
+    }
+
     return `![${name}](${imgPath})`
   })
 

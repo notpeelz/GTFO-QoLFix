@@ -24,13 +24,13 @@ A general [GTFO](https://store.steampowered.com/app/493520/GTFO) improvement mod
 
 Lets you put resources/consumables back in lockers/boxes.
 
-[![dropresources](img/dropresources_thumbnail.jpg)](https://i.imgur.com/SfCT6dD.mp4)
+<a href="https://i.imgur.com/SfCT6dD.mp4"><img height="240" src="img/dropresources_thumbnail.jpg"></a>
 
 ### LatencyHUD
 
 Displays network latency on your HUD.
 
-![latencyhud_ping_hover](img/latencyhud_ping_hover.jpg) ![latencyhud_ping_watermark](img/latencyhud_ping_watermark.jpg)
+<img height="120" src="img/latencyhud_ping_hover.jpg"> <img height="120" src="img/latencyhud_ping_watermark.jpg">
 
 Known bugs: due to a bug with the way GTFO estimates network latency, the ping is only updated once upon joining a game.
 
@@ -38,7 +38,7 @@ Known bugs: due to a bug with the way GTFO estimates network latency, the ping i
 
 Lets you open the steam profile of your teammates by clicking on their name.
 
-[![steamprofile](img/steamprofile_thumbnail.jpg)](https://i.imgur.com/iMfZv7S.mp4)
+<a href="https://i.imgur.com/iMfZv7S.mp4"><img height="240" src="img/steamprofile_thumbnail.jpg"></a>
 
 ### BetterWeaponSwap
 
@@ -46,13 +46,13 @@ Changes the weapon swap order dynamically based on the drama state of the game (
 
 This prevents accidentally switching back to your primary weapon after, e.g., running out of glowsticks.
 
-[![betterweaponswap](img/betterweaponswap_thumbnail.jpg)](https://i.imgur.com/Q4cZQff.mp4)
+<a href="https://i.imgur.com/Q4cZQff.mp4"><img height="240" src="img/betterweaponswap_thumbnail.jpg"></a>
 
 ### IntroSkip
 
 Skips the game intro on startup. Gets you on the rundown screen within seconds of launching the game!
 
-[![introskip](img/introskip_thumbnail.jpg)](https://i.imgur.com/4Z6XJe4.mp4)
+<a href="https://i.imgur.com/4Z6XJe4.mp4"><img height="240" src="img/introskip_thumbnail.jpg"></a>
 
 ### ElevatorVolume
 
@@ -92,7 +92,7 @@ Improves the GTFO movement system. Currently only lets you charge/reload your we
 
 Lets you unready after readying up.
 
-![lobbyunready](img/lobbyunready.jpg)
+<img height="60" src="img/lobbyunready.jpg">
 
 ### ResourceAudioCue
 
@@ -110,7 +110,7 @@ Known bugs: when pinging a swapped item, the ping icon will not show up for swap
 
 Updates the Steam recent players list.
 
-![steamrecentplayers](img/steamrecentplayers.jpg)
+<img height="180" src="img/steamrecentplayers.jpg">
 
 ### FramerateLimiter
 
@@ -130,7 +130,7 @@ Disables the blue noise shader. This makes the game look clearer, although some 
 
 | Before | After |
 | ------ | ----- |
-| ![bluenoise_before](img/bluenoise_before.jpg) | ![bluenoise_after](img/bluenoise_after.jpg) |
+| <img height="120" src="img/bluenoise_before.jpg"> | <img height="120" src="img/bluenoise_after.jpg"> |
 
 ### PlayerAmbientLight
 
@@ -157,13 +157,13 @@ Fixes these bugs:
 
 - (**FixBioScannerNavMarker**) bio tracker tags would remain on screen after multiple scans; no more floating triangles everywhere!
 
-  ![biotracker_navmarker](img/biotracker_navmarker.jpg)
+  <img height="240" src="img/biotracker_navmarker.jpg">
 
 - (**FixToolRefillBioScanner**) bio tracker could be given tool refills
 
 - (**FixLockerPing**) resources inside of lockers/boxes weren't individually pingable
 
-  ![fixlockerping](img/fixlockerping.jpg)
+  <img height="120" src="img/fixlockerping.jpg">
 
 - (**FixDoorCollisionPatch**) c-foam globs could go through doors if aimed at the cracks
 
