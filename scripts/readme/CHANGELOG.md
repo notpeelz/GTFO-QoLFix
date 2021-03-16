@@ -50,8 +50,8 @@
 
 - `DropResources`
 
-    - Fixes placeholders incorrectly syncing when hot-dropping, causing players to be able to interact with items/placeholders in closed lockers
-    - Fixes player pings not working due to having the patch disabled
+    - Fixed placeholders incorrectly syncing when hot-dropping, causing players to be able to interact with items/placeholders in closed lockers
+    - Fixed player pings not working due to having the patch disabled
 
 - `BetterWeaponSwap`
 
