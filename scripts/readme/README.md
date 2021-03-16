@@ -6,9 +6,13 @@ A general [GTFO](https://store.steampowered.com/app/493520/GTFO) improvement mod
 ## How to install
 
 1. Download the latest [IL2CPP x64 BepInEx build](https://builds.bepis.io/projects/bepinex_be)
+
 2. Extract the archive to your game folder (`steamapps/common/GTFO`)
+
 3. [Download the latest version of QoL Fix]({{../REPO_URL}}/releases) and put the DLL file in `BepInEx/plugins`
+
 4. Download the [Unity 2019.4.1 libraries archive](https://github.com/LavaGang/Unity-Runtime-Libraries/raw/master/2019.4.1.zip) and extract it in `BepInEx/unity-libs`. Create the folder if it doesn't exist.
+
 5. Launch your game
 
 {{/ifEquals}}
@@ -69,11 +73,17 @@ Skips the intro that plays when dropping into a level.
 Fixes several quirks of the interaction system, namely:
 
 - Hacking tool minigame would get cancelled if you swapped weapons or moved too early
+
 - The mine deployer would prioritize interacting with doors over placing mines
+
 - Mines placed high up would be hard to pick up while jumping
+
 - Placing sentries/mines would get cancelled while the player is walking/running
+
 - Overlapping items (e.g. cells) would cause the interaction to cancel because the game couldn't decide which one you were trying to interact with
+
 - Reloading would disable interactions
+
 - Reviving teammates would cancel for seemingly no reason; with this patch, you can **look around freely** while reviving.
 
 ### RunReloadCancel
@@ -156,6 +166,7 @@ Fixes these bugs:
   {{embedImage name='biotracker_navmarker'}}
 
 - (**FixToolRefillBioScanner**) bio tracker could be given tool refills
+
 - (**FixLockerPing**) resources inside of lockers/boxes weren't individually pingable
 
   {{embedImage name='fixlockerping'}}
@@ -165,8 +176,11 @@ Fixes these bugs:
   Note: this bugfix also fixes the door double-hit exploit
 
 - (**FixDoorFramePing**) the door frames on the tech tileset weren't pingable
+
 - (**FixSoundMuffle**) the scout/map muffle sound effect wouldn't get reset under certain circumstances
+
 - (**FixFlashlightState**) the flashlight would turn off when dropping/swapping items
+
 - (**FixWeaponAnimations**) animation sequences (e.g. reload) would carry over when switching weapons
 
 ## Credits

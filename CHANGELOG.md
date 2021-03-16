@@ -21,10 +21,15 @@
     Fixes several quirks of the interaction system, namely:
 
     - Hacking tool minigame would get cancelled if you swapped weapons or moved too early
+
     - The mine deployer would prioritize interacting with doors over placing mines
+
     - Mines placed high up would be hard to pick up while jumping
+
     - Placing sentries/mines would get cancelled while the player is walking/running
+
     - Overlapping items (e.g. cells) would cause the interaction to cancel because the game couldn't decide which one you were trying to interact with
+
     - Reviving teammates would cancel for seemingly no reason; with this patch, you can **look around freely** while reviving.
 
 - Added `RecentlyPlayedWith`
@@ -46,6 +51,7 @@
 - `FixSoundMuffle`
 
     - Now also fixes the map muffle sound effect not going away under certain circumstances
+
     - Added an activer timer that forcefully stops the muffle sound effect ~10 seconds after a scout is done screaming
 
 ### Bugfixes
@@ -53,6 +59,7 @@
 - `DropResources`
 
     - Fixed placeholders incorrectly syncing when hot-dropping, causing players to be able to interact with items/placeholders in closed lockers
+
     - Fixed player pings not working due to having the patch disabled
 
 - `BetterWeaponSwap`
@@ -84,7 +91,9 @@
     Fixes the bug where your flashlight would turn off after dropping an item.
 
 - Added `FixSoundMuffle`
+
 - Fixes the bug where the scout muffle sound effect doesn't go away when exiting a game too early.
+
 - Disabled `FixTerminalDisplayPing` due to world generation errors
 
 ## 0.1.0
