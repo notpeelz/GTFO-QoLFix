@@ -109,6 +109,7 @@ Lowers your FPS when alt-tabbing to preserve system resources.
 Prevents screen liquid effects from playing. This can be configured to remove blood, spitter or infection effects.
 
 ### NoiseRemoval
+
 <sub>(default: disabled)</sub>
 
 Disables the blue noise shader. This makes the game look clearer, although some areas might look a lot darker than normal.
@@ -131,6 +132,7 @@ NOTE: for balance reasons, you can't increase it past the default vanilla value 
 Hides the in-game crosshair when a weapon is out. Only useful if using [an external crosshair](https://github.com/notpeelz/reshade-xhair)... or if you fancy playing without a crosshair :)
 
 ### DisableSteamRichPresence
+
 <sub>(default: disabled)</sub>
 
 Disables Steam Rich Presence updates; also prevents Steam friends from seeing your lobby from the rundown screen.
@@ -138,6 +140,7 @@ Disables Steam Rich Presence updates; also prevents Steam friends from seeing yo
 ## Bugfixes
 
 Fixes these bugs:
+
 - (**FixBioScannerNavMarker**) bio tracker tags would remain on screen after multiple scans; no more floating triangles everywhere!
 
   ![biotracker_navmarker](img/biotracker_navmarker.jpg)

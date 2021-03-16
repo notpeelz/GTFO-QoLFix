@@ -3,7 +3,7 @@
     <GameFolder>C:\Program Files (x86)\Steam\steamapps\common\GTFO</GameFolder>
     <BIELibsFolder>$(GameFolder)\BepInEx\core</BIELibsFolder>
     <UnhollowedLibsFolder>$(GameFolder)\BepInEx\unhollowed</UnhollowedLibsFolder>
-    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>QoLFix</RootNamespace>
     <LangVersion>preview</LangVersion>
     <Copyright>© peelz 2021</Copyright>
