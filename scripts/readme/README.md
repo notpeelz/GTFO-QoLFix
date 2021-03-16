@@ -88,6 +88,8 @@ Fixes several quirks of the interaction system, namely:
 
 - Reviving teammates would cancel for seemingly no reason; with this patch, you can **look around freely** while reviving.
 
+  NOTE: for balance reasons, this also disables shooting/ADSing while reviving.
+
 {{embedVideo name='betterinteractions' height='240' url='https://i.imgur.com/Mi7jy8l.mp4'}}
 
 ### RunReloadCancel
