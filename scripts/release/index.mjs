@@ -115,9 +115,6 @@ async function main() {
   logger.info("Generating README and CHANGELOG")
   await readmeGenerator()
 
-  logger.info("Cleaning")
-  await exec("dotnet clean", execOptions)
-
   logger.info("Building")
   await Promise.all([
     exec(`dotnet build -c ${CONFIG_RELEASE_STANDALONE}`, execOptions),
