@@ -35,6 +35,8 @@ const thunderstorePkgPath = path.join(pkgPath, "thunderstore")
 const standalonePkgPath = path.join(pkgPath, "standalone")
 const pluginBinPath = path.join(rootPath, "QoLFix/bin")
 
+const execOptions = { cwd: rootPath }
+
 function findCsprojProperty(csproj, name) {
   const prop = csproj.Project.PropertyGroup.find(x => x[name] != null)
   if (prop == null) return null
@@ -107,10 +109,37 @@ async function createThunderstorePackage(out, { pluginFile, manifest }) {
   await archive.finalize()
 }
 
+async function getVersionInfo(version, prerelease) {
+  const r = new RegExp("\n", "g")
+  const getStdout = x => x.stdout.replace(r, "")
+
+  let semver = prerelease
+    ? `${version}-${prerelease}`
+    : version
+
+  const gitHashPromise = exec("git describe --long --always --dirty --exclude=* --abbrev=7", execOptions)
+  const gitHash = await gitHashPromise
+  if (gitHashPromise.child.exitCode !== 0) {
+    throw new Error(`Failed to get git commit hash: exit code ${gitHashPromise.child.exitCode}`)
+  }
+
+  const gitBranchPromise = exec("git branch --show-current", execOptions)
+  const gitBranch = await gitBranchPromise
+  if (gitBranchPromise.child.exitCode !== 0) {
+    throw new Error(`Failed to get git branch: exit code ${gitBranchPromise.child.exitCode}`)
+  }
+
+  semver += `+git${getStdout(gitHash)}-${getStdout(gitBranch)}`
+
+  return {
+    semver,
+    commit: gitHash,
+    branch: gitBranch,
+  }
+}
+
 async function main() {
   await rm(pkgPath, { recursive: true, force: true })
-
-  const execOptions = { cwd: rootPath }
 
   logger.info("Generating README and CHANGELOG")
   await readmeGenerator()
@@ -149,39 +178,41 @@ async function main() {
 
   const version = getPropertyValue(csproj, "Version")
   const prerelease = getPropertyValue(csproj, "VersionPrerelease")
-  const semver = prerelease
-    ? `${version}-${prerelease}`
-    : version
+  const versionInfo = await getVersionInfo(version, prerelease)
 
-  const thunderstorePackage = path.join(thunderstorePkgPath, `${PKG_NAME.toLowerCase()}-${semver}+thunderstore.zip`)
-  const r2modmanPackage = path.join(thunderstorePkgPath, `${PKG_NAME.toLowerCase()}-${semver}+r2modman.zip`)
+  const thunderstorePackage = path.join(thunderstorePkgPath, `${PKG_NAME.toLowerCase()}-${versionInfo.semver}-thunderstore.zip`)
+  const r2modmanPackage = path.join(thunderstorePkgPath, `${PKG_NAME.toLowerCase()}-${versionInfo.semver}-r2modman.zip`)
   const standaloneFile = path.join(standalonePkgPath, PLUGIN_DLL_NAME)
 
   const pluginFile = path.join(targetFramework, PLUGIN_DLL_NAME)
   const thunderstorePluginFile = path.join(pluginBinPath, CONFIG_RELEASE_THUNDERSTORE, pluginFile)
   const standalonePluginFile = path.join(pluginBinPath, CONFIG_RELEASE_STANDALONE, pluginFile)
 
-  const gitProc = await exec("git diff --shortstat", execOptions)
-  const isWorktreeDirty = !!gitProc.stdout
+  const gitDiff = await exec("git diff --shortstat", execOptions)
+  const isWorktreeDirty = !!gitDiff.stdout
+  const isMasterBranch = versionInfo.branch === "master"
+  const isValidRelease = isMasterBranch && !isWorktreeDirty
 
-  if (!isWorktreeDirty && prerelease) {
+  if (isValidRelease && prerelease) {
     logger.warn("Thunderstore doesn't yet support SemVer; the Thunderstore package won't be created for this pre-release.")
   }
 
   if (isWorktreeDirty) {
     logger.warn("The git worktree is dirty. Only the r2modman package will be created.")
+  } else if (!isMasterBranch) {
+    logger.warn("The current git branch is not the main branch. Only the r2modman package will be created.")
   }
 
   await Promise.all([
-    (!prerelease && !isWorktreeDirty ? createThunderstorePackage(thunderstorePackage, {
+    (!prerelease && isValidRelease ? createThunderstorePackage(thunderstorePackage, {
       pluginFile: thunderstorePluginFile,
-      manifest: createThunderstoreManifest(semver),
+      manifest: createThunderstoreManifest(versionInfo.semver),
     }) : undefined),
     createThunderstorePackage(r2modmanPackage, {
       pluginFile: thunderstorePluginFile,
-      manifest: createR2ModManManifest(semver),
+      manifest: createR2ModManManifest(versionInfo.semver),
     }),
-    (!isWorktreeDirty ? copyFile(standalonePluginFile, standaloneFile) : undefined),
+    (isValidRelease ? copyFile(standalonePluginFile, standaloneFile) : undefined),
   ])
 
   logger.info("Done")

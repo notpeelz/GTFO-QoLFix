@@ -73,7 +73,7 @@ async function main() {
   const readTemplate = async (filename) => {
     const tplPath = path.join(__dirname, filename)
     const data = await readFile(tplPath, "utf8")
-    const relTplPath = path.relative(rootPath, tplPath).replace(new RegExp('\\\\', 'g'), '/')
+    const relTplPath = path.relative(rootPath, tplPath).replace(new RegExp("\\\\", "g"), "/")
     return `[//]: # (THIS FILE WAS AUTOMATICALLY GENERATED FROM ${relTplPath})\n\n${data}`
   }
 
