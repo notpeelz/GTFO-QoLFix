@@ -7,7 +7,7 @@
 
 A general [GTFO](https://store.steampowered.com/app/493520/GTFO) improvement mod that aims to fix various quality of life issues.
 
-## How to install
+## Manual install
 
 1. Download the latest [IL2CPP x64 BepInEx build](https://builds.bepis.io/projects/bepinex_be)
 

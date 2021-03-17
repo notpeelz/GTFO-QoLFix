@@ -1,12 +1,14 @@
 # QoL Fix
 
 [![GitHub](https://img.shields.io/github/license/{{REPO_PATH}}?color=green&style=for-the-badge)]({{REPO_URL}})
-[![Thunderstore](https://img.shields.io/badge/Thunderstore-blue?style=for-the-badge)]({{PKG_URL}})
+{{#ifEquals release "standalone"}}
+[![Thunderstore](https://img.shields.io/badge/Thunderstore-blue?style=for-the-badge)]({{../PKG_URL}})
+{{/ifEquals}}
 
 A general [GTFO](https://store.steampowered.com/app/493520/GTFO) improvement mod that aims to fix various quality of life issues.
 
 {{#ifEquals release "standalone"}}
-## How to install
+## Manual install
 
 1. Download the latest [IL2CPP x64 BepInEx build](https://builds.bepis.io/projects/bepinex_be)
 
