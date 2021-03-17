@@ -125,6 +125,8 @@ Updates the Steam recent players list.
 
 Lowers your FPS when alt-tabbing to preserve system resources.
 
+Note: FPS limiting doesn't work with v-sync.
+
 ### ScreenLiquidRemoval
 
 <sub>(default: disabled)</sub>

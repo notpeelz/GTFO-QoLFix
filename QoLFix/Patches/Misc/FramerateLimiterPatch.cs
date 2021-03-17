@@ -28,15 +28,24 @@ namespace QoLFix.Patches.Misc
             this.PatchMethod<CellSettingsManager>(nameof(CellSettingsManager.OnApplicationFocus), PatchType.Postfix);
         }
 
+        private static bool WarningShown;
         private static void CellSettingsManager__OnApplicationFocus__Postfix(bool focus)
         {
+            if (QualitySettings.vSyncCount != 0 && !WarningShown)
+            {
+                Instance.LogWarning("FPS limiting doesn't work with v-sync; this will have no effect.");
+                WarningShown = true;
+            }
+
             if (!focus)
             {
                 var maxFPS = QoLFixPlugin.Instance.Config.GetConfigEntry<int>(ConfigMaxFPS).Value;
+                Instance.LogDebug("Limiting FPS while out of focus");
                 Application.targetFrameRate = Math.Clamp(maxFPS, -1, 999);
                 return;
             }
 
+            Instance.LogDebug("Restoring target FPS");
             CellSettingsManager.SettingsData.Video.TargetFramerate.ApplyValue();
         }
     }
