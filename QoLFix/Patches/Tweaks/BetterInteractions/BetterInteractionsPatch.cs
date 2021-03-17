@@ -6,6 +6,12 @@ namespace QoLFix.Patches.Tweaks
     {
         private const string PatchName = nameof(BetterInteractionsPatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
+        private static readonly ConfigDefinition ConfigPersistentInteractions = new(PatchName, "PersistentInteractions");
+        private static readonly ConfigDefinition ConfigInteractWhileReloading = new(PatchName, "InteractWhileReloading");
+        private static readonly ConfigDefinition ConfigPatchInteractDistance = new(PatchName, "PatchInteractDistance");
+        private static readonly ConfigDefinition ConfigPatchMineDeployer = new(PatchName, "PatchMineDeployer");
+        private static readonly ConfigDefinition ConfigPatchRevive = new(PatchName, "PatchRevive");
+        private static readonly ConfigDefinition ConfigPatchHackingTool = new(PatchName, "PatchHackingTool");
 
         public static Patch Instance { get; private set; }
 
@@ -13,6 +19,12 @@ namespace QoLFix.Patches.Tweaks
         {
             Instance = this;
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Fixes several quirks of the interaction system."));
+            QoLFixPlugin.Instance.Config.Bind(ConfigPersistentInteractions, true, new ConfigDescription("Prevents timed interactions from getting cancelled by looking at another interaction."));
+            QoLFixPlugin.Instance.Config.Bind(ConfigInteractWhileReloading, true, new ConfigDescription("Lets you interact while reloading."));
+            QoLFixPlugin.Instance.Config.Bind(ConfigPatchInteractDistance, true, new ConfigDescription("Fixes interactions cancelling when moving too far away (sentries, mines on ceiling, etc.)"));
+            QoLFixPlugin.Instance.Config.Bind(ConfigPatchMineDeployer, true, new ConfigDescription("Fixes the mine deployer prioritizing doors over placing mines."));
+            QoLFixPlugin.Instance.Config.Bind(ConfigPatchRevive, true, new ConfigDescription("Gives you full control over your camera while reviving. NOTE: for balance reasons, this also prevents you from firing/ADSing while reviving."));
+            QoLFixPlugin.Instance.Config.Bind(ConfigPatchHackingTool, true, new ConfigDescription("Prevents the hacking tool minigame from getting cancelled if you swapped weapons/moved too early."));
         }
 
         public override string Name { get; } = PatchName;
@@ -21,12 +33,35 @@ namespace QoLFix.Patches.Tweaks
 
         public override void Execute()
         {
-            this.PatchMethod<PlayerInteraction>(nameof(PlayerInteraction.UpdateWorldInteractions), PatchType.Prefix);
-            //this.PatchMethod<Weapon>($"get_{nameof(Weapon.AllowPlayerInteraction)}", PatchType.Prefix);
-            this.PatchInteractDistance();
-            this.PatchMineDeployer();
-            this.PatchRevive();
-            this.PatchHackingTool();
+            if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigPersistentInteractions).Value)
+            {
+                this.PatchMethod<PlayerInteraction>(nameof(PlayerInteraction.UpdateWorldInteractions), PatchType.Prefix);
+            }
+
+            if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigInteractWhileReloading).Value)
+            {
+                //this.PatchMethod<Weapon>($"get_{nameof(Weapon.AllowPlayerInteraction)}", PatchType.Prefix);
+            }
+
+            if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigPatchInteractDistance).Value)
+            {
+                this.PatchInteractDistance();
+            }
+
+            if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigPatchMineDeployer).Value)
+            {
+                this.PatchMineDeployer();
+            }
+
+            if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigPatchRevive).Value)
+            {
+                this.PatchRevive();
+            }
+
+            if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigPatchHackingTool).Value)
+            {
+                this.PatchHackingTool();
+            }
         }
 
         private static bool Weapon__get_AllowPlayerInteraction__Prefix(ref bool __result)
