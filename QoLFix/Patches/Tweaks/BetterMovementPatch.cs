@@ -7,13 +7,17 @@ namespace QoLFix.Patches.Tweaks
     {
         private const string PatchName = nameof(BetterMovementPatch);
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
+        private static readonly ConfigDefinition ConfigAllowFallingActions = new(PatchName, "AllowFallingActions");
+        private static readonly ConfigDefinition ConfigFixVelocityBug = new(PatchName, "FixVelocityBug");
 
         public static Patch Instance { get; private set; }
 
         public override void Initialize()
         {
             Instance = this;
-            QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Lets you charge/reload while falling."));
+            QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Improves the GTFO movement system."));
+            QoLFixPlugin.Instance.Config.Bind(ConfigAllowFallingActions, true, new ConfigDescription("Lets you charge/reload/shoot while falling."));
+            QoLFixPlugin.Instance.Config.Bind(ConfigFixVelocityBug, true, new ConfigDescription("Fixes the bug where you would lose all horizontal velocity while bunny-hopping."));
         }
 
         public override string Name { get; } = PatchName;
@@ -22,18 +26,25 @@ namespace QoLFix.Patches.Tweaks
 
         public override void Execute()
         {
-            this.PatchMethod<PLOC_Jump>(nameof(PLOC_Jump.Exit), PatchType.Both);
-            this.PatchMethod<PLOC_Fall>(
-                methodName: nameof(PLOC_Fall.Enter),
-                patchType: PatchType.Both,
-                prefixMethodName: nameof(PLOC_Fall__Prefix),
-                postfixMethodName: nameof(PLOC_Fall__Postfix));
-            this.PatchMethod<PLOC_Fall>(
-                methodName: nameof(PLOC_Fall.Exit),
-                patchType: PatchType.Both,
-                prefixMethodName: nameof(PLOC_Fall__Prefix),
-                postfixMethodName: nameof(PLOC_Fall__Postfix));
-            this.PatchMethod<FirstPersonItemHolder>($"set_{nameof(FirstPersonItemHolder.ItemDownTrigger)}", PatchType.Prefix);
+            if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigAllowFallingActions).Value)
+            {
+                this.PatchMethod<PLOC_Fall>(
+                    methodName: nameof(PLOC_Fall.Enter),
+                    patchType: PatchType.Both,
+                    prefixMethodName: nameof(PLOC_Fall__Prefix),
+                    postfixMethodName: nameof(PLOC_Fall__Postfix));
+                this.PatchMethod<PLOC_Fall>(
+                    methodName: nameof(PLOC_Fall.Exit),
+                    patchType: PatchType.Both,
+                    prefixMethodName: nameof(PLOC_Fall__Prefix),
+                    postfixMethodName: nameof(PLOC_Fall__Postfix));
+                this.PatchMethod<FirstPersonItemHolder>($"set_{nameof(FirstPersonItemHolder.ItemDownTrigger)}", PatchType.Prefix);
+            }
+
+            if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigFixVelocityBug).Value)
+            {
+                this.PatchMethod<PLOC_Jump>(nameof(PLOC_Jump.Exit), PatchType.Both);
+            }
         }
 
         private static Vector3 HorizontalVelocity;
