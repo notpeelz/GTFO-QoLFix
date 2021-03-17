@@ -1,4 +1,5 @@
 ﻿using BepInEx.Configuration;
+using UnityEngine;
 
 namespace QoLFix.Patches.Tweaks
 {
@@ -21,6 +22,7 @@ namespace QoLFix.Patches.Tweaks
 
         public override void Execute()
         {
+            this.PatchMethod<PLOC_Jump>(nameof(PLOC_Jump.Exit), PatchType.Both);
             this.PatchMethod<PLOC_Fall>(
                 methodName: nameof(PLOC_Fall.Enter),
                 patchType: PatchType.Both,
@@ -34,7 +36,18 @@ namespace QoLFix.Patches.Tweaks
             this.PatchMethod<FirstPersonItemHolder>($"set_{nameof(FirstPersonItemHolder.ItemDownTrigger)}", PatchType.Prefix);
         }
 
+        private static Vector3 HorizontalVelocity;
         private static bool BlockItemDown;
+
+        private static void PLOC_Jump__Exit__Prefix(PLOC_Jump __instance)
+        {
+            HorizontalVelocity = __instance.m_owner.Locomotion.HorizontalVelocity;
+        }
+
+        private static void PLOC_Jump__Exit__Postfix(PLOC_Jump __instance)
+        {
+            __instance.m_owner.Locomotion.HorizontalVelocity = HorizontalVelocity;
+        }
 
         private static bool FirstPersonItemHolder__set_ItemDownTrigger__Prefix() =>
             BlockItemDown

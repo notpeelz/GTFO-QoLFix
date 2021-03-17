@@ -103,7 +103,11 @@ Lets you cancel your reload by sprinting rather than having to swap weapons.
 
 ### BetterMovement
 
-Improves the GTFO movement system. Currently only lets you charge/reload your weapons mid-air.
+Improves the GTFO movement system:
+
+- lets you charge/reload your weapons mid-air
+
+- fixes the bug where you would lose all horizontal velocity while bunny-hopping
 
 {{embedVideo name='bettermovement' height='240' url='https://i.imgur.com/yLqX835.mp4'}}
 
