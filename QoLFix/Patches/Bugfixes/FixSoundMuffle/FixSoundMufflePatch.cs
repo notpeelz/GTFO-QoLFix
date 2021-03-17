@@ -1,6 +1,5 @@
 ﻿using AK;
 using BepInEx.Configuration;
-using Enemies;
 using QoLFix.UI;
 using UnhollowerRuntimeLib;
 
@@ -34,10 +33,15 @@ namespace QoLFix.Patches.Bugfixes
             {
                 GOFactory.CreateObject("ResetTimer", UIManager.CanvasRoot.transform, out ResetTimer);
             };
-            this.PatchMethod<ES_ScoutScream>(nameof(ES_ScoutScream.Enter), PatchType.Postfix);
+
+            this.PatchMethod<EnemyVoice>(nameof(EnemyVoice.PlayVoiceEvent), PatchType.Postfix);
         }
 
-        private static void ES_ScoutScream__Enter__Postfix() => ResetTimer.ScheduleReset();
+        private static void EnemyVoice__PlayVoiceEvent__Postfix(uint ID)
+        {
+            if (ID != EVENTS.SCOUT_DETECT_SCREAM) return;
+            ResetTimer.ScheduleReset();
+        }
 
         private static void GameStateManager__ChangeState__Postfix(eGameStateName nextState)
         {
