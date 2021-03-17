@@ -12,7 +12,9 @@ const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
 const esc = Handlebars.Utils.escapeExpression
 
-import { REPO_URL, REPO_PATH } from "../constants.mjs"
+import constants, {
+  REPO_URL,
+} from "../constants.mjs"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -84,10 +86,7 @@ async function main() {
   await mkdir(thunderstorePkgPath, { recursive: true })
   await mkdir(standalonePkgPath, { recursive: true })
 
-  const ctx = {
-    REPO_PATH,
-    REPO_URL,
-  }
+  const ctx = constants
 
   // Thunderstore
   await writeFile(path.join(thunderstorePkgPath, "README.md"), readme({ ...ctx, release: "thunderstore" }))

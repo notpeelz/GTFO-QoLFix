@@ -3,6 +3,7 @@
 # QoL Fix
 
 [![GitHub](https://img.shields.io/github/license/notpeelz/GTFO-QoLFix?color=green&style=for-the-badge)](https://github.com/notpeelz/GTFO-QoLFix)
+[![Thunderstore](https://img.shields.io/badge/Thunderstore-blue?style=for-the-badge)](https://gtfo.thunderstore.io/package/notpeelz/QoLFix)
 
 A general [GTFO](https://store.steampowered.com/app/493520/GTFO) improvement mod that aims to fix various quality of life issues.
 

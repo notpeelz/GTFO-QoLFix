@@ -1,6 +1,7 @@
 # QoL Fix
 
 [![GitHub](https://img.shields.io/github/license/{{REPO_PATH}}?color=green&style=for-the-badge)]({{REPO_URL}})
+[![Thunderstore](https://img.shields.io/badge/Thunderstore-blue?style=for-the-badge)]({{PKG_URL}})
 
 A general [GTFO](https://store.steampowered.com/app/493520/GTFO) improvement mod that aims to fix various quality of life issues.
 
