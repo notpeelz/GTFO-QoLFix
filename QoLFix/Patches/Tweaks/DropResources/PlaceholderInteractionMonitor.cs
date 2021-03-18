@@ -1,6 +1,7 @@
 ﻿using System;
 using LevelGeneration;
 using Player;
+using QoLFix.Patches.Misc;
 using SNetwork;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
@@ -134,6 +135,7 @@ namespace QoLFix.Patches.Tweaks
 
             private void Update()
             {
+                if (WorldInteractionBlockerPatch.IgnoreWorldInteractions > 0) return;
                 if (GameStateManager.CurrentStateName != eGameStateName.InLevel) return;
 
 #if DEBUG_PLACEHOLDERS

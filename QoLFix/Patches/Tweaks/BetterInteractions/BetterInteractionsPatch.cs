@@ -1,4 +1,5 @@
 ﻿using BepInEx.Configuration;
+using Gear;
 using QoLFix.Patches.Misc;
 
 namespace QoLFix.Patches.Tweaks
@@ -39,6 +40,7 @@ namespace QoLFix.Patches.Tweaks
             if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigPersistentInteractions).Value)
             {
                 this.PatchMethod<PlayerInteraction>(nameof(PlayerInteraction.UpdateWorldInteractions), PatchType.Prefix);
+                this.PatchMethod<ResourcePackFirstPerson>(nameof(ResourcePackFirstPerson.Update), PatchType.Postfix);
             }
 
             if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigInteractWhileReloading).Value)
@@ -67,6 +69,19 @@ namespace QoLFix.Patches.Tweaks
             }
         }
 
+        private static bool WorldInteractionTimerRunning;
+        private static bool ResourcePackInteractionTimerRunning;
+
+        private static void ResourcePackFirstPerson__Update__Postfix(ResourcePackFirstPerson __instance)
+        {
+            var interact = __instance.m_interactApplyResource;
+            if (interact.TimerIsActive != ResourcePackInteractionTimerRunning)
+            {
+                ResourcePackInteractionTimerRunning = interact.TimerIsActive;
+                WorldInteractionBlockerPatch.IgnoreWorldInteractions += ResourcePackInteractionTimerRunning ? 1 : -1;
+            }
+        }
+
         private static bool Weapon__get_AllowPlayerInteraction__Prefix(ref bool __result)
         {
             // Allow interactions while reloading weapons
@@ -74,10 +89,9 @@ namespace QoLFix.Patches.Tweaks
             return HarmonyControlFlow.DontExecute;
         }
 
-        private static bool TimerRunning;
-
         private static bool PlayerInteraction__UpdateWorldInteractions__Prefix(PlayerInteraction __instance)
         {
+            if (ResourcePackInteractionTimerRunning) return HarmonyControlFlow.DontExecute;
             if (!PlayerInteraction.InteractionEnabled) return HarmonyControlFlow.Execute;
 
             // Prevent timed interacts from getting interrupted by other
@@ -101,10 +115,10 @@ namespace QoLFix.Patches.Tweaks
                 timedInteract.PlayerDoInteract(player);
             }
 
-            if (timedInteract.TimerIsActive != TimerRunning)
+            if (timedInteract.TimerIsActive != WorldInteractionTimerRunning)
             {
-                TimerRunning = timedInteract.TimerIsActive;
-                WorldInteractionBlockerPatch.IgnoreWorldInteractions += TimerRunning ? 1 : -1;
+                WorldInteractionTimerRunning = timedInteract.TimerIsActive;
+                WorldInteractionBlockerPatch.IgnoreWorldInteractions += WorldInteractionTimerRunning ? 1 : -1;
             }
 
             return HarmonyControlFlow.DontExecute;
