@@ -30,6 +30,13 @@ namespace QoLFix.Patches.Tweaks
             this.PatchMethod<MineDeployerFirstPerson>(nameof(MineDeployerFirstPerson.ShowPlacementIndicator), PatchType.Prefix);
             this.PatchMethod<MineDeployerFirstPerson>(nameof(MineDeployerFirstPerson.OnStickyMineSpawned), PatchType.Postfix);
             this.PatchMethod<MineDeployerFirstPerson>(nameof(MineDeployerFirstPerson.ShowItem), PatchType.Prefix);
+
+            LevelCleanupPatch.OnExitLevel += () =>
+            {
+                CanPlaceMine = false;
+                UseWorldInteraction = false;
+                IsMineCooldownActive = false;
+            };
         }
 
         private static void MineDeployerFirstPerson__OnStickyMineSpawned__Postfix(MineDeployerFirstPerson __instance, PlayerAgent sourceAgent)

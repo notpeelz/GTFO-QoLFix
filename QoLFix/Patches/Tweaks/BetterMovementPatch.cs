@@ -1,5 +1,6 @@
 ﻿using BepInEx.Configuration;
 using Gear;
+using QoLFix.Patches.Misc;
 using UnityEngine;
 
 namespace QoLFix.Patches.Tweaks
@@ -53,6 +54,11 @@ namespace QoLFix.Patches.Tweaks
             {
                 this.PatchMethod<MeleeWeaponFirstPerson>($"get_{nameof(MeleeWeaponFirstPerson.FireButton)}", PatchType.Prefix);
             }
+
+            LevelCleanupPatch.OnExitLevel += () =>
+            {
+                BlockItemDown = false;
+            };
         }
 
         private static Vector3 HorizontalVelocity;

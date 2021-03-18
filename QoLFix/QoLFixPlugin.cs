@@ -78,6 +78,7 @@ namespace QoLFix
             RegisterPatch<RecentlyPlayedWithPatch>();
             RegisterPatch<FramerateLimiterPatch>();
             RegisterPatch<ModInfoWatermarkPatch>();
+            RegisterPatch<LevelCleanupPatch>();
 
             // Annoyances
             RegisterPatch<IntroSkipPatch>();

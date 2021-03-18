@@ -1,5 +1,6 @@
 ﻿using BepInEx.Configuration;
 using Player;
+using QoLFix.Patches.Misc;
 
 namespace QoLFix.Patches.Tweaks
 {

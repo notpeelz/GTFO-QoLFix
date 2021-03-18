@@ -1,4 +1,6 @@
-﻿namespace QoLFix.Patches.Tweaks
+﻿using QoLFix.Patches.Misc;
+
+namespace QoLFix.Patches.Tweaks
 {
     public partial class BetterInteractionsPatch
     {
@@ -20,6 +22,11 @@
                 methodName: nameof(InputMapper.DoGetButtonDown),
                 patchType: PatchType.Prefix,
                 prefixMethodName: nameof(InputMapper__DoGetButton__Prefix));
+
+            LevelCleanupPatch.OnExitLevel += () =>
+            {
+                IsReviving = false;
+            };
         }
 
         private static void Interact_Revive__Setup__Postfix(Interact_Revive __instance)

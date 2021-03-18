@@ -14,6 +14,11 @@
         public override void Execute()
         {
             this.PatchMethod<PlayerInteraction>($"get_{nameof(PlayerInteraction.HasWorldInteraction)}", PatchType.Prefix);
+
+            LevelCleanupPatch.OnExitLevel += () =>
+            {
+                IgnoreWorldInteractions = 0;
+            };
         }
 
         private static int ignoreWorldInteractions;

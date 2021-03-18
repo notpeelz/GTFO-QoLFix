@@ -68,6 +68,13 @@ namespace QoLFix.Patches.Tweaks
             {
                 this.PatchHackingTool();
             }
+
+            LevelCleanupPatch.OnExitLevel += () =>
+            {
+                WorldInteractionTimerRunning = false;
+                ResourcePackInteractionTimerRunning = false;
+                CarryItemInteractionTimerRunning = false;
+            };
         }
 
         private static bool WorldInteractionTimerRunning;
