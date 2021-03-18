@@ -36,14 +36,9 @@ namespace QoLFix.Patches.Tweaks
             var playerAgent = PlayerManager.GetLocalPlayerAgent();
             if (playerAgent == null) return HarmonyControlFlow.Execute;
 
-            if (playerAgent.Locomotion.m_lastStateEnum == PlayerLocomotion.PLOC_State.ClimbLadder)
-            {
-                return HarmonyControlFlow.Execute;
-            }
-
             var lastWanted = playerAgent.Sync.LastWantedSlot;
             var bp = PlayerBackpackManager.LocalBackpack;
-            if (lastWanted == InventorySlot.None
+            if (lastWanted != InventorySlot.None
                 && bp.TryGetBackpackItem(lastWanted, out var lastWantedItem)
                 && lastWantedItem.Status == eInventoryItemStatus.InBackpack)
             {
