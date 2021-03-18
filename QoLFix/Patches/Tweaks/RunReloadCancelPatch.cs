@@ -40,6 +40,7 @@ namespace QoLFix.Patches.Tweaks
         private static void PLOC__Update__Prefix(PLOC_Stand __instance, bool isCrouching)
         {
             var player = __instance.m_owner;
+            if (!player.IsLocallyOwned) return;
 
             var toggleRun = PlayerLocomotion.RunToggleLock;
             try
