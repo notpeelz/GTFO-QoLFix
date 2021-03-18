@@ -75,7 +75,7 @@ Fixes several quirks of the interaction system, namely:
 
 - Placing sentries/mines would get cancelled while the player is walking/running
 
-- Resource packs would get interrupted by other interactions
+- Resource packs and carry items would get interrupted by other interactions
 
 - Overlapping items (e.g. cells) would cause the interaction to cancel because the game couldn't decide which one you were trying to interact with
 

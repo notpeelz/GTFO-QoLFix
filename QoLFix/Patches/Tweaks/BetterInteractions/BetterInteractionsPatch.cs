@@ -41,6 +41,7 @@ namespace QoLFix.Patches.Tweaks
             {
                 this.PatchMethod<PlayerInteraction>(nameof(PlayerInteraction.UpdateWorldInteractions), PatchType.Prefix);
                 this.PatchMethod<ResourcePackFirstPerson>(nameof(ResourcePackFirstPerson.Update), PatchType.Postfix);
+                this.PatchMethod<CarryItemEquippableFirstPerson>(nameof(CarryItemEquippableFirstPerson.Update), PatchType.Postfix);
             }
 
             if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigInteractWhileReloading).Value)
@@ -71,6 +72,17 @@ namespace QoLFix.Patches.Tweaks
 
         private static bool WorldInteractionTimerRunning;
         private static bool ResourcePackInteractionTimerRunning;
+        private static bool CarryItemInteractionTimerRunning;
+
+        private static void CarryItemEquippableFirstPerson__Update__Postfix(CarryItemEquippableFirstPerson __instance)
+        {
+            var interact = __instance.m_interactDropItem;
+            if (interact.TimerIsActive != CarryItemInteractionTimerRunning)
+            {
+                CarryItemInteractionTimerRunning = interact.TimerIsActive;
+                WorldInteractionBlockerPatch.IgnoreWorldInteractions += CarryItemInteractionTimerRunning ? 1 : -1;
+            }
+        }
 
         private static void ResourcePackFirstPerson__Update__Postfix(ResourcePackFirstPerson __instance)
         {
@@ -92,6 +104,7 @@ namespace QoLFix.Patches.Tweaks
         private static bool PlayerInteraction__UpdateWorldInteractions__Prefix(PlayerInteraction __instance)
         {
             if (ResourcePackInteractionTimerRunning) return HarmonyControlFlow.DontExecute;
+            if (CarryItemInteractionTimerRunning) return HarmonyControlFlow.DontExecute;
             if (!PlayerInteraction.InteractionEnabled) return HarmonyControlFlow.Execute;
 
             // Prevent timed interacts from getting interrupted by other
