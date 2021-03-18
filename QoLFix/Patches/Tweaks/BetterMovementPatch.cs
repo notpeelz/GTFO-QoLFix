@@ -66,11 +66,13 @@ namespace QoLFix.Patches.Tweaks
 
         private static void PLOC_Jump__Exit__Prefix(PLOC_Jump __instance)
         {
+            if (!__instance.m_owner.IsLocallyOwned) return;
             HorizontalVelocity = __instance.m_owner.Locomotion.HorizontalVelocity;
         }
 
         private static void PLOC_Jump__Exit__Postfix(PLOC_Jump __instance)
         {
+            if (!__instance.m_owner.IsLocallyOwned) return;
             __instance.m_owner.Locomotion.HorizontalVelocity = HorizontalVelocity;
         }
 
@@ -81,12 +83,14 @@ namespace QoLFix.Patches.Tweaks
 
         private static void PLOC_Fall__Prefix(PLOC_Fall __instance)
         {
+            if (!__instance.m_owner.IsLocallyOwned) return;
             if (__instance.m_owner?.FPItemHolder == null) return;
             BlockItemDown = true;
         }
 
         private static void PLOC_Fall__Postfix(PLOC_Fall __instance)
         {
+            if (!__instance.m_owner.IsLocallyOwned) return;
             if (__instance.m_owner?.FPItemHolder == null) return;
             BlockItemDown = false;
         }
