@@ -12,7 +12,6 @@
     <VersionPrerelease></VersionPrerelease>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <Configurations>Debug;Release-Standalone;Release-Thunderstore</Configurations>
-    <!--<DefineConstants>DEBUG_PLACEHOLDERS</DefineConstants>-->
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <DefineConstants>RELEASE_STANDALONE</DefineConstants>
@@ -22,6 +21,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release-Thunderstore'">
     <DefineConstants>RELEASE;RELEASE_THUNDERSTORE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!--<DefineConstants>$(DefineConstants);DEBUG_PLACEHOLDERS</DefineConstants>-->
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="$(BIELibsFolder)\*.dll" Private="false" />
