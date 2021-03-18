@@ -30,6 +30,8 @@ namespace QoLFix
 #endif
         internal const string RepoName = "notpeelz/GTFO-QoLFix";
 
+        internal static readonly bool IsReleaseBuild = VersionInfo.GitBranch == "master";
+
         public const int SupportedGameRevision = 21989;
 
         private const string SectionMain = "Config";
@@ -50,10 +52,12 @@ namespace QoLFix
         {
             Instance = this;
 
-#if RELEASE_STANDALONE
-            LogMessage($"Initializing plugin [{VersionInfo.SemVer}] (Standalone version)");
+#if DEBUG
+            LogMessage($"Initializing plugin [{VersionInfo.SemVer}] (Dev build)");
+#elif RELEASE_STANDALONE
+            LogMessage($"Initializing plugin [{VersionInfo.SemVer}] (Standalone build)");
 #elif RELEASE_THUNDERSTORE
-            LogMessage($"Initializing plugin [{VersionInfo.SemVer}] (Thunderstore version)");
+            LogMessage($"Initializing plugin [{VersionInfo.SemVer}] (Thunderstore build)");
 #endif
 
             if (!this.CheckConfigVersion()) return;
@@ -73,6 +77,7 @@ namespace QoLFix
             RegisterPatch<DisableSteamRichPresencePatch>();
             RegisterPatch<RecentlyPlayedWithPatch>();
             RegisterPatch<FramerateLimiterPatch>();
+            RegisterPatch<ModInfoWatermarkPatch>();
 
             // Annoyances
             RegisterPatch<IntroSkipPatch>();
