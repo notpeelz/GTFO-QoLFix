@@ -1,6 +1,7 @@
 ﻿using AK;
 using LevelGeneration;
 using Player;
+using QoLFix.Patches.Misc;
 using UnityEngine;
 
 namespace QoLFix.Patches.Tweaks
@@ -16,12 +17,12 @@ namespace QoLFix.Patches.Tweaks
         }
 
         private static bool CanPlaceMine;
-        private static bool IgnoreWorldInteractions;
         private static bool UseWorldInteraction;
         private static bool IsMineCooldownActive;
 
         private void PatchMineDeployer()
         {
+            QoLFixPlugin.RegisterPatch<WorldInteractionBlockerPatch>();
             this.PatchMethod<MineDeployerFirstPerson>(nameof(MineDeployerFirstPerson.Update), PatchType.Both);
             this.PatchMethod<MineDeployerFirstPerson>(nameof(MineDeployerFirstPerson.OnUnWield), PatchType.Both);
             this.PatchMethod<MineDeployerFirstPerson>(nameof(MineDeployerFirstPerson.OnWield), PatchType.Postfix);
@@ -29,7 +30,6 @@ namespace QoLFix.Patches.Tweaks
             this.PatchMethod<MineDeployerFirstPerson>(nameof(MineDeployerFirstPerson.ShowPlacementIndicator), PatchType.Prefix);
             this.PatchMethod<MineDeployerFirstPerson>(nameof(MineDeployerFirstPerson.OnStickyMineSpawned), PatchType.Postfix);
             this.PatchMethod<MineDeployerFirstPerson>(nameof(MineDeployerFirstPerson.ShowItem), PatchType.Prefix);
-            this.PatchMethod<PlayerInteraction>($"get_{nameof(PlayerInteraction.HasWorldInteraction)}", PatchType.Prefix);
         }
 
         private static void MineDeployerFirstPerson__OnStickyMineSpawned__Postfix(MineDeployerFirstPerson __instance, PlayerAgent sourceAgent)
@@ -107,13 +107,6 @@ namespace QoLFix.Patches.Tweaks
             return HarmonyControlFlow.Execute;
         }
 
-        private static bool PlayerInteraction__get_HasWorldInteraction__Prefix(ref bool __result)
-        {
-            if (!IgnoreWorldInteractions) return HarmonyControlFlow.Execute;
-            __result = false;
-            return HarmonyControlFlow.DontExecute;
-        }
-
         private static void MineDeployerFirstPerson__OnUnWield__Postfix()
         {
             Instance.LogDebug("Unwielding mine deployer");
@@ -149,7 +142,10 @@ namespace QoLFix.Patches.Tweaks
             // directly at a mine. HasWorldInteraction is used the vanilla
             // CheckCanPlace method, which causes world interactions to
             // suppress the mine deployer interaction.
-            IgnoreWorldInteractions = !UseWorldInteraction;
+            if (!UseWorldInteraction)
+            {
+                WorldInteractionBlockerPatch.IgnoreWorldInteractions++;
+            }
 
             // Disables the placement indicator if we're looking at a ladder
             var playerInteraction = __instance.Owner.Interaction;
@@ -195,7 +191,10 @@ namespace QoLFix.Patches.Tweaks
         {
             CanPlaceMine = __instance.CanWield && __instance.CheckCanPlace();
             //Instance.LogDebug($"CanPlaceMine: {CanPlaceMine}; ShowPlacementIndicator: {__instance.ShowPlacementIndicator()}");
-            IgnoreWorldInteractions = false;
+            if (!UseWorldInteraction)
+            {
+                WorldInteractionBlockerPatch.IgnoreWorldInteractions--;
+            }
         }
 
         private static bool? PlayerInteraction__UpdateWorldInteractions__MineDeployer(PlayerInteraction __instance)

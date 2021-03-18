@@ -1,4 +1,5 @@
 ﻿using BepInEx.Configuration;
+using QoLFix.Patches.Misc;
 
 namespace QoLFix.Patches.Tweaks
 {
@@ -33,6 +34,8 @@ namespace QoLFix.Patches.Tweaks
 
         public override void Execute()
         {
+            QoLFixPlugin.RegisterPatch<WorldInteractionBlockerPatch>();
+
             if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigPersistentInteractions).Value)
             {
                 this.PatchMethod<PlayerInteraction>(nameof(PlayerInteraction.UpdateWorldInteractions), PatchType.Prefix);
@@ -71,6 +74,8 @@ namespace QoLFix.Patches.Tweaks
             return HarmonyControlFlow.DontExecute;
         }
 
+        private static bool TimerRunning;
+
         private static bool PlayerInteraction__UpdateWorldInteractions__Prefix(PlayerInteraction __instance)
         {
             if (!PlayerInteraction.InteractionEnabled) return HarmonyControlFlow.Execute;
@@ -94,6 +99,12 @@ namespace QoLFix.Patches.Tweaks
             if (timedInteract.PlayerCheckInput(player))
             {
                 timedInteract.PlayerDoInteract(player);
+            }
+
+            if (timedInteract.TimerIsActive != TimerRunning)
+            {
+                TimerRunning = timedInteract.TimerIsActive;
+                WorldInteractionBlockerPatch.IgnoreWorldInteractions += TimerRunning ? 1 : -1;
             }
 
             return HarmonyControlFlow.DontExecute;
