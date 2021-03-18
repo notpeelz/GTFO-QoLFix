@@ -109,6 +109,8 @@ Improves the GTFO movement system:
 
 - fixes the bug where you would lose all horizontal velocity while bunny-hopping
 
+- fixes the bug where your melee charge would get cancelled if you jumped and charged on the same frame
+
 {{embedVideo name='bettermovement' height='240' url='https://i.imgur.com/yLqX835.mp4'}}
 
 ### LobbyUnready

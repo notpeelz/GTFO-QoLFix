@@ -1,4 +1,5 @@
 ﻿using BepInEx.Configuration;
+using Gear;
 using UnityEngine;
 
 namespace QoLFix.Patches.Tweaks
@@ -9,6 +10,7 @@ namespace QoLFix.Patches.Tweaks
         private static readonly ConfigDefinition ConfigEnabled = new(PatchName, "Enabled");
         private static readonly ConfigDefinition ConfigAllowFallingActions = new(PatchName, "AllowFallingActions");
         private static readonly ConfigDefinition ConfigFixVelocityBug = new(PatchName, "FixVelocityBug");
+        private static readonly ConfigDefinition ConfigFixMeleeChargeBug = new(PatchName, "FixMeleeChargeBug");
 
         public static Patch Instance { get; private set; }
 
@@ -18,6 +20,7 @@ namespace QoLFix.Patches.Tweaks
             QoLFixPlugin.Instance.Config.Bind(ConfigEnabled, true, new ConfigDescription("Improves the GTFO movement system."));
             QoLFixPlugin.Instance.Config.Bind(ConfigAllowFallingActions, true, new ConfigDescription("Lets you charge/reload/shoot while falling."));
             QoLFixPlugin.Instance.Config.Bind(ConfigFixVelocityBug, true, new ConfigDescription("Fixes the bug where you would lose all horizontal velocity while bunny-hopping."));
+            QoLFixPlugin.Instance.Config.Bind(ConfigFixMeleeChargeBug, true, new ConfigDescription("Fixes the bug where your melee charge would get cancelled if you jumped and charged on the same frame."));
         }
 
         public override string Name { get; } = PatchName;
@@ -45,10 +48,21 @@ namespace QoLFix.Patches.Tweaks
             {
                 this.PatchMethod<PLOC_Jump>(nameof(PLOC_Jump.Exit), PatchType.Both);
             }
+
+            if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigFixMeleeChargeBug).Value)
+            {
+                this.PatchMethod<MeleeWeaponFirstPerson>($"get_{nameof(MeleeWeaponFirstPerson.FireButton)}", PatchType.Prefix);
+            }
         }
 
         private static Vector3 HorizontalVelocity;
         private static bool BlockItemDown;
+
+        private static bool MeleeWeaponFirstPerson__get_FireButton__Prefix(MeleeWeaponFirstPerson __instance, ref bool __result)
+        {
+            __result = InputMapper.GetButton.Invoke(InputAction.Fire, __instance.Owner.InputFilter);
+            return HarmonyControlFlow.DontExecute;
+        }
 
         private static void PLOC_Jump__Exit__Prefix(PLOC_Jump __instance)
         {
