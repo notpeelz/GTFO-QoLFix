@@ -2,7 +2,7 @@
 {
     public partial class BetterInteractionsPatch
     {
-        public void PatchInteractDistance()
+        private void PatchInteractDistance()
         {
             this.PatchMethod<SentryGunFirstPerson>(nameof(SentryGunFirstPerson.Setup), PatchType.Postfix);
             this.PatchMethod<MineDeployerInstance>(nameof(MineDeployerInstance.Setup), PatchType.Postfix);

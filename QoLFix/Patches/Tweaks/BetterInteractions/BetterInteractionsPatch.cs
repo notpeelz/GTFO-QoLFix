@@ -36,10 +36,11 @@ namespace QoLFix.Patches.Tweaks
         public override void Execute()
         {
             QoLFixPlugin.RegisterPatch<WorldInteractionBlockerPatch>();
+            this.PatchMethod<PlayerInteraction>(nameof(PlayerInteraction.UpdateWorldInteractions), PatchType.Prefix);
 
             if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigPersistentInteractions).Value)
             {
-                this.PatchMethod<PlayerInteraction>(nameof(PlayerInteraction.UpdateWorldInteractions), PatchType.Prefix);
+                WorldInteractions_PersistentInteractions = true;
                 this.PatchMethod<ResourcePackFirstPerson>(nameof(ResourcePackFirstPerson.Update), PatchType.Postfix);
                 this.PatchMethod<CarryItemEquippableFirstPerson>(nameof(CarryItemEquippableFirstPerson.Update), PatchType.Postfix);
             }
@@ -56,6 +57,7 @@ namespace QoLFix.Patches.Tweaks
 
             if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigPatchMineDeployer).Value)
             {
+                WorldInteractions_MineDeployer = true;
                 this.PatchMineDeployer();
             }
 
@@ -77,6 +79,8 @@ namespace QoLFix.Patches.Tweaks
             };
         }
 
+        private static bool WorldInteractions_MineDeployer;
+        private static bool WorldInteractions_PersistentInteractions;
         private static bool WorldInteractionTimerRunning;
         private static bool ResourcePackInteractionTimerRunning;
         private static bool CarryItemInteractionTimerRunning;
@@ -123,9 +127,12 @@ namespace QoLFix.Patches.Tweaks
             var timedInteract = __instance.m_bestSelectedInteract?.TryCast<Interact_Timed>();
             if (timedInteract?.TimerIsActive != true)
             {
+                if (!WorldInteractions_MineDeployer) return HarmonyControlFlow.Execute;
                 var bmd = PlayerInteraction__UpdateWorldInteractions__MineDeployer(__instance);
                 return bmd ?? HarmonyControlFlow.Execute;
             }
+
+            if (!WorldInteractions_PersistentInteractions) return HarmonyControlFlow.Execute;
 
             var player = __instance.m_owner;
 
