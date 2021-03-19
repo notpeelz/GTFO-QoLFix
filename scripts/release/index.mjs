@@ -30,6 +30,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const PLUGIN_DLL_NAME = `${PKG_NAME}.dll`
 const CONFIG_RELEASE_STANDALONE = "Release-Standalone"
 const CONFIG_RELEASE_THUNDERSTORE = "Release-Thunderstore"
+const CONFIG_DEBUG = "Debug"
 
 const rootPath = path.resolve(path.join(__dirname, "../.."))
 const pkgPath = path.join(rootPath, "pkg")
@@ -148,6 +149,7 @@ async function main() {
 
   logger.info("Building")
   await Promise.all([
+    exec(`dotnet build -c ${CONFIG_DEBUG}`, execOptions),
     exec(`dotnet build -c ${CONFIG_RELEASE_STANDALONE}`, execOptions),
     exec(`dotnet build -c ${CONFIG_RELEASE_THUNDERSTORE}`, execOptions),
   ])
@@ -187,6 +189,7 @@ async function main() {
 
   const pluginFile = path.join(targetFramework, PLUGIN_DLL_NAME)
   const thunderstorePluginFile = path.join(pluginBinPath, CONFIG_RELEASE_THUNDERSTORE, pluginFile)
+  const debugPluginFile = path.join(pluginBinPath, CONFIG_DEBUG, pluginFile)
   const standalonePluginFile = path.join(pluginBinPath, CONFIG_RELEASE_STANDALONE, pluginFile)
 
   const gitDiff = await exec("git diff --shortstat", execOptions)
@@ -210,7 +213,7 @@ async function main() {
       manifest: createThunderstoreManifest(versionInfo.semver),
     }) : undefined),
     createThunderstorePackage(r2modmanPackage, {
-      pluginFile: thunderstorePluginFile,
+      pluginFile: debugPluginFile,
       manifest: createR2ModManManifest(versionInfo.semver),
     }),
     (isValidRelease ? copyFile(standalonePluginFile, standaloneFile) : undefined),
