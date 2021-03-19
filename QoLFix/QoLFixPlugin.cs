@@ -173,6 +173,7 @@ namespace QoLFix
             return true;
         }
 
+#pragma warning disable CS0162
         private void CheckGameVersion()
         {
             var currentGameVersion = CellBuildData.GetRevision();
@@ -292,6 +293,7 @@ namespace QoLFix
             UpdateManager.OpenReleasePage();
             Application.Quit();
         }
+#pragma warning restore CS0162
 
         private bool CheckUnityLibs()
         {
