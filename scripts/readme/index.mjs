@@ -1,20 +1,22 @@
-#!/usr/bin/env node
+#!/usr/bin/env -S node --es-module-specifier-resolution=node
+// NOTE: for some reason es-module-specifier-resolution is necessary
+// otherwise importing modules without specfiying the ".mjs" extension fails.
 
 import fs from "fs"
 import path, { dirname } from "path"
 import { fileURLToPath } from "url"
 import { promisify } from "util"
 import Handlebars from "handlebars"
-import esMain from "../es-main.mjs"
+import esMain from "../es-main"
+
+import constants, {
+  REPO_URL,
+} from "../constants"
 
 const mkdir = promisify(fs.mkdir)
 const readFile = promisify(fs.readFile)
 const writeFile = promisify(fs.writeFile)
 const esc = Handlebars.Utils.escapeExpression
-
-import constants, {
-  REPO_URL,
-} from "../constants.mjs"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -25,7 +27,7 @@ const standalonePkgPath = path.join(pkgPath, "standalone")
 
 async function main() {
   Handlebars.registerHelper("ifEquals", (arg1, arg2, options) => {
-    return (arg1 == arg2) ? options.fn(this) : options.inverse(this)
+    return (arg1 === arg2) ? options.fn(this) : options.inverse(this)
   })
 
   Handlebars.registerHelper("sub", ({ hash: { text }, data }) => {
@@ -45,7 +47,7 @@ async function main() {
     // Thunderstore's Markdown flavor doesn't support HTML tags :/
     if (height != null && !isThunderstore) {
       return new Handlebars.SafeString(
-        `<a href="${esc(url)}"><img height="${esc(height)}" src="${esc(imgPath)}"></a>`
+        `<a href="${esc(url)}"><img height="${esc(height)}" src="${esc(imgPath)}"></a>`,
       )
     }
 
@@ -63,7 +65,7 @@ async function main() {
 
     if (height != null && !isThunderstore) {
       return new Handlebars.SafeString(
-        `<img height="${esc(height)}" src="${esc(imgPath)}">`
+        `<img height="${esc(height)}" src="${esc(imgPath)}">`,
       )
     }
 

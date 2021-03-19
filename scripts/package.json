@@ -12,5 +12,14 @@
     "colors": "^1.4.0",
     "handlebars": "^4.7.7",
     "xml2js": "^0.4.23"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.13.10",
+    "@babel/eslint-parser": "^7.13.10",
+    "@babel/plugin-syntax-top-level-await": "^7.12.13",
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-editorconfig": "^3.0.2",
+    "eslint-plugin-import": "^2.22.1"
   }
 }

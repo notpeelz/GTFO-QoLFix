@@ -1,18 +1,18 @@
-#!/usr/bin/env node
+#!/usr/bin/env -S node --es-module-specifier-resolution=node
+// NOTE: for some reason es-module-specifier-resolution is necessary
+// otherwise importing modules without specfiying the ".mjs" extension fails.
 
 import fs from "fs"
-import { readFile, copyFile, rm, mkdir, stat } from "fs/promises"
+import { readFile, copyFile, rm, mkdir } from "fs/promises"
 import path, { dirname } from "path"
 import { fileURLToPath } from "url"
 import { promisify } from "util"
-import child_process from "child_process"
+import childProcess from "child_process"
 import { Parser } from "xml2js"
 import archiver from "archiver"
-import esMain from "../es-main.mjs"
-import readmeGenerator from "../readme/index.mjs"
-import logger from "../logger.mjs"
-
-const exec = promisify(child_process.exec)
+import esMain from "../es-main"
+import readmeGenerator from "../readme"
+import logger from "../logger"
 
 import {
   PKG_NAME,
@@ -21,7 +21,9 @@ import {
   PKG_LICENSE,
   REPO_URL,
   PKG_DEPENDENCIES,
-} from "../constants.mjs"
+} from "../constants"
+
+const exec = promisify(childProcess.exec)
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -38,7 +40,7 @@ const pluginBinPath = path.join(rootPath, "QoLFix/bin")
 const execOptions = { cwd: rootPath }
 
 function findCsprojProperty(csproj, name) {
-  const prop = csproj.Project.PropertyGroup.find(x => x[name] != null)
+  const prop = csproj.Project.PropertyGroup.find((x) => x[name] != null)
   if (prop == null) return null
   return prop[name]
 }
@@ -78,7 +80,7 @@ function createR2ModManManifest(version) {
     NetworkMode: "both",
     PackageType: "mod",
     InstallMode: "managed",
-    Loaders: [ "bepinex" ],
+    Loaders: ["bepinex"],
     ExtraData: {},
   }
 }
@@ -98,7 +100,7 @@ async function createThunderstorePackage(out, { pluginFile, manifest }) {
 
   const archive = archiver("zip")
 
-  archive.on("error", err => { throw err })
+  archive.on("error", (err) => { throw err })
   archive.pipe(output)
 
   archive.append(Buffer.from(JSON.stringify(manifest, null, 2)), { name: "manifest.json" })
@@ -111,7 +113,7 @@ async function createThunderstorePackage(out, { pluginFile, manifest }) {
 
 async function getVersionInfo(version, prerelease) {
   const r = new RegExp("\n", "g")
-  const getStdout = x => x.stdout.replace(r, "")
+  const getStdout = (x) => x.stdout.replace(r, "")
 
   let semver = prerelease
     ? `${version}-${prerelease}`
@@ -157,8 +159,7 @@ async function main() {
   let data
   try {
     data = await readFile(path.join(__dirname, "../../QoLFix/QoLFix.csproj"), "utf8")
-  }
-  catch (e) {
+  } catch (e) {
     logger.error("Failed reading csproj", e)
     return
   }
