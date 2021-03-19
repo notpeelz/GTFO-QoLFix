@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using BepInEx.IL2CPP;
 using BepInEx;
@@ -132,6 +133,10 @@ namespace QoLFix
                             UpdateNotifier.SetNotificationVisibility(true);
                         }
                     }
+                    catch (NotImplementedException)
+                    {
+                        LogWarning($"{nameof(UpdateManager)}.{nameof(UpdateManager.CheckForUpdate)} is not implemented");
+                    }
                     catch (Exception ex)
                     {
                         LogError($"Failed checking for update: {ex}");
@@ -231,16 +236,27 @@ namespace QoLFix
             }
             catch (AggregateException aggregateException)
             {
-                var exceptions = aggregateException.InnerExceptions;
-                if (exceptions.Count > 0)
+                var exceptions = aggregateException.InnerExceptions
+                    .Where(x => x is not NotImplementedException)
+                    .ToArray();
+
+                if (exceptions.Length > 0)
                 {
-                    for (var i = 0; i < exceptions.Count; i++)
+                    for (var i = 0; i < exceptions.Length; i++)
                     {
                         LogError($"Failed checking for update (ex[{i}]): {exceptions[i]}");
                     }
                     NativeMethods.MessageBox(
                         hWnd: IntPtr.Zero,
                         text: "Failed to check for updates; check your BepInEx logs.",
+                        caption: $"{ModName} - Failed to check for updates",
+                        options: (int)(NativeMethods.MB_OK | NativeMethods.MB_ICONERROR | NativeMethods.MB_SYSTEMMODAL));
+                }
+                else if (aggregateException.InnerExceptions.Count > 0)
+                {
+                    NativeMethods.MessageBox(
+                        hWnd: IntPtr.Zero,
+                        text: "Failed to check for updates (not implemented)",
                         caption: $"{ModName} - Failed to check for updates",
                         options: (int)(NativeMethods.MB_OK | NativeMethods.MB_ICONERROR | NativeMethods.MB_SYSTEMMODAL));
                 }

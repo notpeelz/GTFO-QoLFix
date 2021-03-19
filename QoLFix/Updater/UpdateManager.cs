@@ -51,6 +51,8 @@ namespace QoLFix.Updater
             return versionName;
         }
 
+#pragma warning disable CS1998
+#pragma warning disable CS0162
         public static async Task<bool> CheckForUpdate(bool includePrerelease = false, bool force = false)
         {
             LogInfo("Checking for updates");
@@ -61,7 +63,7 @@ namespace QoLFix.Updater
 #elif RELEASE_STANDALONE
             LatestRelease = await GitHubAPI.GetLatestRelease(includePrerelease, force);
 #else
-            throw new NotImplementedException();
+            throw new System.NotImplementedException();
 #endif
 
             if (LatestRelease == null) throw new FailedUpdateException("Failed fetching the latest release");
@@ -74,6 +76,8 @@ namespace QoLFix.Updater
 
             return false;
         }
+#pragma warning restore CS0162
+#pragma warning restore CS1998
 
         private static void LogDebug(object data) => QoLFixPlugin.LogDebug($"<{nameof(UpdateManager)}> " + data);
 
