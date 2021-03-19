@@ -142,7 +142,12 @@ async function getVersionInfo(version, prerelease) {
 }
 
 async function main() {
-  await rm(pkgPath, { recursive: true, force: true })
+  await rm(pkgPath, {
+    recursive: true,
+    force: true,
+    maxRetries: 3,
+    retryDelay: 100,
+  })
 
   logger.info("Generating README and CHANGELOG")
   await readmeGenerator()
