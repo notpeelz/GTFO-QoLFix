@@ -26,7 +26,7 @@ namespace QoLFix
 #if RELEASE
         internal const string GUID = "dev.peelz.qolfix";
 #else
-        internal const string GUID = $"dev.peelz.qolfix.{VersionInfo.GitBranch}";
+        internal const string GUID = "dev.peelz.qolfix.dev";
 #endif
         internal const string RepoName = "notpeelz/GTFO-QoLFix";
 
