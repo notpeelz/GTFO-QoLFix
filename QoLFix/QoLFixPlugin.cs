@@ -52,12 +52,12 @@ namespace QoLFix
         {
             Instance = this;
 
-#if DEBUG
-            LogMessage($"Initializing plugin [{VersionInfo.SemVer}] (Dev build)");
-#elif RELEASE_STANDALONE
+#if RELEASE_STANDALONE
             LogMessage($"Initializing plugin [{VersionInfo.SemVer}] (Standalone build)");
 #elif RELEASE_THUNDERSTORE
             LogMessage($"Initializing plugin [{VersionInfo.SemVer}] (Thunderstore build)");
+#else
+            LogMessage($"Initializing plugin [{VersionInfo.SemVer}] (Dev build)");
 #endif
 
             if (!this.CheckConfigVersion()) return;
