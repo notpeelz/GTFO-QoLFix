@@ -14,7 +14,7 @@
     <Configurations>Debug;Release-Standalone;Release-Thunderstore</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <DefineConstants>RELEASE_STANDALONE</DefineConstants>
+    <DefineConstants>INDEV</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release-Standalone'">
     <DefineConstants>RELEASE;RELEASE_STANDALONE</DefineConstants>
