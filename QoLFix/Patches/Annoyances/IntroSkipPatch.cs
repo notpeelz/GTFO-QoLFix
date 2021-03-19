@@ -22,7 +22,7 @@ namespace QoLFix.Patches.Annoyances
 
         public override string Name { get; } = PatchName;
 
-        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => ConfigEnabled.GetConfigEntry<bool>().Value;
 
         public override void Execute()
         {
@@ -34,12 +34,12 @@ namespace QoLFix.Patches.Annoyances
         private static void CM_PageRundown_New__Setup__Prefix(CM_PageRundown_New __instance)
         {
             __instance.m_cortexIntroIsDone = true;
-            __instance.m_rundownIntroIsDone = QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigSkipRundownConnect).Value;
+            __instance.m_rundownIntroIsDone = ConfigSkipRundownConnect.GetConfigEntry<bool>().Value;
         }
 
         private static void CM_PageRundown_New__TryPlaceRundown(CM_PageRundown_New __instance)
         {
-            if (!QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigSkipRundownConnect).Value) return;
+            if (!ConfigSkipRundownConnect.GetConfigEntry<bool>().Value) return;
 
             __instance.m_buttonConnect.SetVisible(false);
             __instance.SetRundownFullyRevealed();
@@ -61,7 +61,7 @@ namespace QoLFix.Patches.Annoyances
                 previousStep = __instance.m_step;
             }
 
-            var skipRundownInfo = QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigSkipRundownInfo).Value;
+            var skipRundownInfo = ConfigSkipRundownInfo.GetConfigEntry<bool>().Value;
             if (!skipRundownInfo) return;
 
             if (PlayFabManager.LoggedIn && __instance.m_step == CM_IntroStep.StartupScreenWaitingForPlayfab)

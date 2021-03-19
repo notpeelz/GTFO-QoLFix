@@ -26,11 +26,11 @@ namespace QoLFix.Patches.Tweaks
 
         public override string Name { get; } = PatchName;
 
-        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => ConfigEnabled.GetConfigEntry<bool>().Value;
 
         public override void Execute()
         {
-            if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigAllowFallingActions).Value)
+            if (ConfigAllowFallingActions.GetConfigEntry<bool>().Value)
             {
                 this.PatchMethod<PLOC_Fall>(
                     methodName: nameof(PLOC_Fall.Enter),
@@ -45,12 +45,12 @@ namespace QoLFix.Patches.Tweaks
                 this.PatchMethod<FirstPersonItemHolder>($"set_{nameof(FirstPersonItemHolder.ItemDownTrigger)}", PatchType.Prefix);
             }
 
-            if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigFixVelocityBug).Value)
+            if (ConfigFixVelocityBug.GetConfigEntry<bool>().Value)
             {
                 this.PatchMethod<PLOC_Jump>(nameof(PLOC_Jump.Exit), PatchType.Both);
             }
 
-            if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigFixMeleeChargeBug).Value)
+            if (ConfigFixMeleeChargeBug.GetConfigEntry<bool>().Value)
             {
                 this.PatchMethod<MeleeWeaponFirstPerson>($"get_{nameof(MeleeWeaponFirstPerson.FireButton)}", PatchType.Prefix);
             }

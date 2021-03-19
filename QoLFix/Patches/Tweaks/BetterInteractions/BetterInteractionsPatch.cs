@@ -31,42 +31,42 @@ namespace QoLFix.Patches.Tweaks
 
         public override string Name { get; } = PatchName;
 
-        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => ConfigEnabled.GetConfigEntry<bool>().Value;
 
         public override void Execute()
         {
             QoLFixPlugin.RegisterPatch<WorldInteractionBlockerPatch>();
             this.PatchMethod<PlayerInteraction>(nameof(PlayerInteraction.UpdateWorldInteractions), PatchType.Prefix);
 
-            if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigPersistentInteractions).Value)
+            if (ConfigPatchMineDeployer.GetConfigEntry<bool>().Value)
             {
                 WorldInteractions_PersistentInteractions = true;
                 this.PatchMethod<ResourcePackFirstPerson>(nameof(ResourcePackFirstPerson.Update), PatchType.Postfix);
                 this.PatchMethod<CarryItemEquippableFirstPerson>(nameof(CarryItemEquippableFirstPerson.Update), PatchType.Postfix);
             }
 
-            if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigInteractWhileReloading).Value)
+            if (ConfigPersistentInteractions.GetConfigEntry<bool>().Value)
             {
                 //this.PatchMethod<Weapon>($"get_{nameof(Weapon.AllowPlayerInteraction)}", PatchType.Prefix);
             }
 
-            if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigPatchInteractDistance).Value)
+            if (ConfigPatchInteractDistance.GetConfigEntry<bool>().Value)
             {
                 this.PatchInteractDistance();
             }
 
-            if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigPatchMineDeployer).Value)
+            if (ConfigPatchMineDeployer.GetConfigEntry<bool>().Value)
             {
                 WorldInteractions_MineDeployer = true;
                 this.PatchMineDeployer();
             }
 
-            if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigPatchRevive).Value)
+            if (ConfigPatchRevive.GetConfigEntry<bool>().Value)
             {
                 this.PatchRevive();
             }
 
-            if (QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigPatchHackingTool).Value)
+            if (ConfigPatchHackingTool.GetConfigEntry<bool>().Value)
             {
                 this.PatchHackingTool();
             }

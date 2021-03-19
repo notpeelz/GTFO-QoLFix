@@ -21,7 +21,7 @@ namespace QoLFix.Updater
 #if RELEASE_THUNDERSTORE
         public static bool Enabled => false;
 #else
-        public static bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public static bool Enabled => ConfigEnabled.GetConfigEntry<bool>().Value;
 #endif
 
         public static void Initialize()

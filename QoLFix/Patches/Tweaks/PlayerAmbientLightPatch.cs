@@ -24,7 +24,7 @@ namespace QoLFix.Patches.Tweaks
 
         public override string Name { get; } = PatchName;
 
-        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => ConfigEnabled.GetConfigEntry<bool>().Value;
 
         public override void Execute()
         {
@@ -33,7 +33,7 @@ namespace QoLFix.Patches.Tweaks
 
         private static void PlayerAgent__AquireAmbientPoint__Postfix(PlayerAgent __instance)
         {
-            var range = QoLFixPlugin.Instance.Config.GetConfigEntry<float>(ConfigLightRange).Value;
+            var range = ConfigLightRange.GetConfigEntry<float>().Value;
             range = Math.Clamp(range, 0, __instance.m_ambienceLight.range);
             __instance.m_ambienceLight.range = range;
             __instance.m_ambientPoint.SetRange(range);

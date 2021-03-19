@@ -22,7 +22,7 @@ namespace QoLFix.Patches.Tweaks
 
         public override string Name { get; } = PatchName;
 
-        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => ConfigEnabled.GetConfigEntry<bool>().Value;
 
         public override void Execute()
         {
@@ -73,7 +73,7 @@ namespace QoLFix.Patches.Tweaks
 
             bool InterceptEffect(ScreenLiquidCategory category)
             {
-                var filteredCategories = QoLFixPlugin.Instance.Config.GetConfigEntry<ScreenLiquidCategory>(ConfigFilteredEffects).Value;
+                var filteredCategories = ConfigFilteredEffects.GetConfigEntry<ScreenLiquidCategory>().Value;
                 var shouldFilter = (filteredCategories & category) != 0;
                 Instance.LogDebug($"{(shouldFilter ? "Blocking" : "Playing")} ScreenLiquid effect: {setting}");
                 return shouldFilter

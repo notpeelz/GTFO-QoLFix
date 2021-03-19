@@ -22,7 +22,7 @@ namespace QoLFix.Updater
                 {
                     if (!force && Releases != null || await UpdateReleaseObject())
                     {
-                        var allowPrerelease = includePrerelease || QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigNotifyPrerelease).Value;
+                        var allowPrerelease = includePrerelease || ConfigNotifyPrerelease.GetConfigEntry<bool>().Value;
                         var releases = Releases
                             .Children<JObject>()
                             .Select(x =>

@@ -14,5 +14,8 @@ namespace QoLFix
 
             return entry;
         }
+
+        public static ConfigEntry<T> GetConfigEntry<T>(this ConfigDefinition definition) =>
+            QoLFixPlugin.Instance.Config.GetConfigEntry<T>(definition);
     }
 }

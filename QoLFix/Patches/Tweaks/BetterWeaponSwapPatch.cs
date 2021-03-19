@@ -25,7 +25,7 @@ namespace QoLFix.Patches.Tweaks
 
         public override string Name { get; } = PatchName;
 
-        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => ConfigEnabled.GetConfigEntry<bool>().Value;
 
         public override void Execute()
         {
@@ -56,9 +56,9 @@ namespace QoLFix.Patches.Tweaks
 
         private static InventorySlot GetInventorySlotByDrama()
         {
-            var swapModeCombat = QoLFixPlugin.Instance.Config.GetConfigEntry<SwapMode>(ConfigSwapModeCombat).Value;
-            var swapModeStealth = QoLFixPlugin.Instance.Config.GetConfigEntry<SwapMode>(ConfigSwapModeStealth).Value;
-            var swapModeDefault = QoLFixPlugin.Instance.Config.GetConfigEntry<SwapMode>(ConfigSwapModeDefault).Value;
+            var swapModeCombat = ConfigSwapModeCombat.GetConfigEntry<SwapMode>().Value;
+            var swapModeStealth = ConfigSwapModeStealth.GetConfigEntry<SwapMode>().Value;
+            var swapModeDefault = ConfigSwapModeDefault.GetConfigEntry<SwapMode>().Value;
 
             switch (DramaManager.CurrentStateEnum)
             {

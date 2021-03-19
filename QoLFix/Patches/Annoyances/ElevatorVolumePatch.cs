@@ -20,7 +20,7 @@ namespace QoLFix.Patches.Annoyances
 
         public override string Name { get; } = PatchName;
 
-        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => ConfigEnabled.GetConfigEntry<bool>().Value;
 
         public override void Execute()
         {
@@ -49,7 +49,7 @@ namespace QoLFix.Patches.Annoyances
                 case eGameStateName.StopElevatorRide:
                 case eGameStateName.ReadyToStartLevel:
                     if (!Focused) return true;
-                    CellSound.SetGlobalRTPCValue(GAME_PARAMETERS.VOLUME_SETTING_SFX, QoLFixPlugin.Instance.Config.GetConfigEntry<float>(ConfigVolume).Value * 100f);
+                    CellSound.SetGlobalRTPCValue(GAME_PARAMETERS.VOLUME_SETTING_SFX, ConfigVolume.GetConfigEntry<float>().Value * 100f);
                     return true;
                 default:
                     if (!Focused) return false;

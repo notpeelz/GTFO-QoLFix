@@ -19,7 +19,7 @@ namespace QoLFix.Patches.Misc
         public override string Name { get; } = PatchName;
 
 #if RELEASE
-        public override bool Enabled => QoLFixPlugin.Instance.Config.GetConfigEntry<bool>(ConfigEnabled).Value;
+        public override bool Enabled => ConfigEnabled.GetConfigEntry<bool>().Value;
 #else
         public override bool Enabled => true;
 #endif
