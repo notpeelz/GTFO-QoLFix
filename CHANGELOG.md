@@ -1,5 +1,25 @@
 [//]: # (THIS FILE WAS AUTOMATICALLY GENERATED FROM scripts/readme/CHANGELOG.md)
 
+## 0.3.1
+
+### Bugfixes
+
+- `FixSoundMuffle`
+
+    - Fixed active reset timer not working as client
+
+- `BetterInteractions`
+
+    - Temporarily disabled the patch that allowed interactions while reloading as it caused strikers to have no cooldown between tongue attacks
+
+- `FramerateLimiter`
+
+    - Now clamps the MaxFPS value using the value from your video settings
+
+- `BetterWeaponSwap`
+
+    - Fixed a bug where climbing a ladder would cause the patch to stop working
+
 ## 0.3.0
 
 ### Features and changes
