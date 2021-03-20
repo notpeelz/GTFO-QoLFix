@@ -22,7 +22,7 @@ namespace QoLFix.Patches.Tweaks
         public override void Execute()
         {
             this.PatchMethod<PlayerInteraction>(nameof(PlayerInteraction.UpdateWorldInteractions), PatchType.Prefix);
-            this.PatchMethod<Weapon>($"get_{nameof(Weapon.AllowPlayerInteraction)}", PatchType.Prefix);
+            //this.PatchMethod<Weapon>($"get_{nameof(Weapon.AllowPlayerInteraction)}", PatchType.Prefix);
             this.PatchInteractDistance();
             this.PatchMineDeployer();
             this.PatchRevive();
