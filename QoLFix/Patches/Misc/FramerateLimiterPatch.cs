@@ -39,9 +39,10 @@ namespace QoLFix.Patches.Misc
 
             if (!focus)
             {
-                var maxFPS = QoLFixPlugin.Instance.Config.GetConfigEntry<int>(ConfigMaxFPS).Value;
                 Instance.LogDebug("Limiting FPS while out of focus");
-                Application.targetFrameRate = Math.Clamp(maxFPS, -1, CellSettingsManager.SettingsData.Video.TargetFramerate.Value);
+                var maxFPS = QoLFixPlugin.Instance.Config.GetConfigEntry<int>(ConfigMaxFPS).Value;
+                var targetFPS = CellSettingsManager.SettingsData.Video.TargetFramerate.Value;
+                Application.targetFrameRate = Math.Clamp(maxFPS, -1, targetFPS < 0 ? 999 : targetFPS);
                 return;
             }
 
