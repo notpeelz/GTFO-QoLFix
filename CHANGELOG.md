@@ -34,7 +34,7 @@
 
     Lets you charge/reload your weapons mid-air. This also fixes the bug where your melee weapon would release prematurely when bunny-hopping.
 
-  <a href="https://i.imgur.com/yLqX835.mp4"><img height="240" src="img/bettermovement_thumbnail.jpg"></a>
+    <a href="https://i.imgur.com/yLqX835.mp4"><img height="240" src="img/bettermovement_thumbnail.jpg"></a>
 
 - Added `FixWeaponAnimations`
 
@@ -104,7 +104,7 @@
 
 - Added `FixSoundMuffle`
 
-- Fixes the bug where the scout muffle sound effect doesn't go away when exiting a game too early.
+    Fixes the bug where the scout muffle sound effect doesn't go away when exiting a game too early.
 
 - Disabled `FixTerminalDisplayPing` due to world generation errors
 
