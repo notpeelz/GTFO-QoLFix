@@ -1,5 +1,13 @@
 [//]: # (THIS FILE WAS AUTOMATICALLY GENERATED FROM scripts/readme/CHANGELOG.md)
 
+## 0.3.2
+
+### Bugfixes
+
+- `FramerateLimiter`
+
+    - Fixed a bug where the framerate would get uncapped if the target FPS was set to "infinite"
+
 ## 0.3.1
 
 ### Bugfixes
