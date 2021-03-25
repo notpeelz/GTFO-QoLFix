@@ -1,3 +1,9 @@
+import path, { dirname } from "path"
+import { fileURLToPath } from "url"
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+export const ROOT_PATH = path.resolve(__dirname, "../..")
+
 export const PKG_NAME = "QoLFix"
 export const PKG_AUTHOR = "notpeelz"
 export const PKG_DESCRIPTION = "A general GTFO improvement mod that aims to fix various quality of life issues."
@@ -10,6 +16,7 @@ export const PKG_URL = `https://gtfo.thunderstore.io/package/${PKG_PATH}`
 export const REPO_PATH = "notpeelz/GTFO-QoLFix"
 export const REPO_URL = `https://github.com/${REPO_PATH}`
 export default {
+  ROOT_PATH,
   PKG_NAME,
   PKG_AUTHOR,
   PKG_DESCRIPTION,

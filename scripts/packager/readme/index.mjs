@@ -10,6 +10,7 @@ import Handlebars from "handlebars"
 import esMain from "../es-main"
 
 import constants, {
+  ROOT_PATH,
   REPO_URL,
 } from "../constants"
 
@@ -20,8 +21,7 @@ const esc = Handlebars.Utils.escapeExpression
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-const rootPath = path.resolve(path.join(__dirname, "../.."))
-const pkgPath = path.join(rootPath, "pkg")
+const pkgPath = path.join(ROOT_PATH, "pkg")
 const thunderstorePkgPath = path.join(pkgPath, "thunderstore")
 const standalonePkgPath = path.join(pkgPath, "standalone")
 
@@ -75,7 +75,7 @@ async function main() {
   const readTemplate = async (filename) => {
     const tplPath = path.join(__dirname, filename)
     const data = await readFile(tplPath, "utf8")
-    const relTplPath = path.relative(rootPath, tplPath).replace(new RegExp("\\\\", "g"), "/")
+    const relTplPath = path.relative(ROOT_PATH, tplPath).replace(new RegExp("\\\\", "g"), "/")
     return `[//]: # (THIS FILE WAS AUTOMATICALLY GENERATED FROM ${relTplPath})\n\n${data}`
   }
 
@@ -98,8 +98,8 @@ async function main() {
   await writeFile(path.join(standalonePkgPath, "CHANGELOG.md"), changelog({ ...ctx, release: "standalone" }))
 
   // Repo
-  await writeFile(path.join(rootPath, "README.md"), readme({ ...ctx, release: "standalone" }))
-  await writeFile(path.join(rootPath, "CHANGELOG.md"), changelog({ ...ctx, release: "standalone" }))
+  await writeFile(path.join(ROOT_PATH, "README.md"), readme({ ...ctx, release: "standalone" }))
+  await writeFile(path.join(ROOT_PATH, "CHANGELOG.md"), changelog({ ...ctx, release: "standalone" }))
 }
 
 if (await esMain(import.meta)) {

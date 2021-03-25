@@ -4,8 +4,7 @@
 
 import fs from "fs"
 import { readFile, copyFile, rm, mkdir } from "fs/promises"
-import path, { dirname } from "path"
-import { fileURLToPath } from "url"
+import path from "path"
 import { promisify } from "util"
 import childProcess from "child_process"
 import { Parser } from "xml2js"
@@ -15,6 +14,7 @@ import readmeGenerator from "../readme"
 import logger from "../logger"
 
 import {
+  ROOT_PATH,
   PKG_NAME,
   PKG_AUTHOR,
   PKG_DESCRIPTION,
@@ -25,20 +25,17 @@ import {
 
 const exec = promisify(childProcess.exec)
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-
 const PLUGIN_DLL_NAME = `${PKG_NAME}.dll`
 const CONFIG_RELEASE_STANDALONE = "Release-Standalone"
 const CONFIG_RELEASE_THUNDERSTORE = "Release-Thunderstore"
 const CONFIG_DEBUG = "Debug"
 
-const rootPath = path.resolve(path.join(__dirname, "../.."))
-const pkgPath = path.join(rootPath, "pkg")
+const pkgPath = path.join(ROOT_PATH, "pkg")
 const thunderstorePkgPath = path.join(pkgPath, "thunderstore")
 const standalonePkgPath = path.join(pkgPath, "standalone")
-const pluginBinPath = path.join(rootPath, "QoLFix/bin")
+const pluginBinPath = path.join(ROOT_PATH, "QoLFix/bin")
 
-const execOptions = { cwd: rootPath }
+const execOptions = { cwd: ROOT_PATH }
 
 function findCsprojProperty(csproj, name) {
   const prop = csproj.Project.PropertyGroup.find((x) => x[name] != null)
@@ -101,7 +98,7 @@ async function createThunderstorePackage(out, { pluginFile, manifest }) {
   archive.pipe(output)
 
   archive.append(Buffer.from(JSON.stringify(manifest, null, 2)), { name: "manifest.json" })
-  archive.file(path.join(rootPath, "img/logo.png"), { name: "icon.png" })
+  archive.file(path.join(ROOT_PATH, "img/logo.png"), { name: "icon.png" })
   archive.file(path.join(thunderstorePkgPath, "README.md"), { name: "README.md" })
   archive.file(pluginFile, { name: "QoLFix.dll" })
 
@@ -161,7 +158,7 @@ async function main() {
 
   let data
   try {
-    data = await readFile(path.join(__dirname, "../../QoLFix/QoLFix.csproj"), "utf8")
+    data = await readFile(path.join(ROOT_PATH, "QoLFix/QoLFix.csproj"), "utf8")
   } catch (e) {
     logger.error("Failed reading csproj", e)
     return
