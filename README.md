@@ -1,4 +1,4 @@
-[//]: # (THIS FILE WAS AUTOMATICALLY GENERATED FROM scripts/readme/README.md)
+[//]: # (THIS FILE WAS AUTOMATICALLY GENERATED FROM scripts/packager/readme/README.md)
 
 # QoL Fix
 
