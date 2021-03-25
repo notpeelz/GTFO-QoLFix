@@ -43,7 +43,7 @@ module.exports = {
     sourceType: "module",
     requireConfigFile: false,
     babelOptions: {
-      configFile: path.resolve(path.join(__dirname, ".babelrc.cjs")),
+      configFile: path.resolve(__dirname, ".babelrc.cjs"),
     },
   },
 }

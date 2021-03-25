@@ -2,8 +2,9 @@ import { fileURLToPath } from "url"
 import { lstat } from "fs/promises"
 import process from "process"
 import path from "path"
+import logger from "./logger"
 
-export default async function(meta) {
+export default async function esMain(meta) {
   const modulePath = path.resolve(fileURLToPath(meta.url))
   const scriptPath = path.resolve(process.argv[1])
 
@@ -11,7 +12,7 @@ export default async function(meta) {
   try {
     stats = await lstat(scriptPath)
   } catch (ex) {
-    console.error(`Failed calling stat() on ${scriptPath}`, ex)
+    logger.error(`Failed calling stat() on ${scriptPath}`, ex)
   }
 
   if (stats) {
