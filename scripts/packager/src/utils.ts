@@ -1,8 +1,8 @@
 import path from "path";
-import { ROOT_PATH } from "./constants";
+import { paths } from "./constants";
 
 export function projectRelativePath(absPath: string) {
-  const relPath = path.relative(ROOT_PATH, absPath);
+  const relPath = path.relative(paths.ROOT, absPath);
 
   if (process.platform === "win32") {
     return relPath.replace(new RegExp("\\\\", "g"), "/");

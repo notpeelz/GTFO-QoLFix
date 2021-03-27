@@ -3,10 +3,10 @@ import { rm } from "fs/promises";
 import release from "./release";
 import readme from "./readme";
 import esMain from "./es-main";
-import { OUTPUT_PATH } from "./constants";
+import { paths } from "./constants";
 
 if (await esMain(import.meta.url)) {
-  await rm(OUTPUT_PATH, {
+  await rm(paths.OUTPUT, {
     recursive: true,
     force: true,
     maxRetries: 3,

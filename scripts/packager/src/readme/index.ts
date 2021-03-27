@@ -6,7 +6,7 @@ import Handlebars from "handlebars";
 
 import logger from "../logger";
 import { projectRelativePath } from "../utils";
-import constants, { ROOT_PATH, REPO_URL } from "../constants";
+import constants, { paths, REPO_URL } from "../constants";
 
 const mkdir = promisify(fs.mkdir);
 const readFile = promisify(fs.readFile);
@@ -14,10 +14,6 @@ const writeFile = promisify(fs.writeFile);
 const esc = Handlebars.Utils.escapeExpression;
 
 const __dirname = dirname(fileURLToPath(import.meta.moduleUrl));
-
-const pkgPath = path.join(ROOT_PATH, "pkg");
-const thunderstorePkgPath = path.join(pkgPath, "thunderstore");
-const standalonePkgPath = path.join(pkgPath, "standalone");
 
 Handlebars.registerHelper(
   "ifEquals",
@@ -103,34 +99,34 @@ export default async function main() {
 
   const readme = Handlebars.compile(await readTemplate("README.md"));
 
-  await mkdir(thunderstorePkgPath, { recursive: true });
-  await mkdir(standalonePkgPath, { recursive: true });
+  await mkdir(paths.OUTPUT_THUNDERSTORE, { recursive: true });
+  await mkdir(paths.OUTPUT_STANDALONE, { recursive: true });
 
   const ctx = constants;
 
   // Thunderstore
   await writeFile(
-    path.join(thunderstorePkgPath, "README.md"),
+    path.join(paths.OUTPUT_THUNDERSTORE, "README.md"),
     readme({ ...ctx, release: "thunderstore" }),
   );
 
   // Standalone
   await writeFile(
-    path.join(standalonePkgPath, "README.md"),
+    path.join(paths.OUTPUT_STANDALONE, "README.md"),
     readme({ ...ctx, release: "standalone" }),
   );
   await writeFile(
-    path.join(standalonePkgPath, "CHANGELOG.md"),
+    path.join(paths.OUTPUT_STANDALONE, "CHANGELOG.md"),
     changelog({ ...ctx, release: "standalone" }),
   );
 
   // Repo
   await writeFile(
-    path.join(ROOT_PATH, "README.md"),
+    path.join(paths.ROOT, "README.md"),
     readme({ ...ctx, release: "standalone" }),
   );
   await writeFile(
-    path.join(ROOT_PATH, "CHANGELOG.md"),
+    path.join(paths.ROOT, "CHANGELOG.md"),
     changelog({ ...ctx, release: "standalone" }),
   );
 }

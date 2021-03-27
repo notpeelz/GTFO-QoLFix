@@ -5,8 +5,14 @@ const rootPath = path.resolve(
   fileURLToPath(import.meta.moduleUrl),
   "../../../..",
 );
+const outputPath = path.join(rootPath, "pkg");
 
-export const ROOT_PATH = rootPath;
+export const paths = {
+  ROOT: rootPath,
+  OUTPUT: outputPath,
+  OUTPUT_THUNDERSTORE: path.join(outputPath, "thunderstore"),
+  OUTPUT_STANDALONE: path.join(outputPath, "standalone"),
+};
 export const PKG_NAME = "QoLFix";
 export const PKG_AUTHOR = "notpeelz";
 export const PKG_DESCRIPTION =
@@ -18,7 +24,6 @@ export const PKG_URL = `https://gtfo.thunderstore.io/package/${PKG_PATH}`;
 export const REPO_PATH = "notpeelz/GTFO-QoLFix";
 export const REPO_URL = `https://github.com/${REPO_PATH}`;
 export default {
-  ROOT_PATH,
   PKG_NAME,
   PKG_AUTHOR,
   PKG_DESCRIPTION,

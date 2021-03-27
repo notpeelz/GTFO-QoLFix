@@ -1,14 +1,14 @@
 import fs from "fs";
-import { readFile, copyFile, mkdir } from "fs/promises";
+import { copyFile, mkdir } from "fs/promises";
 import path from "path";
 import { promisify } from "util";
 import childProcess from "child_process";
-import { Parser } from "xml2js";
 import archiver from "archiver";
+import Csproj from "../csproj";
 
 import logger from "../logger";
 import {
-  ROOT_PATH,
+  paths,
   PKG_NAME,
   PKG_AUTHOR,
   PKG_DESCRIPTION,
@@ -24,34 +24,9 @@ const CONFIG_RELEASE_STANDALONE = "Release-Standalone";
 const CONFIG_RELEASE_THUNDERSTORE = "Release-Thunderstore";
 const CONFIG_DEBUG = "Debug";
 
-const pkgPath = path.join(ROOT_PATH, "pkg");
-const thunderstorePkgPath = path.join(pkgPath, "thunderstore");
-const standalonePkgPath = path.join(pkgPath, "standalone");
-const pluginBinPath = path.join(ROOT_PATH, "QoLFix/bin");
+const pluginBinPath = path.join(paths.ROOT, "QoLFix/bin");
 
-const execOptions = { cwd: ROOT_PATH };
-
-function findCsprojProperty(csproj: any, name: string) {
-  const prop = csproj.Project.PropertyGroup.find(
-    (x: Record<string, string>) => x[name] != null,
-  );
-  if (prop == null) return null;
-  return prop[name];
-}
-
-function getPropertyValue(csproj: any, name: string) {
-  const prop = findCsprojProperty(csproj, name);
-
-  if (prop == null || prop.length === 0) {
-    throw new Error(`Missing MSBuild property: ${name}`);
-  }
-
-  if (prop.length > 1) {
-    throw new Error(`MSBuild property was defined more than once: ${name}`);
-  }
-
-  return prop[0];
-}
+const execOptions = { cwd: paths.ROOT };
 
 function createR2ModManManifest(version: string) {
   return {
@@ -101,8 +76,10 @@ async function createThunderstorePackage(
   archive.append(Buffer.from(JSON.stringify(manifest, null, 2)), {
     name: "manifest.json",
   });
-  archive.file(path.join(ROOT_PATH, "img/logo.png"), { name: "icon.png" });
-  archive.file(path.join(thunderstorePkgPath, "README.md"), {
+  archive.file(path.join(paths.ROOT, "img/logo.png"), {
+    name: "icon.png",
+  });
+  archive.file(path.join(paths.OUTPUT_THUNDERSTORE, "README.md"), {
     name: "README.md",
   });
   archive.file(pluginFile, { name: "QoLFix.dll" });
@@ -160,31 +137,17 @@ export default async function main() {
   ]);
 
   logger.info("Packaging");
-  await mkdir(thunderstorePkgPath, { recursive: true });
-  await mkdir(standalonePkgPath, { recursive: true });
+  await mkdir(paths.OUTPUT_THUNDERSTORE, { recursive: true });
+  await mkdir(paths.OUTPUT_STANDALONE, { recursive: true });
 
-  let data;
-  try {
-    data = await readFile(path.join(ROOT_PATH, "QoLFix/QoLFix.csproj"), "utf8");
-  } catch (e) {
-    logger.error("Failed reading csproj", e);
-    return;
-  }
+  const csproj = await Csproj.fromPath(
+    path.join(paths.ROOT, "QoLFix/QoLFix.csproj"),
+  );
 
-  const parser = new Parser();
+  const targetFramework = csproj.getPropertyValue("TargetFramework");
 
-  let csproj;
-  try {
-    csproj = await parser.parseStringPromise(data);
-  } catch (e) {
-    logger.error("Failed parsing csproj", e);
-    return;
-  }
-
-  const targetFramework = getPropertyValue(csproj, "TargetFramework");
-
-  const version = getPropertyValue(csproj, "Version");
-  const prerelease = getPropertyValue(csproj, "VersionPrerelease");
+  const version = csproj.getPropertyValue("Version");
+  const prerelease = csproj.getPropertyValue("VersionPrerelease");
   const versionInfo = await getVersionInfo(version, prerelease);
 
   const pluginFile = path.join(targetFramework, PLUGIN_DLL_NAME);
@@ -208,7 +171,7 @@ export default async function main() {
     // R2ModMan local install package
     createThunderstorePackage(
       path.join(
-        thunderstorePkgPath,
+        paths.OUTPUT_THUNDERSTORE,
         `${PKG_NAME.toLowerCase()}-${versionInfo.semver}-r2modman.zip`,
       ),
       {
@@ -231,7 +194,7 @@ export default async function main() {
     promises.push(
       copyFile(
         standalonePluginFile,
-        path.join(standalonePkgPath, PLUGIN_DLL_NAME),
+        path.join(paths.OUTPUT_STANDALONE, PLUGIN_DLL_NAME),
       ),
     );
 
@@ -244,7 +207,7 @@ export default async function main() {
       promises.push(
         createThunderstorePackage(
           path.join(
-            thunderstorePkgPath,
+            paths.OUTPUT_THUNDERSTORE,
             `${PKG_NAME.toLowerCase()}-${versionInfo.semver}-thunderstore.zip`,
           ),
           {
