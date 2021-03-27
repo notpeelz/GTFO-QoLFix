@@ -1,7 +1,7 @@
 ﻿<Project>
   <Target Name="ILRepacker" AfterTargets="Build">
     <ItemGroup>
-      <InputAssemblies Include="$(OutputPath)$(TargetName)$(TargetExt)" />
+      <InputAssemblies Include="$(OutputPath)/$(TargetName)$(TargetExt)" />
       <InputAssemblies Include="@(EmbedAssemblies)" />
       <LibraryPaths Include="$(BIELibsFolder)" />
       <LibraryPaths Include="$(UnhollowedLibsFolder)" />
@@ -20,7 +20,7 @@
       InputAssemblies="@(InputAssemblies)"
       TargetKind="SameAsPrimaryAssembly"
       KeyFile="$(KeyFile)"
-      OutputFile="$(OutputPath)$(TargetName)$(TargetExt)"
+      OutputFile="$(OutputPath)/$(TargetName)$(TargetExt)"
     />
   </Target>
 </Project>

@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <GameFolder>C:\Program Files (x86)\Steam\steamapps\common\GTFO</GameFolder>
-    <BIELibsFolder>$(GameFolder)\BepInEx\core</BIELibsFolder>
-    <UnhollowedLibsFolder>$(GameFolder)\BepInEx\unhollowed</UnhollowedLibsFolder>
+    <BIELibsFolder>$(GameFolder)/BepInEx/core</BIELibsFolder>
+    <UnhollowedLibsFolder>$(GameFolder)/BepInEx/unhollowed</UnhollowedLibsFolder>
     <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>QoLFix</RootNamespace>
     <LangVersion>preview</LangVersion>
@@ -26,14 +26,14 @@
     <!--<DefineConstants>$(DefineConstants);DEBUG_PLACEHOLDERS</DefineConstants>-->
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="$(BIELibsFolder)\*.dll" Private="false" />
-    <Reference Remove="$(BIELibsFolder)\SemVer.dll" />
-    <Reference Include="$(UnhollowedLibsFolder)\*.dll" Private="false" />
-    <Reference Remove="$(UnhollowedLibsFolder)\Newtonsoft.Json.dll" />
+    <Reference Include="$(BIELibsFolder)/*.dll" Private="false" />
+    <Reference Remove="$(BIELibsFolder)/SemVer.dll" />
+    <Reference Include="$(UnhollowedLibsFolder)/*.dll" Private="false" />
+    <Reference Remove="$(UnhollowedLibsFolder)/Newtonsoft.Json.dll" />
   </ItemGroup>
   <ItemGroup>
-    <EmbedAssemblies Include="$(OutputPath)Newtonsoft.Json.dll" />
-    <EmbedAssemblies Include="$(OutputPath)SemVer.dll" />
+    <EmbedAssemblies Include="$(OutputPath)/Newtonsoft.Json.dll" />
+    <EmbedAssemblies Include="$(OutputPath)/SemVer.dll" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ILRepack.Lib.MSBuild" Version="2.1.16.1" PrivateAssets="all" />
@@ -42,7 +42,7 @@
     <PackageReference Include="SemanticVersioning" Version="1.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\QoLFix.Generators\QoLFix.Generators.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
+    <ProjectReference Include="../QoLFix.Generators/QoLFix.Generators.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
   </ItemGroup>
-  <Import Project="..\QoLFix.Generators\Generators.props" />
+  <Import Project="../QoLFix.Generators/Generators.props" />
 </Project>
