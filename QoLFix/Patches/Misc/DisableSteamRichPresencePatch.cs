@@ -1,4 +1,4 @@
-﻿using BepInEx.Configuration;
+using BepInEx.Configuration;
 using SNetwork;
 
 namespace QoLFix.Patches.Misc

@@ -1,4 +1,4 @@
-﻿using BepInEx.Configuration;
+using BepInEx.Configuration;
 
 namespace QoLFix.Patches.Annoyances
 {

@@ -1,4 +1,4 @@
-﻿namespace QoLFix.Patches.Tweaks
+namespace QoLFix.Patches.Tweaks
 {
     public partial class BetterInteractionsPatch
     {

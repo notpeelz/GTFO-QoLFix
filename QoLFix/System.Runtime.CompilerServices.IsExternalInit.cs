@@ -1,4 +1,4 @@
-﻿#if NETSTANDARD2_1
+#if NETSTANDARD2_1
 // This is necessary because C# 9.0 init properties require a class that isn't
 // included in netstandard <= 2.1
 using System.ComponentModel;

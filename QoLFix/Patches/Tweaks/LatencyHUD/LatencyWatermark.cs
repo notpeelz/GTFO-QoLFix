@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using SNetwork;
 using TMPro;
 using UnityEngine;

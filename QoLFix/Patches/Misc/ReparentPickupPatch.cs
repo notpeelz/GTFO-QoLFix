@@ -1,4 +1,4 @@
-﻿using Gear;
+using Gear;
 using LevelGeneration;
 using Player;
 

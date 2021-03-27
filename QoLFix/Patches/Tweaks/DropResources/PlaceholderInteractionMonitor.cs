@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using LevelGeneration;
 using Player;
 using QoLFix.Patches.Misc;

@@ -1,4 +1,4 @@
-﻿#if DEBUG_PLACEHOLDERS
+#if DEBUG_PLACEHOLDERS
 using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

@@ -1,4 +1,4 @@
-﻿namespace QoLFix.Updater
+namespace QoLFix.Updater
 {
     public static partial class UpdateManager
     {

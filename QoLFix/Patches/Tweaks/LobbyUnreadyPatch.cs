@@ -1,4 +1,4 @@
-﻿using AK;
+using AK;
 using BepInEx.Configuration;
 using CellMenu;
 using SNetwork;

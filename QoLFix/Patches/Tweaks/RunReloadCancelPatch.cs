@@ -1,4 +1,4 @@
-﻿using BepInEx.Configuration;
+using BepInEx.Configuration;
 using Player;
 using QoLFix.Patches.Misc;
 

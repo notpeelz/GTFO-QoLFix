@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using QoLFix.UI;
 using UnityEngine;
 

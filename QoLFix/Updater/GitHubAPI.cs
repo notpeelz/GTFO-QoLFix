@@ -1,4 +1,4 @@
-﻿#if RELEASE_STANDALONE
+#if RELEASE_STANDALONE
 using System;
 using System.Linq;
 using System.Net;

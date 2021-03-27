@@ -1,4 +1,4 @@
-﻿using AK;
+using AK;
 using LevelGeneration;
 using Player;
 using QoLFix.Patches.Misc;

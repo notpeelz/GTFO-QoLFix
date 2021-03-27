@@ -1,4 +1,4 @@
-﻿using CellMenu;
+using CellMenu;
 using QoLFix.UI;
 using UnityEngine;
 

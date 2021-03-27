@@ -13,17 +13,22 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 charset = utf-8
 # MSBuild files
-[*.{csproj,targets,props}]
+[*.{csproj,csproj.user,targets,props}]
 indent_size = 2
 insert_final_newline = true
 trim_trailing_whitespace = true
-charset = utf-8-bom
+charset = utf-8
+# Solution files
+[*.sln]
+charset = utf-8
+indent_style = tab
+indent_size = 2
 # Code files
 [*.{cs,csx,vb,vbx}]
 indent_size = 4
 insert_final_newline = true
 trim_trailing_whitespace = true
-charset = utf-8-bom
+charset = utf-8
 ###############################
 # .NET Coding Conventions     #
 ###############################

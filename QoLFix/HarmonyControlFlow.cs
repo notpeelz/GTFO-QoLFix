@@ -1,4 +1,4 @@
-﻿namespace QoLFix
+namespace QoLFix
 {
     public static class HarmonyControlFlow
     {

@@ -1,4 +1,4 @@
-﻿using UnityEngine.CrashReportHandler;
+using UnityEngine.CrashReportHandler;
 
 namespace QoLFix.Patches.Misc
 {

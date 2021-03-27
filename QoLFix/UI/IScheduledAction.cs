@@ -1,4 +1,4 @@
-﻿namespace QoLFix.UI
+namespace QoLFix.UI
 {
     public interface IScheduledAction
     {

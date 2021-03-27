@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using BepInEx.Configuration;
 using CellMenu;
 using QoLFix.Patches.Common;

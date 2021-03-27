@@ -1,4 +1,4 @@
-﻿using BepInEx.Configuration;
+using BepInEx.Configuration;
 using QoLFix.Patches.Misc;
 
 namespace QoLFix.Patches.Bugfixes

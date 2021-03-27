@@ -1,4 +1,4 @@
-﻿using BepInEx.Configuration;
+using BepInEx.Configuration;
 using Enemies;
 
 namespace QoLFix.Patches.Bugfixes

@@ -1,4 +1,4 @@
-﻿namespace QoLFix.Patches.Misc
+namespace QoLFix.Patches.Misc
 {
     public class ItemEquippableAnimationSequencePatch : Patch
     {

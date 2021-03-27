@@ -1,4 +1,4 @@
-﻿<Project>
+<Project>
   <Target Name="ILRepacker" AfterTargets="Build">
     <ItemGroup>
       <InputAssemblies Include="$(OutputPath)/$(TargetName)$(TargetExt)" />

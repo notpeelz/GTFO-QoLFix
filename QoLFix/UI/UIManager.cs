@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using QoLFix.Patches.Common.Cursor;
 using UnhollowerRuntimeLib;
 using UnityEngine;

@@ -1,4 +1,4 @@
-﻿using BepInEx.Configuration;
+using BepInEx.Configuration;
 using CellMenu;
 
 namespace QoLFix.Patches.Annoyances

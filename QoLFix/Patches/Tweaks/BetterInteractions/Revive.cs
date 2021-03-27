@@ -1,4 +1,4 @@
-﻿using QoLFix.Patches.Misc;
+using QoLFix.Patches.Misc;
 
 namespace QoLFix.Patches.Tweaks
 {

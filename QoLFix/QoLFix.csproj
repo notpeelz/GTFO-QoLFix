@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="ValidateGamePath">
+<Project Sdk="Microsoft.NET.Sdk" InitialTargets="ValidateGamePath">
   <!--
     Add a GameFolder.props file to the project to set your game path:
 

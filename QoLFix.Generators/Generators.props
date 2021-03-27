@@ -1,4 +1,4 @@
-﻿<Project>
+<Project>
   <!-- This is a workaround for https://github.com/dotnet/roslyn/issues/47786 -->
   <!--<Target Name="_CleanupRoslynAdditionalFiles" BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun">
     <ItemGroup>
