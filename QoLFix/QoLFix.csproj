@@ -1,6 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk" InitialTargets="ValidateGamePath">
+  <!--
+    Add a GameFolder.props file to the project to set your game path:
+
+    <Project>
+      <PropertyGroup>
+        <GameFolder>C:\Program Files (x86)\Steam\steamapps\common\GTFO</GameFolder>
+      </PropertyGroup>
+    </Project>
+  -->
+
+  <Import Project="GameFolder.props" Condition="Exists('./GameFolder.props')" />
   <PropertyGroup>
-    <GameFolder>C:\Program Files (x86)\Steam\steamapps\common\GTFO</GameFolder>
     <BIELibsFolder>$(GameFolder)/BepInEx/core</BIELibsFolder>
     <UnhollowedLibsFolder>$(GameFolder)/BepInEx/unhollowed</UnhollowedLibsFolder>
     <TargetFramework>netstandard2.1</TargetFramework>
@@ -13,6 +23,9 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <Configurations>Debug;Release-Standalone;Release-Thunderstore</Configurations>
   </PropertyGroup>
+  <Target Name="ValidateGamePath">
+    <Error Text="The GameFolder property must be set to the GTFO game folder." Condition="'$(GameFolder)' == '' or !Exists('$(GameFolder)')" />
+  </Target>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <DefineConstants>INDEV</DefineConstants>
   </PropertyGroup>
