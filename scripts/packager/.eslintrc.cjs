@@ -1,6 +1,7 @@
-const path = require("path")
+const path = require("path");
+const airbnbStyleRules = require("eslint-config-airbnb-base/rules/style");
 
-const prettierrc = require(path.resolve(__dirname, ".prettierrc.cjs"))
+const prettierrc = require(path.resolve(__dirname, ".prettierrc.cjs"));
 
 module.exports = {
   root: true,
@@ -29,7 +30,7 @@ module.exports = {
     ],
   },
   rules: {
-    "prettier/prettier": [ "error", prettierrc ],
+    "prettier/prettier": ["error", prettierrc],
     // Handled by prettier
     "arrow-body-style": "off",
     "prefer-arrow-callback": "off",
@@ -37,11 +38,17 @@ module.exports = {
     "object-curly-newline": ["off"],
     "arrow-body-style": ["off"],
     "no-confusing-arrow": ["off"],
-    "space-unary-ops": ["off"], // for typeof() expressions (typeof is technically a unary operator)
     "no-control-regex": ["off"],
     "no-underscore-dangle": ["error", {
       allow: ["__dirname", "__filename"],
     }],
+    "no-restricted-syntax": ["error", ...airbnbStyleRules.rules["no-restricted-syntax"]
+      .filter(x => {
+        if (typeof x !== "object") return false;
+        if (x.selector === "ForOfStatement") return false;
+        return true;
+      })
+    ],
     "@typescript-eslint/naming-convention": [
       "error",
       {
@@ -61,11 +68,6 @@ module.exports = {
         format: [ "PascalCase" ],
       },
     ],
-    "@typescript-eslint/quotes": ["error", "double", {
-      avoidEscape: false,
-      allowTemplateLiterals: true,
-    }],
-    "@typescript-eslint/semi": ["error", "always"],
   },
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -75,4 +77,4 @@ module.exports = {
     project: path.resolve(__dirname, "tsconfig.json"),
     extraFileExtensions: [ ".cjs", ".mjs" ],
   },
-}
+};

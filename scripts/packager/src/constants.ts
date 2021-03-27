@@ -1,6 +1,10 @@
 import path from "path";
 import { fileURLToPath } from "url";
 
+if (!import.meta.moduleUrl) {
+  throw new Error("Couldn't find moduleUrl in the module metadata.");
+}
+
 const rootPath = path.resolve(
   fileURLToPath(import.meta.moduleUrl),
   "../../../..",
@@ -10,9 +14,8 @@ const outputPath = path.join(rootPath, "pkg");
 export const paths = {
   ROOT: rootPath,
   OUTPUT: outputPath,
-  OUTPUT_THUNDERSTORE: path.join(outputPath, "thunderstore"),
-  OUTPUT_STANDALONE: path.join(outputPath, "standalone"),
 };
+export const PLUGIN_FILENAME = "QoLFix.dll";
 export const PKG_NAME = "QoLFix";
 export const PKG_AUTHOR = "notpeelz";
 export const PKG_DESCRIPTION =
