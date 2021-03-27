@@ -2,7 +2,7 @@
 
 [![GitHub](https://img.shields.io/github/license/{{REPO_PATH}}?color=green&style=for-the-badge)]({{REPO_URL}})
 {{#ifEquals release "standalone"}}
-[![Thunderstore](https://img.shields.io/badge/Thunderstore-blue?style=for-the-badge)]({{../PKG_URL}})
+[![Thunderstore](https://img.shields.io/badge/Thunderstore-blue?style=for-the-badge)]({{PKG_URL}})
 {{/ifEquals}}
 
 A general [GTFO](https://store.steampowered.com/app/493520/GTFO) improvement mod that aims to fix various quality of life issues.
@@ -14,7 +14,7 @@ A general [GTFO](https://store.steampowered.com/app/493520/GTFO) improvement mod
 
 2. Extract the archive to your game folder (`steamapps/common/GTFO`)
 
-3. [Download the latest version of QoL Fix]({{../REPO_URL}}/releases) and put the DLL file in `BepInEx/plugins`
+3. [Download the latest version of QoL Fix]({{REPO_URL}}/releases) and put the DLL file in `BepInEx/plugins`
 
 4. Download the [Unity 2019.4.1 libraries archive](https://github.com/LavaGang/Unity-Runtime-Libraries/raw/master/2019.4.1.zip) and extract it in `BepInEx/unity-libs`. Create the folder if it doesn't exist.
 

@@ -2,11 +2,14 @@
   "name": "scripts",
   "version": "1.0.0",
   "description": "",
-  "main": "",
+  "main": "dist/index.mjs",
   "type": "module",
-  "scripts": {},
-  "author": "",
-  "license": "",
+  "scripts": {
+    "prestart": "rollup --config",
+    "start": "node --es-module-specifier-resolution=node ./dist/index.mjs"
+  },
+  "author": "notpeelz",
+  "license": "GPL-3.0-or-later",
   "dependencies": {
     "archiver": "^5.3.0",
     "colors": "^1.4.0",
@@ -14,12 +17,21 @@
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
-    "@babel/core": "^7.13.10",
-    "@babel/eslint-parser": "^7.13.10",
-    "@babel/plugin-syntax-top-level-await": "^7.12.13",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-typescript": "^8.2.0",
+    "@types/archiver": "^5.1.0",
+    "@types/node": "^14.14.36",
+    "@types/xml2js": "^0.4.8",
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
     "eslint": "^7.2.0",
-    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-airbnb-typescript": "^12.3.1",
+    "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-editorconfig": "^3.0.2",
-    "eslint-plugin-import": "^2.22.1"
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.3.1",
+    "prettier": "^2.2.1",
+    "rollup": "^2.42.4",
+    "rollup-plugin-eslint": "^7.0.0"
   }
 }

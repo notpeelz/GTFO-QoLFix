@@ -1,4 +1,4 @@
-[//]: # (THIS FILE WAS AUTOMATICALLY GENERATED FROM scripts/packager/readme/CHANGELOG.md)
+[//]: # (THIS FILE WAS AUTOMATICALLY GENERATED FROM scripts/packager/src/readme/CHANGELOG.md)
 
 ## 0.3.2
 
