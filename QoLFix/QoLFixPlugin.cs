@@ -16,6 +16,7 @@ using UnityEngine.SceneManagement;
 using QoLFix.Patches.Common.Cursor;
 using QoLFix.Updater;
 using QoLFix.Updater.UI;
+using UnityEngine.CrashReportHandler;
 
 namespace QoLFix
 {
@@ -306,6 +307,8 @@ namespace QoLFix
                 unstripped &= goActive != null;
                 var colorAlpha = typeof(Color).GetMethod(nameof(Color.AlphaMultiplied));
                 unstripped &= colorAlpha != null;
+                var enableCaptureExceptions = typeof(CrashReportHandler).GetMethod($"set_{nameof(CrashReportHandler.enableCaptureExceptions)}");
+                unstripped &= enableCaptureExceptions != null;
             }
             catch
             {
