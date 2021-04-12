@@ -45,8 +45,8 @@
     <Reference Remove="$(UnhollowedLibsFolder)/Newtonsoft.Json.dll" />
   </ItemGroup>
   <ItemGroup>
-    <EmbedAssemblies Include="$(OutputPath)/Newtonsoft.Json.dll" />
-    <EmbedAssemblies Include="$(OutputPath)/SemVer.dll" />
+    <EmbeddedAssembly Include="$(OutputPath)/Newtonsoft.Json.dll" />
+    <EmbeddedAssembly Include="$(OutputPath)/SemVer.dll" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ILRepack.Lib.MSBuild" Version="2.1.16.1" PrivateAssets="all" />
