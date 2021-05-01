@@ -39,9 +39,12 @@
     <!--<DefineConstants>$(DefineConstants);DEBUG_PLACEHOLDERS</DefineConstants>-->
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="$(BIELibsFolder)/*.dll" Private="false" />
-    <Reference Remove="$(BIELibsFolder)/SemVer.dll" />
+    <Reference Include="$(BIELibsFolder)/BepInEx.*.dll" Private="false" />
+    <Reference Include="$(BIELibsFolder)/0Harmony.dll" Private="false" />
+    <Reference Include="$(BIELibsFolder)/UnhollowerBaseLib.dll" Private="false" />
+    <Reference Include="$(BIELibsFolder)/UnhollowerRuntimeLib.dll" Private="false" />
     <Reference Include="$(UnhollowedLibsFolder)/*.dll" Private="false" />
+    <Reference Remove="$(UnhollowedLibsFolder)/netstandard.dll" />
     <Reference Remove="$(UnhollowedLibsFolder)/Newtonsoft.Json.dll" />
   </ItemGroup>
   <ItemGroup>
