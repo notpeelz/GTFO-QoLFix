@@ -1,6 +1,7 @@
 using AK;
 using LevelGeneration;
 using Player;
+using QoLFix.Patches.Common;
 using QoLFix.Patches.Misc;
 using UnityEngine;
 
@@ -10,19 +11,17 @@ namespace QoLFix.Patches.Tweaks
     {
         // Used to keep track of whether to replace the mine interaction
         // with a world interaction (when looked directly at).
-        private static class WorldInteractionOverride
+        private static class LookingAtWorldInteraction
         {
             public static bool state;
             public static bool oldState;
         }
 
         private static bool CanPlaceMine;
-        private static bool UseWorldInteraction;
         private static bool IsMineCooldownActive;
 
         private void PatchMineDeployer()
         {
-            QoLFixPlugin.RegisterPatch<WorldInteractionBlockerPatch>();
             this.PatchMethod<MineDeployerFirstPerson>(nameof(MineDeployerFirstPerson.Update), PatchType.Both);
             this.PatchMethod<MineDeployerFirstPerson>(nameof(MineDeployerFirstPerson.OnUnWield), PatchType.Both);
             this.PatchMethod<MineDeployerFirstPerson>(nameof(MineDeployerFirstPerson.OnWield), PatchType.Postfix);
@@ -34,8 +33,9 @@ namespace QoLFix.Patches.Tweaks
             LevelCleanupPatch.OnExitLevel += () =>
             {
                 CanPlaceMine = false;
-                UseWorldInteraction = false;
                 IsMineCooldownActive = false;
+                MineInteractionBlocker?.Dispose();
+                MineInteractionBlocker = null;
             };
         }
 
@@ -94,7 +94,7 @@ namespace QoLFix.Patches.Tweaks
 
         private static bool MineDeployerFirstPerson__ShowPlacementIndicator__Prefix(ref bool __result)
         {
-            if (WorldInteractionOverride.state || IsMineCooldownActive)
+            if (LookingAtWorldInteraction.state || IsMineCooldownActive)
             {
                 __result = false;
                 return HarmonyControlFlow.DontExecute;
@@ -105,7 +105,7 @@ namespace QoLFix.Patches.Tweaks
 
         private static bool MineDeployerFirstPerson__CheckCanPlace__Prefix(ref bool __result)
         {
-            if (WorldInteractionOverride.state || IsMineCooldownActive)
+            if (LookingAtWorldInteraction.state || IsMineCooldownActive)
             {
                 __result = false;
                 return HarmonyControlFlow.DontExecute;
@@ -142,22 +142,14 @@ namespace QoLFix.Patches.Tweaks
             }
         }
 
+        private static SharedResourceLease MineInteractionBlocker;
+
         private static bool MineDeployerFirstPerson__Update__Prefix(MineDeployerFirstPerson __instance)
         {
-            // This is so that HasWorldInteraction can return false (to
-            // ignore world interactions) unless the player is looking
-            // directly at a mine. HasWorldInteraction is used the vanilla
-            // CheckCanPlace method, which causes world interactions to
-            // suppress the mine deployer interaction.
-            if (!UseWorldInteraction)
-            {
-                WorldInteractionBlockerPatch.IgnoreWorldInteractions++;
-            }
-
             // Disables the placement indicator if we're looking at a ladder
             var playerInteraction = __instance.Owner.Interaction;
-            WorldInteractionOverride.oldState = WorldInteractionOverride.state;
-            WorldInteractionOverride.state = playerInteraction.m_enterLadderVisible
+            LookingAtWorldInteraction.oldState = LookingAtWorldInteraction.state;
+            LookingAtWorldInteraction.state = playerInteraction.m_enterLadderVisible
                 || PlayerInteraction.LadderInteractionEnabled && playerInteraction.WantToEnterLadder
                 // Prioritize interacting with certain things if looked at directly
                 || GTFOUtils.GetComponentInSight<Component>(
@@ -179,8 +171,8 @@ namespace QoLFix.Patches.Tweaks
 
             // For some reason, patching CheckCanPlace and
             // ShowPlacementIndicator isn't sufficient to hide the indicator.
-            var stateChanged = WorldInteractionOverride.oldState != WorldInteractionOverride.state;
-            if (stateChanged && WorldInteractionOverride.state)
+            var stateChanged = LookingAtWorldInteraction.oldState != LookingAtWorldInteraction.state;
+            if (stateChanged && LookingAtWorldInteraction.state)
             {
                 Instance.LogDebug("Disabling placement indicator");
                 __instance.m_lastCanPlace = false;
@@ -198,48 +190,59 @@ namespace QoLFix.Patches.Tweaks
         {
             CanPlaceMine = __instance.CanWield && __instance.CheckCanPlace();
             //Instance.LogDebug($"CanPlaceMine: {CanPlaceMine}; ShowPlacementIndicator: {__instance.ShowPlacementIndicator()}");
-            if (!UseWorldInteraction)
-            {
-                WorldInteractionBlockerPatch.IgnoreWorldInteractions--;
-            }
         }
 
-        private static bool? PlayerInteraction__UpdateWorldInteractions__MineDeployer(PlayerInteraction __instance)
+        private static bool? UpdateMineDeployerInteractionBlocker()
         {
-            var obj = __instance.m_owner.FPSCamera?.CameraRayObject;
+            var playerInteraction = PlayerInteractionInstance;
+            var obj = playerInteraction.m_owner?.FPSCamera?.CameraRayObject;
             if (obj == null) return null;
 
-            UseWorldInteraction = false;
-
-            // Players probably don't want to put mines down while running,
-            // so let them use the world interactions.
-            if (__instance.m_owner.Locomotion.m_currentStateEnum == PlayerLocomotion.PLOC_State.Run)
+            var useWorldInteraction = false;
+            try
             {
-                UseWorldInteraction = true;
-                return HarmonyControlFlow.Execute;
-            }
-
-            var interacts = obj.GetComponents<Interact_Timed>();
-            foreach (var interact in interacts)
-            {
-                // XXX: this is the most efficient way I could think of
-                // to detect when the player is looking at a mine.
-                // The alternatives would be either convoluted or inefficient.
-                // This is dirty but it works.
-                var isMine = interact.SFXInteractStart == EVENTS.INTERACT_TOOL_START
-                    && interact.SFXInteractCancel == EVENTS.INTERACT_TOOL_CANCEL
-                    && interact.SFXInteractEnd == EVENTS.INTERACT_TOOL_FINISHED;
-
-                if (isMine && interact.enabled)
+                // Players probably don't want to put mines down while running,
+                // so let them use the world interactions.
+                if (playerInteraction.m_owner.Locomotion.m_currentStateEnum == PlayerLocomotion.PLOC_State.Run)
                 {
-                    UseWorldInteraction = true;
+                    useWorldInteraction = true;
                     return HarmonyControlFlow.Execute;
                 }
-            }
 
-            //Instance.LogDebug($"CanPlaceMine: {CanPlaceMine}; IsLadderInteraction: {IsLadderInteraction}");
-            if (CanPlaceMine && !WorldInteractionOverride.state) return HarmonyControlFlow.DontExecute;
-            return null;
+                var interacts = obj.GetComponents<Interact_Timed>();
+                foreach (var interact in interacts)
+                {
+                    // XXX: this is the most efficient way I could think of
+                    // to detect when the player is looking at a mine.
+                    // The alternatives would be either convoluted or inefficient.
+                    // This is dirty but it works.
+                    var isMine = interact.SFXInteractStart == EVENTS.INTERACT_TOOL_START
+                        && interact.SFXInteractCancel == EVENTS.INTERACT_TOOL_CANCEL
+                        && interact.SFXInteractEnd == EVENTS.INTERACT_TOOL_FINISHED;
+
+                    if (isMine && interact.enabled)
+                    {
+                        useWorldInteraction = true;
+                        return HarmonyControlFlow.Execute;
+                    }
+                }
+
+                //Instance.LogDebug($"CanPlaceMine: {CanPlaceMine}; IsLadderInteraction: {IsLadderInteraction}");
+                if (CanPlaceMine && !LookingAtWorldInteraction.state) return HarmonyControlFlow.DontExecute;
+                return null;
+            }
+            finally
+            {
+                if (!useWorldInteraction && MineInteractionBlocker != null)
+                {
+                    MineInteractionBlocker.Dispose();
+                    MineInteractionBlocker = null;
+                }
+                else if (useWorldInteraction && MineInteractionBlocker == null)
+                {
+                    MineInteractionBlocker = InteractionBlocker.AcquireLease();
+                }
+            }
         }
     }
 }

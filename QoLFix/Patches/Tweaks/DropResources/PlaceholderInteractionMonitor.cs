@@ -1,6 +1,7 @@
 using System;
 using LevelGeneration;
 using Player;
+using QoLFix.Patches.Common;
 using QoLFix.Patches.Misc;
 using SNetwork;
 using UnhollowerBaseLib.Attributes;
@@ -24,8 +25,7 @@ namespace QoLFix.Patches.Tweaks
             private Interact_ManualTimedWithCallback interact;
             private StorageSlotPlaceholder currentPlaceholder;
             private ItemEquippable currentWieldedItem;
-
-            public static bool DisableInteractions { get; private set; }
+            private SharedResourceLease interactionBlocker;
 
             internal void Awake()
             {
@@ -133,9 +133,14 @@ namespace QoLFix.Patches.Tweaks
             private void UpdateInteractionMessage(string message) =>
                 this.interact.SetAction(message, InputAction.Use);
 
-            private void Update()
+            internal void OnDestroy()
             {
-                if (WorldInteractionBlockerPatch.IgnoreWorldInteractions > 0) return;
+                this.interactionBlocker?.Dispose();
+            }
+
+            internal void Update()
+            {
+                //if (WorldInteractionBlockerPatch.IgnoreWorldInteractions > 0) return;
                 if (GameStateManager.CurrentStateName != eGameStateName.InLevel) return;
 
 #if DEBUG_PLACEHOLDERS
@@ -162,7 +167,7 @@ namespace QoLFix.Patches.Tweaks
                 {
                     if (this.currentPlaceholder != null)
                     {
-                        DisableInteractions = false;
+                        this.interactionBlocker?.Dispose();
                         if (this.ghostGO != null)
                         {
                             Destroy(this.ghostGO);
@@ -190,15 +195,8 @@ namespace QoLFix.Patches.Tweaks
 #endif
                     placeholderChanged = true;
                     this.currentPlaceholder = placeholder;
-                    DisableInteractions = true;
-                    // Disable the previous interaction
-                    this.playerAgent.Interaction.UnSelectCurrentBestInteraction();
-                    // This causes PlayerInteraction.HasWorldInteraction to
-                    // evaluate to true. This is used to trick other
-                    // interactions into thinking that the user already has an
-                    // interaction prompt.
-                    this.playerAgent.Interaction.m_bestSelectedInteract = this.interact.Cast<IInteractable>();
-                    this.playerAgent.Interaction.m_bestInteractInCurrentSearch = this.interact;
+                    this.interactionBlocker?.Dispose();
+                    this.interactionBlocker = BetterInteractionsPatch.InteractionBlocker.AcquireLease();
                 }
 
                 var wieldedItemChanged = false;

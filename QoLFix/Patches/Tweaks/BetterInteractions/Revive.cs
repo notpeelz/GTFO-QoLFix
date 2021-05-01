@@ -43,8 +43,8 @@ namespace QoLFix.Patches.Tweaks
 
             // For balance reasons, we prevent firing weapons while reviving
             // since we're giving the player full control over their camera.
-            if (action != InputAction.Fire
-                && action != InputAction.Aim) return HarmonyControlFlow.Execute;
+            if (action is not InputAction.Fire
+                and not InputAction.Aim) return HarmonyControlFlow.Execute;
             __result = false;
             return HarmonyControlFlow.DontExecute;
         }

@@ -45,7 +45,6 @@ namespace QoLFix.Patches.Tweaks
             this.PatchMethod<LG_ResourceContainer_Storage>(nameof(LG_ResourceContainer_Storage.DisablePickupInteractions), PatchType.Postfix);
             this.PatchMethod<LG_PickupItem_Sync>(nameof(LG_PickupItem_Sync.OnStateChange), PatchType.Postfix);
             this.PatchMethod<LG_ResourceContainerBuilder>(nameof(LG_ResourceContainerBuilder.SetupFunctionGO), PatchType.Postfix);
-            this.PatchMethod<PlayerInteraction>(nameof(PlayerInteraction.UpdateWorldInteractions), PatchType.Prefix);
         }
 
         private static void LocalPlayerAgentSettings__OnLocalPlayerAgentEnable__Postfix()
@@ -54,13 +53,6 @@ namespace QoLFix.Patches.Tweaks
             if (playerAgent == null) return;
             playerAgent.gameObject.AddComponent<PlaceholderInteractionMonitor>();
         }
-
-        // If interactions are disabled, skip the original function to
-        // prevent it from interfering with our placeholder interaction.
-        private static bool PlayerInteraction__UpdateWorldInteractions__Prefix() =>
-            PlaceholderInteractionMonitor.DisableInteractions
-                ? HarmonyControlFlow.DontExecute
-                : HarmonyControlFlow.Execute;
 
         private static void LG_PickupItem_Sync__OnStateChange__Postfix(LG_PickupItem_Sync __instance)
         {
