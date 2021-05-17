@@ -1,6 +1,6 @@
 <Project InitialTargets="ValidateGamePath">
   <!--
-    Add a GameFolder.props file to the root of the solution to set your game path:
+    Add a Paths.props file to the root of the solution to set your game path:
 
     <Project>
       <PropertyGroup>
@@ -9,7 +9,7 @@
     </Project>
   -->
 
-  <Import Project="$(MSBuildThisFileDirectory)/../GameFolder.props" Condition="Exists('$(MSBuildThisFileDirectory)/../GameFolder.props')" />
+  <Import Project="$(MSBuildThisFileDirectory)/../Paths.props" Condition="Exists('$(MSBuildThisFileDirectory)/../Paths.props')" />
   <Target Name="ValidateGamePath">
     <Error Text="The GameFolder property must be set to the GTFO game folder." Condition="'$(GameFolder)' == '' or !Exists('$(GameFolder)')" />
   </Target>
