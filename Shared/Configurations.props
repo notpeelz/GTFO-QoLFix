@@ -1,0 +1,5 @@
+<Project>
+  <PropertyGroup>
+    <Configurations>Debug;Release-Standalone;Release-Thunderstore</Configurations>
+  </PropertyGroup>
+</Project>

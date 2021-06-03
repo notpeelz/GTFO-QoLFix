@@ -1,0 +1,74 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../Shared/ReadmeGenerator.Config.props" />
+  <Import Project="../Shared/Configurations.props" />
+
+  <ItemGroup>
+    <ReadmeProjectReference Include="QoL.BetterLockers" />
+    <ReadmeProjectReference Include="QoL.BetterMovement" />
+    <ReadmeProjectReference Include="QoL.BetterWeaponSwap" />
+    <ReadmeProjectReference Include="QoL.BugFixes" />
+    <ReadmeProjectReference Include="QoL.Common" />
+    <ReadmeProjectReference Include="QoL.ElevatorIntroSkip" />
+    <ReadmeProjectReference Include="QoL.ElevatorVolume" />
+    <ReadmeProjectReference Include="QoL.FPSLimiter" />
+    <ReadmeProjectReference Include="QoL.IntroSkip" />
+    <ReadmeProjectReference Include="QoL.LatencyInfo" />
+    <ReadmeProjectReference Include="QoL.LobbyUnready" />
+    <ReadmeProjectReference Include="QoL.ProfileLink" />
+    <ReadmeProjectReference Include="QoL.RecentlyPlayedWith" />
+    <ReadmeProjectReference Include="QoL.ResourceAudioCue" />
+    <ReadmeProjectReference Include="QoL.RunReloadCancel" />
+    <ReadmeProjectReference Include="QoL.TerminalPingableSwaps" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <ReadmeFeatures>
+      [
+        "QoL.BetterLockers",
+        "QoL.ElevatorVolume",
+        "QoL.IntroSkip",
+        "QoL.ElevatorIntroSkip",
+        "QoL.LatencyInfo",
+        "QoL.ResourceAudioCue",
+        "QoL.RunReloadCancel",
+        "QoL.BetterWeaponSwap",
+        "QoL.BetterMovement",
+        "QoL.TerminalPingableSwaps",
+        "QoL.RecentlyPlayedWith",
+        "QoL.ProfileLink",
+        "QoL.LobbyUnready",
+        "QoL.FPSLimiter",
+        "QoL.BugFixes",
+      ]
+    </ReadmeFeatures>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ReadmeContext Include="features" Type="json" Value="$(ReadmeFeatures)" />
+    <ReadmeContext Include="PKG_URL" Value="https://gtfo.thunderstore.io/package/notpeelz/QoLFix" />
+    <ReadmeContext Include="release" Value="standalone" />
+
+    <ModpackContext Include="@(ReadmeContext)" />
+    <RepoReadmeContext Include="@(ReadmeContext)" />
+
+    <ModpackContext Include="release" Value="thunderstore" Condition="'$(Configuration)' == 'Release-Thunderstore'" />
+
+    <RGTemplate Type="PackageBuild" Include="../Templates/README.md" Context="ModpackContext" />
+    <RGTemplate Type="ProjectBuild" Include="../Templates/README.md" OutputPath="../README.md" OverrideOutputPath="true" Context="RepoReadmeContext" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <RGPartial Include="@(ReadmeProjectReference)" Path="../%(Identity)/Templates/README.md" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
+  <Import Project="../Shared/ReadmeGenerator.targets" />
+</Project>

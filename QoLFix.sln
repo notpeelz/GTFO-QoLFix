@@ -5,12 +5,17 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9823E007-BE7B-49DC-A716-9D860A787CE9}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{0C359BA2-011E-4173-BD9C-7FF4DA61F770}"
 	ProjectSection(SolutionItems) = preProject
 		Shared\Common.props = Shared\Common.props
+		Shared\Common.targets = Shared\Common.targets
+		Shared\Configurations.props = Shared\Configurations.props
 		Shared\Dependencies.props = Shared\Dependencies.props
+		Shared\ReadmeGenerator.Config.props = Shared\ReadmeGenerator.Config.props
+		Shared\ReadmeGenerator.targets = Shared\ReadmeGenerator.targets
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QoL.ElevatorVolume", "QoL.ElevatorVolume\QoL.ElevatorVolume.csproj", "{84EE24A1-4E80-4F57-A4B1-01E84E5AFC4C}"
@@ -44,6 +49,17 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QoL.ProfileLink", "QoL.ProfileLink\QoL.ProfileLink.csproj", "{FD3AE3E2-052C-4257-8809-E427101B8D85}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QoL.LatencyInfo", "QoL.LatencyInfo\QoL.LatencyInfo.csproj", "{B32342F1-9CCD-4BC1-8933-F8E83C187677}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReadmeGeneratorTask", "ReadmeGeneratorTask\ReadmeGeneratorTask.csproj", "{D98320E9-2994-4B08-90E8-DCAD07FFBCDC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{0C3EBC6F-3B7C-4E67-80E8-4E1B1ED4A1DA}"
+	ProjectSection(SolutionItems) = preProject
+		Templates\CHANGELOG.md = Templates\CHANGELOG.md
+		Templates\license.partial.md = Templates\license.partial.md
+		Templates\README.md = Templates\README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Packager", "Packager\Packager.csproj", "{619CB873-DD56-41C5-8481-762AF1B023A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -148,6 +164,18 @@ Global
 		{B32342F1-9CCD-4BC1-8933-F8E83C187677}.Release-Standalone|Any CPU.Build.0 = Release-Standalone|Any CPU
 		{B32342F1-9CCD-4BC1-8933-F8E83C187677}.Release-Thunderstore|Any CPU.ActiveCfg = Release-Thunderstore|Any CPU
 		{B32342F1-9CCD-4BC1-8933-F8E83C187677}.Release-Thunderstore|Any CPU.Build.0 = Release-Thunderstore|Any CPU
+		{D98320E9-2994-4B08-90E8-DCAD07FFBCDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D98320E9-2994-4B08-90E8-DCAD07FFBCDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D98320E9-2994-4B08-90E8-DCAD07FFBCDC}.Release-Standalone|Any CPU.ActiveCfg = Debug|Any CPU
+		{D98320E9-2994-4B08-90E8-DCAD07FFBCDC}.Release-Standalone|Any CPU.Build.0 = Debug|Any CPU
+		{D98320E9-2994-4B08-90E8-DCAD07FFBCDC}.Release-Thunderstore|Any CPU.ActiveCfg = Debug|Any CPU
+		{D98320E9-2994-4B08-90E8-DCAD07FFBCDC}.Release-Thunderstore|Any CPU.Build.0 = Debug|Any CPU
+		{619CB873-DD56-41C5-8481-762AF1B023A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{619CB873-DD56-41C5-8481-762AF1B023A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{619CB873-DD56-41C5-8481-762AF1B023A3}.Release-Standalone|Any CPU.ActiveCfg = Release-Standalone|Any CPU
+		{619CB873-DD56-41C5-8481-762AF1B023A3}.Release-Standalone|Any CPU.Build.0 = Release-Standalone|Any CPU
+		{619CB873-DD56-41C5-8481-762AF1B023A3}.Release-Thunderstore|Any CPU.ActiveCfg = Release-Thunderstore|Any CPU
+		{619CB873-DD56-41C5-8481-762AF1B023A3}.Release-Thunderstore|Any CPU.Build.0 = Release-Thunderstore|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

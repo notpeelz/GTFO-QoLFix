@@ -1,0 +1,96 @@
+<Project>
+  <ItemGroup>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)/../ReadmeGeneratorTask/ReadmeGeneratorTask.csproj" ReferenceOutputAssembly="false" OutputItemType="Task" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemDefinitionGroup>
+    <RGTemplate>
+      <Type>PackageBuild</Type>
+    </RGTemplate>
+  </ItemDefinitionGroup>
+
+  <ItemGroup>
+    <_RGTemplate_Package Include="@(RGTemplate-&gt;HasMetadata('Type')-&gt;WithMetadataValue('Type', 'PackageBuild'))" />
+    <_RGTemplate_Project Include="@(RGTemplate-&gt;HasMetadata('Type')-&gt;WithMetadataValue('Type', 'ProjectBuild'))" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Include="@(_RGTemplate_Package)" />
+    <UpToDateCheckInput Include="@(_RGTemplate_Project)" />
+    <UpToDateCheckInput Include="@(RGPartial)" />
+  </ItemGroup>
+
+  <UsingTask
+    TaskName="CreateReadme"
+    AssemblyFile="$(MSBuildThisFileDirectory)/../ReadmeGeneratorTask/bin/ReadmeGeneratorTask.dll" />
+
+  <Target Name="CreateReadme" AfterTargets="Build">
+    <PropertyGroup>
+      <_RepoRootPath>$(MSBuildProjectDirectory)/..</_RepoRootPath>
+    </PropertyGroup>
+
+    <MSBuild
+      Condition="'%(_RGTemplate_Package.Type)' != ''"
+      Projects="$(MSBuildProjectFullPath)"
+      Properties="RGTemplate_File=%(_RGTemplate_Package.Identity);
+        RGTemplate_Type=%(_RGTemplate_Package.Type);
+        RGTemplate_OutputPath=%(_RGTemplate_Package.OutputPath);
+        RGTemplate_OverrideOutputPath=%(_RGTemplate_Package.OverrideOutputPath);
+        RGTemplate_Context=%(_RGTemplate_Package.Context);
+        RGTask_RepositoryRootPath=$(_RepoRootPath);
+        RGTask_MSBuildOutputPath=$(OutputPath);
+        RGTask_MSBuildProjectDirectory=$(MSBuildProjectDirectory)"
+      Targets="_CreateReadme">
+      <Output TaskParameter="TargetOutputs" ItemName="_GeneratedReadmeFiles" />
+    </MSBuild>
+    <ItemGroup>
+      <FileWrites Include="@(_GeneratedReadmeFiles)" />
+    </ItemGroup>
+
+    <MSBuild
+      Condition="'%(_RGTemplate_Project.Type)' != ''"
+      Projects="$(MSBuildProjectFullPath)"
+      Properties="RGTemplate_File=%(_RGTemplate_Project.Identity);
+        RGTemplate_Type=%(_RGTemplate_Project.Type);
+        RGTemplate_OutputPath=%(_RGTemplate_Project.OutputPath);
+        RGTemplate_OverrideOutputPath=%(_RGTemplate_Project.OverrideOutputPath);
+        RGTemplate_Context=%(_RGTemplate_Project.Context);
+        RGTask_RepositoryRootPath=$(_RepoRootPath);
+        RGTask_MSBuildOutputPath=$(OutputPath);
+        RGTask_MSBuildProjectDirectory=$(MSBuildProjectDirectory)"
+      Targets="_CreateReadme" />
+  </Target>
+
+  <Target
+    Condition="'$(RGTemplate_Type)' != ''"
+    Name="_CreateReadme"
+    Outputs="@(_GeneratedReadmeFiles)">
+    <Error
+      Condition="'$(RGTemplate_Type)' == ''"
+      Text="_CreateReadme target was invoked with no Type property." />
+
+    <PropertyGroup>
+      <RGTemplate_Context Condition="'$(RGTemplate_Context)' == ''">$(RGDefaultContext)</RGTemplate_Context>
+    </PropertyGroup>
+    <Error Text="No context was passed and no default context was defined." Condition="'$(RGTemplate_Context)' == ''" />
+
+    <ItemGroup>
+      <_Context
+        Include="@($(RGTemplate_Context))"
+        Condition="'$(RGTemplate_Context)' != ''" />
+    </ItemGroup>
+
+    <CreateReadme
+      RepositoryRootPath="$(RGTask_RepositoryRootPath)"
+      MSBuildOutputPath="$(RGTask_MSBuildOutputPath)"
+      MSBuildProjectDirectory="$(RGTask_MSBuildProjectDirectory)"
+      OverrideOutputPath="$(RGTemplate_OverrideOutputPath)"
+      OutputPath="$(RGTemplate_OutputPath)"
+      MetadataVars="release"
+      Templates="$(RGTemplate_File)"
+      Partials="@(RGPartial)"
+      Context="@(_Context)">
+      <Output TaskParameter="GeneratedFiles" ItemName="_GeneratedReadmeFiles" />
+    </CreateReadme>
+  </Target>
+</Project>

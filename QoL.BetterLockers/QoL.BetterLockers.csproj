@@ -5,4 +5,6 @@
     <Version>1.0.0</Version>
     <!--<DefineConstants>DEBUG_PLACEHOLDERS</DefineConstants>-->
   </PropertyGroup>
+
+  <Import Project="../Shared/Common.targets" />
 </Project>

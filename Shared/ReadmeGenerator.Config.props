@@ -1,0 +1,47 @@
+<Project>
+  <PropertyGroup>
+    <RGDefaultContext>ReadmeContext</RGDefaultContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <RGPartial Include="license" Path="$(MSBuildThisFileDirectory)/../Templates/license.partial.md" />
+  </ItemGroup>
+
+  <!-- Readme context base -->
+  <ItemGroup>
+    <ReadmeContext Include="project" Value="" />
+    <ReadmeContext Include="project" Value="$(MSBuildProjectName)" Condition="'$(MSBuildProjectName)' != 'Packager'" />
+    <ReadmeContext Include="MOD_LONG_NAME" Value="GTFO-QoL" />
+    <ReadmeContext Include="MOD_SHORT_NAME" Value="QoL" />
+    <ReadmeContext Include="REPO_PATH" Value="notpeelz/GTFO-QoLFix" />
+    <ReadmeContext Include="REPO_URL" Value="https://github.com/notpeelz/GTFO-QoLFix" />
+    <ReadmeContext Include="release" Value="standalone" />
+  </ItemGroup>
+
+  <!-- Package context -->
+  <ItemGroup>
+    <PackageContext Include="@(ReadmeContext)" />
+    <PackageContext Include="MOD_LONG_NAME" Value="QoL" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Release-Thunderstore'">
+    <PackageContext Include="release" Value="thunderstore" />
+    <!-- The modpack is called "QoLFix" on Thunderstore -->
+    <PackageContext Include="MOD_LONG_NAME" Value="QoLFix" />
+  </ItemGroup>
+
+  <!-- Templates/README.md -->
+  <ItemGroup Condition="Exists('$(MSBuildProjectDirectory)/Templates/README.md')">
+    <!-- Build to output dir -->
+    <RGTemplate
+      Type="PackageBuild"
+      Condition="'$(RGBuildPackage)' != 'false'"
+      Include="$(MSBuildProjectDirectory)/Templates/README.md"
+      Context="PackageContext" />
+    <!-- Build to the project dir -->
+    <RGTemplate
+      Type="ProjectBuild"
+      Include="$(MSBuildProjectDirectory)/Templates/README.md"
+      OutputPath="$(MSBuildProjectDirectory)/README.md" />
+  </ItemGroup>
+</Project>
