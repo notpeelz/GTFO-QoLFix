@@ -1,7 +1,7 @@
 using BepInEx;
 using MTFO.Core;
 
-namespace QoL.ElevatorVolume
+namespace QoL.ElevatorEarplugs
 {
     [BepInPlugin(PluginGUID, PluginDisplayName, PluginVersion)]
     [BepInDependency("mtfo.core", BepInDependency.DependencyFlags.HardDependency)]
@@ -16,7 +16,7 @@ namespace QoL.ElevatorVolume
 
         protected override void OnLoad()
         {
-            this.RegisterPatch<ElevatorVolumePatch>();
+            this.RegisterPatch<ElevatorEarplugsPatch>();
         }
     }
 }

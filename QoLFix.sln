@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{0C359B
 		Shared\ReadmeGenerator.targets = Shared\ReadmeGenerator.targets
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QoL.ElevatorVolume", "QoL.ElevatorVolume\QoL.ElevatorVolume.csproj", "{84EE24A1-4E80-4F57-A4B1-01E84E5AFC4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QoL.ElevatorEarplugs", "QoL.ElevatorEarplugs\QoL.ElevatorEarplugs.csproj", "{84EE24A1-4E80-4F57-A4B1-01E84E5AFC4C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QoL.IntroSkip", "QoL.IntroSkip\QoL.IntroSkip.csproj", "{8D6EBE1E-852F-4C0F-AC91-61436501A3E6}"
 EndProject

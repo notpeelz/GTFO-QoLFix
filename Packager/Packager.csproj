@@ -9,7 +9,7 @@
     <ReadmeProjectReference Include="QoL.BugFixes" />
     <ReadmeProjectReference Include="QoL.Common" />
     <ReadmeProjectReference Include="QoL.ElevatorIntroSkip" />
-    <ReadmeProjectReference Include="QoL.ElevatorVolume" />
+    <ReadmeProjectReference Include="QoL.ElevatorEarplugs" />
     <ReadmeProjectReference Include="QoL.FPSLimiter" />
     <ReadmeProjectReference Include="QoL.IntroSkip" />
     <ReadmeProjectReference Include="QoL.LatencyInfo" />
@@ -25,7 +25,7 @@
     <ReadmeFeatures>
       [
         "QoL.BetterLockers",
-        "QoL.ElevatorVolume",
+        "QoL.ElevatorEarplugs",
         "QoL.IntroSkip",
         "QoL.ElevatorIntroSkip",
         "QoL.LatencyInfo",

@@ -38,7 +38,7 @@ Also fixes resource pings showing up as "resource box".
 
 <img height="120" src="img/fixlockerping.jpg">
 
-## Elevator Volume
+## Elevator Earplugs
 
 Lowers the game volume during the elevator sequence; no more alt-tabbing or screaming to your teammates!
 

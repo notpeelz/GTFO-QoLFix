@@ -1,7 +1,7 @@
-[//]: # (THIS FILE WAS GENERATED FROM QoL.ElevatorVolume/Templates/README.md)
+[//]: # (THIS FILE WAS GENERATED FROM QoL.ElevatorEarplugs/Templates/README.md)
 [//]: # (release: standalone)
 
-# QoL - Elevator Volume
+# QoL - Elevator Earplugs
 
 [![GitHub](https://img.shields.io/github/license/notpeelz/GTFO-QoLFix?color=green&style=for-the-badge)](https://github.com/notpeelz/GTFO-QoLFix)
 

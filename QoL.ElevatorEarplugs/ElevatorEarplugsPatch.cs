@@ -3,16 +3,16 @@ using BepInEx.Configuration;
 using HarmonyLib;
 using MTFO.Core;
 
-namespace QoL.ElevatorVolume
+namespace QoL.ElevatorEarplugs
 {
-    public class ElevatorVolumePatch : MTFOPatch
+    public class ElevatorEarplugsPatch : MTFOPatch
     {
-        private const string PatchName = nameof(ElevatorVolumePatch);
+        private const string PatchName = nameof(ElevatorEarplugsPatch);
 
         private static ConfigEntry<bool> ConfigEnabled = default!;
         private static ConfigEntry<float> ConfigVolume = default!;
 
-        public static ElevatorVolumePatch? Instance { get; private set; }
+        public static ElevatorEarplugsPatch? Instance { get; private set; }
 
         public override bool Enabled => ConfigEnabled.Value;
 
