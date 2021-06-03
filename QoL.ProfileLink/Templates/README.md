@@ -8,7 +8,7 @@
 
 Lets you open the steam profile of your teammates by clicking on their name.
 
-{{embedVideo name='steamprofile' height='240' url='https://i.imgur.com/iMfZv7S.mp4'}}
+{{embedVideo name='profilelink' height='240' url='https://i.imgur.com/iMfZv7S.mp4'}}
 {{#notEquals project ""}}
 
 {{h2 "Changelog"}}

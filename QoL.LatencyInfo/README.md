@@ -7,7 +7,7 @@
 
 Displays network latency on your HUD.
 
-<img height="120" src="../img/latencyhud_ping_hover.jpg"> <img height="120" src="../img/latencyhud_ping_watermark.jpg">
+<img height="120" src="../img/latencyinfo_ping_hover.jpg"> <img height="120" src="../img/latencyinfo_ping_watermark.jpg">
 Known bugs: due to a bug with the way GTFO estimates network latency, the ping is only updated once upon joining a game.
 
 ## Changelog

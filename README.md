@@ -56,7 +56,7 @@ Skips the intro that plays when dropping into a level.
 
 Displays network latency on your HUD.
 
-<img height="120" src="img/latencyhud_ping_hover.jpg"> <img height="120" src="img/latencyhud_ping_watermark.jpg">
+<img height="120" src="img/latencyinfo_ping_hover.jpg"> <img height="120" src="img/latencyinfo_ping_watermark.jpg">
 
 ## Resource Audio Cue
 
@@ -98,7 +98,7 @@ Updates the Steam recent players list.
 
 Lets you open the steam profile of your teammates by clicking on their name.
 
-<a href="https://i.imgur.com/iMfZv7S.mp4"><img height="240" src="img/steamprofile_thumbnail.jpg"></a>
+<a href="https://i.imgur.com/iMfZv7S.mp4"><img height="240" src="img/profilelink_thumbnail.jpg"></a>
 
 ## Lobby Unready
 
