@@ -3,7 +3,11 @@
 
 {{> license}}
 {{else}}
+{{#equals release "thunderstore"}}
+{{h1 "[Better Lockers](https://gtfo.thunderstore.io/package/notpeelz/QoL_BetterLockers)"}}
+{{else}}
 {{h1 "Better Lockers"}}
+{{/equals}}
 {{/notEquals}}
 
 Lets you put resources back in lockers.

@@ -3,7 +3,11 @@
 
 {{> license}}
 {{else}}
+{{#equals release "thunderstore"}}
+{{h1 "[Bug Fixes](https://gtfo.thunderstore.io/package/notpeelz/QoL_BugFixes)"}}
+{{else}}
 {{h1 "Bug Fixes"}}
+{{/equals}}
 {{/notEquals}}
 
 Fixes various game bugs:

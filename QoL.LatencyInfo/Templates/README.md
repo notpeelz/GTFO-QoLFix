@@ -3,7 +3,11 @@
 
 {{> license}}
 {{else}}
+{{#equals release "thunderstore"}}
+{{h1 "[Latency Info](https://gtfo.thunderstore.io/package/notpeelz/QoL_LatencyInfo)"}}
+{{else}}
 {{h1 "Latency Info"}}
+{{/equals}}
 {{/notEquals}}
 
 Displays network latency on your HUD.

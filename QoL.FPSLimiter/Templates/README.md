@@ -3,7 +3,11 @@
 
 {{> license}}
 {{else}}
+{{#equals release "thunderstore"}}
+{{h1 "[FPS Limiter](https://gtfo.thunderstore.io/package/notpeelz/QoL_FPSLimiter)"}}
+{{else}}
 {{h1 "FPS Limiter"}}
+{{/equals}}
 {{/notEquals}}
 
 Lowers your FPS when alt-tabbing to preserve system resources.

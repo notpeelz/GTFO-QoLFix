@@ -3,7 +3,11 @@
 
 {{> license}}
 {{else}}
+{{#equals release "thunderstore"}}
+{{h1 "[Better Weapon Swap](https://gtfo.thunderstore.io/package/notpeelz/QoL_BetterWeaponSwap)"}}
+{{else}}
 {{h1 "Better Weapon Swap"}}
+{{/equals}}
 {{/notEquals}}
 
 Changes the weapon swap order dynamically based on the drama state of the game (stealth, combat, etc.)

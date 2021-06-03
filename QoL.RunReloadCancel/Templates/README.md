@@ -3,7 +3,11 @@
 
 {{> license}}
 {{else}}
+{{#equals release "thunderstore"}}
+{{h1 "[Run Reload-cancel](https://gtfo.thunderstore.io/package/notpeelz/QoL_RunReloadCancel)"}}
+{{else}}
 {{h1 "Run Reload-cancel"}}
+{{/equals}}
 {{/notEquals}}
 
 Lets you cancel the reload animation by sprinting rather than having to swap weapons.

@@ -3,7 +3,11 @@
 
 {{> license}}
 {{else}}
+{{#equals release "thunderstore"}}
+{{h1 "[Terminal-pingable Swaps](https://gtfo.thunderstore.io/package/notpeelz/QoL_TerminalPingableSwaps)"}}
+{{else}}
 {{h1 "Terminal-pingable Swaps"}}
+{{/equals}}
 {{/notEquals}}
 
 Relists swapped out items on terminals.

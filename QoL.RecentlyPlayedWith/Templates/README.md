@@ -3,7 +3,11 @@
 
 {{> license}}
 {{else}}
+{{#equals release "thunderstore"}}
+{{h1 "[Recently Played With](https://gtfo.thunderstore.io/package/notpeelz/QoL_RecentlyPlayedWith)"}}
+{{else}}
 {{h1 "Recently Played With"}}
+{{/equals}}
 {{/notEquals}}
 
 Updates the Steam recent players list.
