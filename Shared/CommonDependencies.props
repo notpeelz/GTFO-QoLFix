@@ -1,0 +1,6 @@
+<Project>
+  <ItemGroup Condition="'$(UsingMTFOSdk)' != 'true'">
+    <PackageReference Include="Nullable" Version="1.3.0" PrivateAssets="all" />
+    <PackageReference Include="IsExternalInit" Version="1.0.1" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

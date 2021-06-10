@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../Shared/ReadmeGenerator.Config.props" />
+  <Import Project="../Shared/CommonDependencies.props" />
   <Import Project="../Shared/Configurations.props" />
+  <Import Project="../Shared/ReadmeGenerator.Config.props" />
 
   <ItemGroup>
     <ReadmeProjectReference Include="QoL.BetterLockers" />

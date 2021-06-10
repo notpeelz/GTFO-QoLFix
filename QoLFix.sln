@@ -10,10 +10,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{0C359BA2-011E-4173-BD9C-7FF4DA61F770}"
 	ProjectSection(SolutionItems) = preProject
-		Shared\Common.props = Shared\Common.props
-		Shared\Common.targets = Shared\Common.targets
+		Shared\CommonDependencies.props = Shared\CommonDependencies.props
 		Shared\Configurations.props = Shared\Configurations.props
-		Shared\Dependencies.props = Shared\Dependencies.props
+		Shared\Plugin.props = Shared\Plugin.props
+		Shared\Plugin.targets = Shared\Plugin.targets
 		Shared\ReadmeGenerator.Config.props = Shared\ReadmeGenerator.Config.props
 		Shared\ReadmeGenerator.targets = Shared\ReadmeGenerator.targets
 	EndProjectSection

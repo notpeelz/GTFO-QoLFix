@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../Shared/Common.props" />
+<Project Sdk="MTFO.Sdk/1.0.0">
+  <Import Project="../Shared/Plugin.props" />
 
   <PropertyGroup>
     <Version>1.0.0</Version>
+    <ThunderstorePackageDescription>Lets you put resources back in lockers/boxes</ThunderstorePackageDescription>
     <!--<DefineConstants>DEBUG_PLACEHOLDERS</DefineConstants>-->
   </PropertyGroup>
 
-  <Import Project="../Shared/Common.targets" />
+  <Import Project="../Shared/Plugin.targets" />
 </Project>
