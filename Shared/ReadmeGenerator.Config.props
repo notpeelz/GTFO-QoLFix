@@ -30,13 +30,19 @@
     <PackageContext Include="MOD_LONG_NAME" Value="QoLFix" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <ReadmeTemplateExists>$([System.IO.File]::Exists('$(MSBuildProjectDirectory)/Templates/README.md'))</ReadmeTemplateExists>
+    <PackageReadmeFile>$(MSBuildProjectName)_README.md</PackageReadmeFile>
+  </PropertyGroup>
+
   <!-- Templates/README.md -->
-  <ItemGroup Condition="Exists('$(MSBuildProjectDirectory)/Templates/README.md')">
+  <ItemGroup Condition="'$(ReadmeTemplateExists)' == 'true'">
     <!-- Build to output dir -->
     <RGTemplate
       Type="PackageBuild"
       Condition="'$(RGBuildPackage)' != 'false'"
       Include="$(MSBuildProjectDirectory)/Templates/README.md"
+      OutputPath="$(PackageReadmeFile)"
       Context="PackageContext" />
     <!-- Build to the project dir -->
     <RGTemplate
@@ -44,4 +50,14 @@
       Include="$(MSBuildProjectDirectory)/Templates/README.md"
       OutputPath="$(MSBuildProjectDirectory)/README.md" />
   </ItemGroup>
+
+  <Target
+    Condition="'$(ReadmeTemplateExists)' == 'true'"
+    Name="IncludeThunderstorePackageReadme"
+    BeforeTargets="DefineThunderstorePackage"
+    DependsOnTargets="CreateReadme">
+    <PropertyGroup>
+      <ThunderstorePackageReadme>$(OutputPath)/$(PackageReadmeFile)</ThunderstorePackageReadme>
+    </PropertyGroup>
+  </Target>
 </Project>

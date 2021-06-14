@@ -24,7 +24,10 @@
     TaskName="CreateReadme"
     AssemblyFile="$(MSBuildThisFileDirectory)/../ReadmeGeneratorTask/bin/ReadmeGeneratorTask.dll" />
 
-  <Target Name="CreateReadme" AfterTargets="Build">
+  <Target
+    Name="CreateReadme"
+    BeforeTargets="CreateThunderstorePackage"
+    AfterTargets="Build">
     <PropertyGroup>
       <_RepoRootPath>$(MSBuildProjectDirectory)/..</_RepoRootPath>
     </PropertyGroup>
