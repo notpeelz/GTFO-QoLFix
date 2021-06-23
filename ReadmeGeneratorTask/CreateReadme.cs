@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using HandlebarsDotNet;
 using HandlebarsDotNet.IO;
 using Microsoft.Build.Framework;
@@ -91,7 +89,7 @@ namespace ReadmeGeneratorTask
                 }
 
                 // Normalize for the dictionary key
-                path = Normalize(path);
+                path = PathUtils.NormalizeAbsolute(path);
                 partialCtx["__PARTIAL__"] = path;
 
                 if (!this.partials.TryGetValue(path, out var partial))
@@ -139,7 +137,7 @@ namespace ReadmeGeneratorTask
                 else
                 {
                     imgPath = Path.Combine(this.RepositoryRootPath, imgPath);
-                    imgPath = MakeRelativePath(imgPath, Path.GetDirectoryName(outputPath));
+                    imgPath = PathUtils.MakeRelativePath(imgPath, Path.GetDirectoryName(outputPath));
                 }
 
                 if (height != null && !isThunderstore)
@@ -173,7 +171,7 @@ namespace ReadmeGeneratorTask
                 else
                 {
                     imgPath = Path.Combine(this.RepositoryRootPath, imgPath);
-                    imgPath = MakeRelativePath(imgPath, Path.GetDirectoryName(outputPath));
+                    imgPath = PathUtils.MakeRelativePath(imgPath, Path.GetDirectoryName(outputPath));
                 }
 
                 if (height != null && !isThunderstore)
@@ -217,48 +215,6 @@ namespace ReadmeGeneratorTask
                     helpKeyword: null,
                     senderName: nameof(CreateReadme)));
             });
-        }
-
-        private static readonly Regex PathSeparatorRegex = new("/+");
-
-        private static string MakeRelativePath(string path, string relativeTo)
-        {
-            path = Normalize(path);
-            relativeTo = Normalize(relativeTo);
-            if (!relativeTo.EndsWith("/")) relativeTo += "/";
-
-            if (path.StartsWith(relativeTo))
-            {
-                return path.Substring(relativeTo.Length);
-            }
-
-            if (Path.GetPathRoot(path) != Path.GetPathRoot(relativeTo))
-            {
-                throw new InvalidOperationException("Paths don't share the same root.");
-            }
-
-            var pathParts = PathSeparatorRegex.Split(path)!;
-            var baseParts = PathSeparatorRegex.Split(relativeTo)!;
-            var commonIndex = GetCommonBase();
-            Debug.Assert(commonIndex is null or >= 0);
-            if (commonIndex == null) return path;
-
-            var remainingBaseParts = baseParts.Length - (int)commonIndex - 2;
-            var relativeToBase = string.Concat(Enumerable.Repeat("../", remainingBaseParts));
-            return relativeToBase + string.Join("/", pathParts.Skip((int)commonIndex + 1));
-
-            int? GetCommonBase()
-            {
-                for (var i = 0; i < pathParts.Length; i++)
-                {
-                    if (pathParts[i] != baseParts[i])
-                    {
-                        return i - 1;
-                    }
-                }
-
-                return null;
-            }
         }
 
         public IBuildEngine BuildEngine { get; set; } = default!;
@@ -333,7 +289,7 @@ namespace ReadmeGeneratorTask
                 taskOutputPath = Path.Combine(taskOutputPath, this.OutputPath ?? "");
             }
 
-            taskOutputPath = Normalize(taskOutputPath);
+            taskOutputPath = PathUtils.NormalizeAbsolute(taskOutputPath);
 
             var files = new List<string>();
 
@@ -369,12 +325,14 @@ namespace ReadmeGeneratorTask
 
                 foreach (var path in tplOutPaths)
                 {
+                    using var mutex = MutexWrapper.FromPath("QOLRG", path);
                     if (!this.BuildTemplate(tplInPath, path)) return false;
                     files.Add(path);
                 }
             }
 
             this.GeneratedFiles = files.ToArray();
+
             return true;
         }
 
@@ -425,14 +383,14 @@ namespace ReadmeGeneratorTask
             }
 
             Directory.CreateDirectory(Path.GetDirectoryName(outPath));
-            using var sw = new StreamWriter(File.Open(outPath, FileMode.Create, FileAccess.Write))
+            using var sw = new StreamWriter(File.Open(outPath, FileMode.Create, FileAccess.Write, FileShare.None))
             {
                 NewLine = "\n",
             };
 
             var ctx = CreateContext();
 
-            var relPath = MakeRelativePath(templatePath, this.RepositoryRootPath);
+            var relPath = PathUtils.MakeRelativePath(templatePath, this.RepositoryRootPath);
             sw.Write($"[//]: # (THIS FILE WAS GENERATED FROM {relPath})\n");
             if (this.MetadataVars != null)
             {
@@ -527,8 +485,5 @@ namespace ReadmeGeneratorTask
                 }
             }
         }
-
-        public static string Normalize(string path) =>
-            Uri.UnescapeDataString(new Uri(Path.GetFullPath(path)).AbsolutePath);
     }
 }
