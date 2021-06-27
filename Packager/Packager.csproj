@@ -1,26 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk" InitialTargets="CheckRanFromBuildScript">
   <Import Project="../Shared/CommonDependencies.props" />
   <Import Project="../Shared/Configurations.props" />
   <Import Project="../Shared/ReadmeGenerator.Config.props" />
 
-  <ItemGroup>
-    <ReadmeProjectReference Include="QoL.BetterLockers" />
-    <ReadmeProjectReference Include="QoL.BetterMovement" />
-    <ReadmeProjectReference Include="QoL.BetterWeaponSwap" />
-    <ReadmeProjectReference Include="QoL.BugFixes" />
-    <ReadmeProjectReference Include="QoL.Common" />
-    <ReadmeProjectReference Include="QoL.ElevatorIntroSkip" />
-    <ReadmeProjectReference Include="QoL.ElevatorEarplugs" />
-    <ReadmeProjectReference Include="QoL.FPSLimiter" />
-    <ReadmeProjectReference Include="QoL.IntroSkip" />
-    <ReadmeProjectReference Include="QoL.LatencyInfo" />
-    <ReadmeProjectReference Include="QoL.LobbyUnready" />
-    <ReadmeProjectReference Include="QoL.ProfileLink" />
-    <ReadmeProjectReference Include="QoL.RecentlyPlayedWith" />
-    <ReadmeProjectReference Include="QoL.ResourceAudioCue" />
-    <ReadmeProjectReference Include="QoL.RunReloadCancel" />
-    <ReadmeProjectReference Include="QoL.TerminalPingableSwaps" />
-  </ItemGroup>
+  <Target Name="CheckRanFromBuildScript">
+    <Error
+      Condition="'$(RanFromBuildScript)' != 'true'"
+      Text="Packager should be built from the build script" />
+  </Target>
 
   <PropertyGroup>
     <ReadmeFeatures>
@@ -59,7 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <RGPartial Include="@(ReadmeProjectReference)" Path="../%(Identity)/Templates/README.md" />
+    <RGPartial Include="$(ReadmeProjectReferences)" Path="$(MSBuildThisFileDirectory)/../%(Identity)/Templates/README.md" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -70,6 +57,11 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MTFO.ThunderstorePackager" Version="1.0.0" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.21216.1" PrivateAssets="all" />
+  </ItemGroup>
 
   <Import Project="../Shared/ReadmeGenerator.targets" />
 </Project>

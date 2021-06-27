@@ -171,11 +171,8 @@ Global
 		{D98320E9-2994-4B08-90E8-DCAD07FFBCDC}.Release-Thunderstore|Any CPU.ActiveCfg = Debug|Any CPU
 		{D98320E9-2994-4B08-90E8-DCAD07FFBCDC}.Release-Thunderstore|Any CPU.Build.0 = Debug|Any CPU
 		{619CB873-DD56-41C5-8481-762AF1B023A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{619CB873-DD56-41C5-8481-762AF1B023A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{619CB873-DD56-41C5-8481-762AF1B023A3}.Release-Standalone|Any CPU.ActiveCfg = Release-Standalone|Any CPU
-		{619CB873-DD56-41C5-8481-762AF1B023A3}.Release-Standalone|Any CPU.Build.0 = Release-Standalone|Any CPU
 		{619CB873-DD56-41C5-8481-762AF1B023A3}.Release-Thunderstore|Any CPU.ActiveCfg = Release-Thunderstore|Any CPU
-		{619CB873-DD56-41C5-8481-762AF1B023A3}.Release-Thunderstore|Any CPU.Build.0 = Release-Thunderstore|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
